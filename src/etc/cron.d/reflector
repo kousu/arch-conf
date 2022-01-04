@@ -1,0 +1,5 @@
+# update pacman mirrors
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+01 17 * * * root /usr/bin/reflector --latest 5 --country CA --sort rate --protocol https --save /etc/pacman.d/mirrorlist

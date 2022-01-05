@@ -153,6 +153,8 @@ depends=(
 # and to handle a directory tree it expects to be given a .tar to extract into src/
 # Instead, I've committed the contents of this package *directly* to src/.
 
+install="arch-conf.install"
+
 package() {
   # often PKGBUILDs use install(1) here, because it lets them control permissions
   # but install(1) can't do folders recursively; so instead, just cp -r, and set any permissions directly with chmod

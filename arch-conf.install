@@ -1,0 +1,26 @@
+post_install() {
+  # /etc/locale.gen is owned by glibc
+  # but it needs to be customized (https://wiki.archlinux.org/title/Installation_guide#Localization)
+  # so overwrite it procedurally instead.
+  #
+  # XXX Is there a better way to handle this?
+  # Maybe with telling people to use `--overwrite /etc/locale.gen`?
+  # Can we declare in the PKGBUILD that both packages own the file? Or that our version takes precedence?
+
+  mv /etc/locale.gen /etc/locale.gen.pacsave || true # hack: so we can restore the original on uninstall
+  cat >/etc/locale.gen <<EOF
+en_CA.UTF-8 UTF-8
+fr_CA.UTF-8 UTF-8
+EOF
+
+  # refresh the locales from the (possibly) new config
+  # XXX: can this be made to run optionally?
+  #       if /etc/locale.gen hasn't changed there shouldn't be a need to do this afterall
+  #       this seems like the sort of thing a hook should handle https://wiki.archlinux.org/title/Pacman#Hooks
+  locale-gen
+}
+
+pre_remove() {
+  mv /etc/locale.gen.pacsave /etc/locale.gen || true
+  locale-gen
+}

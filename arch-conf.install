@@ -1,7 +1,16 @@
 post_install() {
-  # /etc/locale.gen is owned by glibc
-  # but it needs to be customized (https://wiki.archlinux.org/title/Installation_guide#Localization)
-  # so overwrite it procedurally instead.
+  # https://wiki.archlinux.org/title/Installation_guide#Time_zone
+  timedatectl set-ntp true # XXX should probably...wait until ntp actually syncs before running the next command?
+
+  # generate /etc/adjtime
+  # this can't be deployed because for the contents to be truthful,
+  # hwclock needs to also actually *sync* the system (i.e. NTP) and hardware clocks and write down when it did so.
+  hwclock --systohc
+
+
+  # https://wiki.archlinux.org/title/Installation_guide#Localization
+  # /etc/locale.gen is owned by glibc, but it needs to be customized
+  # so overwrite it by script instead.
   #
   # XXX Is there a better way to handle this?
   # Maybe with telling people to use `--overwrite /etc/locale.gen`?
@@ -21,6 +30,7 @@ EOF
 }
 
 pre_remove() {
+  # undo https://wiki.archlinux.org/title/Installation_guide#Localization
   mv /etc/locale.gen.pacsave /etc/locale.gen || true
   locale-gen
 }

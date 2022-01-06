@@ -1,0 +1,7 @@
+# set up multiple desktops
+[Desktops]
+Name_1=Main
+Name_2=Comms
+Name_3=Media
+Number=3
+Rows=1

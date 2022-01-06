@@ -4,13 +4,38 @@ This is my first attempt at trying to do configuration management via packages.
 
 `ansible`, `terraform`, `kubernetes`, all that junk is effective but overly complicated. Why add the complexity when OSes already come with a system for controlling what files and software are on your disk: its package manager?
 
+
 Here I'm doing this with [Arch's PKGBUILD format](https://wiki.archlinux.org/wiki/PKGBUILD). So, that means you have to be using Arch to use this particular set up.  The main novelty here is that
+
+This automates as many parts of https://wiki.archlinux.org/Installation_guide that it can, including the all important "suggestions"
+to actually install suites of useful software. In that sense this is something like [Manjaro](TODO), but without (yet) its own installer.
+It also includes my personal UI customization preferences. And it's copiously commented so that you can learn the pointers I've collected in my little dustpan over years on the internet.
+
 
 ## Prereqs
 
 You should be running ArchLinux.
 
-You will need to have `pacman` and `base-devel` installed.
+You will need to have `pacman` and `base-devel` installed, so:
+
+```
+pacman -S --noconfirm base base-devel
+```
+
+Also, you're gonna have to have `git` so add that:
+
+```
+pacman -S git
+```
+
+Then download this repo:
+
+```
+git clone https://github.com/kousu/arch-conf && cd arch-conf
+```
+
+(the rest assumes you're working inside of `arch-conf/`)
+
 
 ## Building
 
@@ -20,32 +45,10 @@ You need `-d` because .. reasons (TODO explain)
 
 ## Installation
 
-2. `makepkg -d && sudo pacman -U kousu-nigiri-*.pkg.tar.zst`
+2. `makepkg -d && sudo pacman -U kousu-device-nigiri-*.pkg.tar.zst`
 
 I'm going to look into what running my own repo looks like; maybe I can do it on Github Pages? That would be nice and easy.
 
-To make a nice clean system do:
-
-```
-pacman -Qe | sudo xargs pacman -D --asdeps && sudo pacman -D --asexplicit kousu-nigiri &&
-pacman -Qttdq | sudo xargs pacman -Rns --noconfirm
-```
-
-This should mean that the *only* files on the system are:
-
-- those in /home
-- those in /var
-- those that are implied by this package
-
-To verify this, [use one of the tips from archwiki](https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Identify_files_not_owned_by_any_package):
-
-```
-# find /etc /usr /opt | LC_ALL=C pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5-
-```
-
-or `pacreport --unowned-files`
-
-i.e. it should be as if you've done a fresh installation, every time.
 
 ## Updates
 
@@ -67,13 +70,132 @@ Then just install the updated package:
 
 ```
 makepkg -d && \
- sudo pacman -U kousu-nigiri-*.pkg.tar.zst && \
- (pacman -Qtdq | sudo pacman -Rcns) && \
- sudo pacman -Sc && \
+ sudo pacman -U kousu-device-nigiri-*.pkg.tar.zst && \
  sudo reboot
 ```
 
-(`pacman -Qtdq | ...` is to remove orphaned packages; it's the equivalent of `apt autoremove`)
+## Users
+
+Installing this package *does not* create a user, because I am not sure how to use the sysusers hook, because I decided to keep my dotfiles in /etc/skel so they could be shared between multiple accounts, and because there's no safe way to automate setting a password anyway so you might as well just do the adduser step separately too.
+
+You should do:
+
+```
+# adduser -G wheel,lp -m your-chosen-username
+# passwd your-chosen-username
+```
+
+`-m` will make sure to deploy the dotfiles from /etc/skel.
+
+The groups here are important! `wheel` means `sudo` rights; `lp` means Bluetooth rights (weirdly?).
+
+## Usage
+
+This system is a fairly plain KDE-based deal.
+
+Log in at the getty(1) prompt (the terminal prompt) with your user, then either use the terminal,
+or run [sx(1)](https://packages.archlinux.org/package/sx) to get into the GUI.
+
+
+## Cleaning
+
+My goal here is that your system's configuration recorded in `pacman -Qe` should be pretty minimal,
+and that the deployed system is at all times identical -- or close to identical -- to the system
+you would have if you erased and reinstalled from scratch.
+
+`pacman -Qe`, the list of software that was directly installed, should be rooted at `kousu-device-nigiri`,
+perhaps with a few extras for things from the AUR:
+
+```
+$ pacman -Qqe
+kousu-device-nigiri
+pikaur
+```
+
+To keep this list clean, you can run
+
+```
+pacman -Qqe | egrep -v 'kousu-.*' | pacman -D --asdeps -
+```
+
+`pacman -Qttd`, the list of [orphans](TODO), should be empty. Orphans can occur when you do `pacman -R` instead of `pacman -Rs` -- removing a top level package you installed, but leaving dependencies that came with it -- or when the dependency web changes during an update.
+This package installs a [pacman hook](https://wiki.archlinux.org/wiki/Pacman#Hooks) that will report orphans and remind you that to clean them up you ucan do:
+
+```
+pacman -Qttdq | sudo pacman -Rns --noconfirm -
+```
+
+The pacman cache is often one of the largest pieces on the system.
+
+A clean system should mean that the *only* files on the system are:
+
+- those that are implied by this package
+- those in /var
+- those in /home
+
+To verify that this is so, [use one of the tips from archwiki](https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Identify_files_not_owned_by_any_package):
+
+```
+# find /etc /usr /opt | LC_ALL=C pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5-
+```
+
+or maybe more accurately:
+
+```
+ls / | egrep -v 'home|var|run|proc|sys' | (cd /; xargs find) | LC_ALL=C pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5-
+```
+
+or `pacreport --unowned-files`
+
+This list should also come out empty. Meaning that you can do a 'user reset' by wiping (or renaming) `/home/$USER`, and a "factory reset" by wiping `/var`, and that those are in fact proper resets.
+
+
+TODO:
+
+* [ ] add a hook/cronjob that reminds you to/does run `pacman -Qqe | grep -v kousu | grep -v pikaur | pacman -D --asdeps` to keep the system config actually clean
+* [ ] add a hook/cronjob that reminds you to/does run `pacman -Sc`
+
+
+## AUR
+
+Dealing with [AUR](https://aur.archlinux.org) packages is tricky.
+
+If we depend on them directly then this package can't be installed on a fresh system,
+because it needs to have the build tools pre-installed (or, at least, something like pikaur).
+bootstrapping steps to get the build tools installed first.
+
+One option would be to bootstrap `pikaur` onto the system. This script will do that:
+
+```
+pacman -S python-commonmark pyalpm --noconfirm &&
+ curl -JLO https://aur.archlinux.org/cgit/aur.git/snapshot/pikaur.tar.gz &&
+ tar -zxvf pikaur.tar.gz &&
+ cd pikaur &&
+ makepkg &&
+ pacman -Rns python-commonmark &&
+ pacman --noconfirm -U pikaur*.pkg.tar.zst
+```
+
+and after that we can use `pikaur -P` in place of `makepkg`.
+
+For now, I think what I'm going to do is pull the AUR packages into a separate
+PKGBUILD, along with these bootstrapping instructions.
+Maybe I could even pull them into `post_install`? Check if `pikaur` is installed and if not, do this?
+
+
+## Dotfiles
+
+I've decided to keep dotfiles under /etc/skel/, since these are single-user systems, or at least
+systems that start single user and can be customized with these dotfiles as a starting point.
+
+Another option would be to use PKGBUILD's `sysusers` feature to actually create user accounts,
+and then fill their contents in. But I haven't explored that. I suspect it will be weird.
+
+But, doing it this way means dotfiles needs special handling during an update. This one-liner will update their contents:
+
+```
+(cd /etc/skel/; find -type f -exec echo cp --parents {} ~/ \;)
+```
 
 
 

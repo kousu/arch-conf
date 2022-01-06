@@ -5,3 +5,12 @@ Name_2=Comms
 Name_3=Media
 Number=3
 Rows=1
+
+# enable redshift, with a relatively deep red colour
+[NightColor]
+Active=true
+EveningBeginFixed=1830
+Mode=Times
+MorningBeginFixed=0530
+NightTemperature=2500
+TransitionTime=90

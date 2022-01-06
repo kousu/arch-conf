@@ -175,11 +175,26 @@ package() {
   chmod 600 "${pkgdir}"/etc/sudoers.d/wheel
 }
 
-# Bugs:
-# * [ ] src/etc/locale.gen conflicts with glibc, which packages the same file
-# * [ ] add a hook to run locale-gen(8) when src/etc/locale.gen is updated.
-#   I think I've seen other packages trigger it?
-
 # and then i want to also figure out how/where to set KDE system defaults
 # with GTK I know it's 'dconf' or 'gconf' (why are there two? who knows)
 # and Firefox defaults too; plus extra Firefox extensions
+
+
+# To control KDE settings:
+# - add a file to src/etc/skel/.config/kdedefaults/
+#   you can figure out what you need to edit by making a change in the GUI, then examining ~/.config/{kdeglobals,kwinrc}
+#   whatever settings you see, copy them to the corresponding file *under* ~/.config/kdedefaults/.
+# To control GTK/GNOME settings:
+# - ...
+# To control Firefox settings:
+# - ...
+# To control xsession settings:
+# - if you're using sx, or xinit, or ...whazzit ~/.xsession
+#
+# In general, if you can't figure it out how to write a config file for a given app, you can do:
+#   1. cp -r ~/.config A
+#   1. make the change in the app's settings/GUI
+#   2. cp -r ~/.config B
+#   3. diff -ru A/ B/
+# This should identify the change.
+# Some apps don't use ~/.config, but they're getting rarer.

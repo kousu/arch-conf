@@ -162,6 +162,7 @@ depends=(
 
   # Things I would like from the AUR:
   # https://aur.archlinux.org/packages/apostrophe - a competitor to ghostwriter, in GTK instead of KDE
+  # https://aur.archlinux.org/packages/dtach - it's better than tmux
 )
 
 # `source` has some basic support for handling local files

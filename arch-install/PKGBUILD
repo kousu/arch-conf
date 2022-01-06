@@ -1,0 +1,16 @@
+# Maintainer: kousu <nick@kousu.ca>
+
+pkgname=kousu-arch-install
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="A script to install Arch unattended, with defaults the way I like them like an encrypted root"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+license=('MIT')
+depends=('arch-install-scripts')
+source=("arch-install")
+sha256sums=('0664084a2668ed2d6462c8739680d7897c764c7b372a0fccc8cf62f97b08739d')
+
+package() {
+  install -Dm 755 arch-install -t "${pkgdir}"/usr/bin
+}

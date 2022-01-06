@@ -90,9 +90,10 @@ depends=(
   python
 
   # TUI
-  vi
+  vi     # editor
   #vim
-  htop
+  htop   # resource/process monitor
+  ranger # curses file browser
 
   # GUI
   #xorg-xinit # weirdly you can install X without xorg-xinit on Arch; I guess because lightdm/gdm/etc can serve its purpose?

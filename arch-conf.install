@@ -27,6 +27,20 @@ EOF
   #       if /etc/locale.gen hasn't changed there shouldn't be a need to do this afterall
   #       this seems like the sort of thing a hook should handle https://wiki.archlinux.org/title/Pacman#Hooks
   locale-gen
+
+  # TODO: I should probably...pull my etckeeper setup out to a separate package
+  # debian's etckeeper package initializes fully and correctly at install time
+  # why doesn't arch's? is it a bug in arch's version or is it on purpose?
+  if [ -f /etc/etckeeper/etckeeper.conf ]; then
+    if ! egrep -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
+      # this is like lineinfile: in ansible
+      # because it doesn't look like this thing contains a .d directory for its config I can use
+      (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf
+    fi
+    etckeeper init # assumption: this is idempotent
+    etckeeper vcs config user.name root  # etckeeper gets mad without this.
+  fi
+
 }
 
 pre_remove() {

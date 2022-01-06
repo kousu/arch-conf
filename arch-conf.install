@@ -31,6 +31,12 @@ EOF
   # TODO: I should probably...pull my etckeeper setup out to a separate package
   # debian's etckeeper package initializes fully and correctly at install time
   # why doesn't arch's? is it a bug in arch's version or is it on purpose?
+  # one immediate problem with having this here: etckeeper assumes it can read /etc/hostname
+  # but this package *creates* /etc/hostname, which means it will get jammed: you can't uninstall kousu-device-nigiri
+  # because removing it removes /etc/hostname, etckeeper will fail, then AVOID_COMMIT_BEFORE_INSTALL wil ltrigger
+  # when you try to reinstall it, but there's no way to `etckeeper commit` becuase /etc/hostname is gone!
+  # splitting things up should make this easier to deal with
+  # a workaround: install inetutils, which brings /usr/bin/hostname; etckeeper will try that first before /etc/hostname
   if [ -f /etc/etckeeper/etckeeper.conf ]; then
     if ! egrep -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
       # this is like lineinfile: in ansible

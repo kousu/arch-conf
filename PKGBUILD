@@ -119,6 +119,9 @@ depends=(
   khotkeys   # KDE plugin to configure/listen for custom shortcut keys
   kde-applications-meta
 
+  discover       # GUI for pacman (cool!)
+  packagekit-qt5
+
   # for a tinier DE:
   # i3wm
   # arandr

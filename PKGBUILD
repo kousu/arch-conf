@@ -4,7 +4,7 @@
 # 3. makepkg --nodeps # because you won't have the dependencies yet and makepkg assumes you need them to build (even if they're only runtime dependencies; which, in this case, they are)
 # 4. pacman -U kousu-nigiri*.pkg*
 
-pkgname=kousu-nigiri
+pkgname=kousu-device-nigiri
 pkgver=v0.1.0
 pkgrel=0
 pkgdesc="Configuration management for kousu's \"nigiri\" thumddrive system"

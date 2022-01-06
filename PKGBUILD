@@ -26,6 +26,7 @@ depends=(
   man-db # the 'man' command
   man-pages # the core linux man pages (kernel, libc, file formats)
   reflector # for updating /etc/pacman.d/mirrorlist
+  etckeeper # for tracking /etc/'s changes; (this is redundant with this package itself; but it's a useful redundancy, that helps me figure out what to change)
   pacman-contrib # pactree, pacdiff, etc
 
   # hardware

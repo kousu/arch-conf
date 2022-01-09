@@ -37,14 +37,18 @@ EOF
   # when you try to reinstall it, but there's no way to `etckeeper commit` becuase /etc/hostname is gone!
   # splitting things up should make this easier to deal with
   # a workaround: install inetutils, which brings /usr/bin/hostname; etckeeper will try that first before /etc/hostname
+
   if [ -f /etc/etckeeper/etckeeper.conf ]; then
-    if ! egrep -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
-      # this is like lineinfile: in ansible
-      # because it doesn't look like this thing contains a .d directory for its config I can use
-      (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf
+    if [ ! -d /etc/.git ]; then  # make this idempotent
+      if ! egrep -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
+        # this is like lineinfile: in ansible
+        # because it doesn't look like this thing contains a .d directory for its config I can use
+        (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf
+      fi
+      etckeeper init # assumption: this is idempotent
+      etckeeper vcs config user.name root  # etckeeper gets mad without this.
+      echo '.updated' >> /etc/.gitignore   # don't track systemd-update-done(8)'s file; it gets bumped on each boot automatically which is kind of counterproductive as far as etckeeper is concerned
     fi
-    etckeeper init # assumption: this is idempotent
-    etckeeper vcs config user.name root  # etckeeper gets mad without this.
   fi
 
 }

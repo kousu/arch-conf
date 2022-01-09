@@ -81,7 +81,7 @@ Installing this package *does not* create a user, because I am not sure how to u
 You should do:
 
 ```
-# adduser -G wheel,lp -m your-chosen-username
+# adduser -G wheel,lp,network -m your-chosen-username
 # passwd your-chosen-username
 ```
 

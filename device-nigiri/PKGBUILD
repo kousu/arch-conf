@@ -49,6 +49,8 @@ depends=(
   bluez-utils  # also pulls in the rest of bluetooth # XXX do I need to add `systemctl enable --now bluetooth` somewhere?
   pulseaudio-bluetooth # pairing some (most?) headphones is impossible without this: https://bbs.archlinux.org/viewtopic.php?id=270465&p=2
 
+  openconnect  # VPN
+
   # CLI
   bash-completion  # lets apps customize tab completion; it's handy for pass(1) and kubectl(1) and some others, but intereferes and is annoying when apps provide incomplete tab completion because it *disables* the default behaviour of files.
   sudo
@@ -180,7 +182,7 @@ package() {
   cp -rp * "${pkgdir}"
 
   chmod 750 "${pkgdir}"/etc/sudoers.d
-  chmod 600 "${pkgdir}"/etc/sudoers.d/wheel
+  chmod 600 "${pkgdir}"/etc/sudoers.d/*
 }
 
 # and then i want to also figure out how/where to set KDE system defaults

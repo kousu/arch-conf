@@ -1,0 +1,5 @@
+# save screenshots to /tmp, so they don't clutter up my junk
+# if I want to keep them I'll upload them somewhere or copy them to my journal
+[Save]
+defaultSaveLocation=file:///tmp
+

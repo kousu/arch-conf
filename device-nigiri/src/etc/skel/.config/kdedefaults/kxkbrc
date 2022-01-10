@@ -1,0 +1,4 @@
+# compose key: enables typing accents via keyboard chords
+# https://en.wikipedia.org/wiki/Compose_key
+[Layout]
+Options=compose:rctrl

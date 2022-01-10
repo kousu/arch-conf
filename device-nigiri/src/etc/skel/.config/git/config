@@ -3,3 +3,11 @@
 [user]
 	name = kousu
 	email = nick@kousu.ca
+
+[push]
+	# automatically push to the branch with the matching name i.e. what you think should happen
+	default = current
+
+[merge]
+	# *force* linear history when pulling
+	ff = only

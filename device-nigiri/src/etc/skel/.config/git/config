@@ -1,4 +1,5 @@
 [init]
+	# or use 'main', 'trunk', etc
 	defaultBranch = master
 [user]
 	name = kousu
@@ -11,3 +12,7 @@
 [merge]
 	# *force* linear history when pulling
 	ff = only
+
+[diff "gpg"]
+	# make pass git log -p decrypt and show diffs of the protected content
+	textconv = gpg -d --no-tty

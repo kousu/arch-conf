@@ -60,6 +60,7 @@ depends=(
   pass-otp
   youtube-dl
   rsync
+  sshfs
 
   #fio   # speed testing
 

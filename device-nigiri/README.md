@@ -31,10 +31,10 @@ pacman -S git
 Then download this repo:
 
 ```
-git clone https://github.com/kousu/arch-conf && cd arch-conf
+git clone https://github.com/kousu/arch-conf && cd arch-conf/device-nigiri
 ```
 
-(the rest assumes you're working inside of `arch-conf/`)
+(the rest assumes you're working inside of this folder)
 
 
 ## Building

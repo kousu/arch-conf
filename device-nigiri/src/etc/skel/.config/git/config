@@ -10,7 +10,7 @@
 	default = current
 
 [merge]
-	# *force* linear history when pulling
+	# *force* linear history when merging
 	ff = only
 
 [diff "gpg"]

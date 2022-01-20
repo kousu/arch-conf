@@ -1,0 +1,10 @@
+#!/bin/sh
+# clip: more intuitive interface to the clipboard:
+# - Put something onto the clipbaord: `echo something | clip`
+# - Get something out: `clip`, `clip | othercommand`
+# 
+if tty -s; then
+  xclip -selection clipboard -o
+else
+  xclip -selection clipboard -i
+fi

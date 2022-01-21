@@ -44,6 +44,9 @@ depends=(
             # basically you need to edit your kernel command line to *prepend* initrd=/boot/amd-ucode.img,/boot/intel-ucode.img,
             # and making that edit by script is tricky. and also in the early boot that path is not always at /boot? ai yi yi
 
+  net-tools # netstat, ifconfig
+  geoip
+  geoip-database-extra
   iwd # wifi
 
   bluez-utils  # also pulls in the rest of bluetooth # XXX do I need to add `systemctl enable --now bluetooth` somewhere?

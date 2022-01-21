@@ -52,6 +52,16 @@ EOF
     fi
   fi
 
+
+  # is there a preferred way to start daemons in Arch?
+  # most Arch packages *don't* autostart their daemons
+  # but I want them started as part of life
+  systemctl enable --now iwd
+  systemctl enable --now sshd
+  systemctl enable --now bluetooth
+  systemctl enable --now packagekit
+  systemctl enable --now polkit  # ??
+
 }
 
 pre_remove() {

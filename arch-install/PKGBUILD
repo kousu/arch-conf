@@ -7,9 +7,12 @@ pkgdesc="A script to install Arch unattended, with dual MBR/EFI booting and full
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 license=('MIT')
-depends=('arch-install-scripts')
+depends=(
+  arch-install-scripts
+  reflector
+  )
 source=("arch-install")
-sha256sums=('0664084a2668ed2d6462c8739680d7897c764c7b372a0fccc8cf62f97b08739d')
+sha256sums=('2a7391e86be4c170de5fcc644f8f270a4b64eb218b1ef59da6e301da95789b4d')
 
 package() {
   install -Dm 755 arch-install -t "${pkgdir}"/usr/bin

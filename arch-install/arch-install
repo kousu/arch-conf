@@ -1,3 +1,204 @@
 #!/bin/sh
+#
+# Install archlinux
+# must be *run* from an existing archlinux system.
+# You can build a boot disk by downloading the standard installer https://archlinux.org/download/
+# and then copying this script to it (via wget, curl, or a spare thumbdrive)
+# TODO: or by unpacking + repacking the install image.
+#
+# Or you can use any existing fully-installed Arch system.
 
-echo Hallo
+set -e -o pipefail
+
+set -x
+
+usage() {
+  echo "usage: $0: /dev/disk"
+}
+
+if [ -z "$1" ]; then
+  usage
+  exit 1
+fi
+
+TARGET_DISK="$1"; shift
+
+if [ ! \( -b "$TARGET_DISK" -o -f "$TARGET_DISK" \) ]; then
+  echo "error: disk $TARGET_DISK must be a block device or a disk image (a regular file)"
+  exit 1
+fi
+
+set -u  # NB: set *after* parsing args to make it easier
+
+PARTITION_SCHEME=mbr
+# question: can I boot an MBR bootloader on a GPT disk? maybe? GPT disks have a 'protective' MBR, maybe I can put syslinux in there
+
+#
+# https://wiki.archlinux.org/title/Installation_guide
+
+
+# https://wiki.archlinux.org/title/Installation_guide#Partition_the_disks
+#
+# An assumption is that we only have one disk -- you can always format more disks after installation.
+# Exotic setups involving having your OS on LVM/RAID are out of scope.
+
+# TODO:
+# - [ ] support detecting file type -- use a loop mount if a regular file
+# - [ ] adapt partition layout to the given disk size / according
+# - [ ] make swap optional
+# - [ ] encrypt the disk
+#   - [ ] make encryption optional
+#   - [ ] make integrity optional / add warning about how slow it is to wipe the entire disk
+# - [ ] make swap use a stable encryption key so that hibernation works
+# - [ ] somehow take device-nigiri as an option to install
+# - [ ] take the hostname on the command line
+#   - does the system work without /etc/hostname and /etc/localtime and /etc/locale.conf? can i skip them?
+#  the entire thing should be unattended once you're past: connect to the wifi, tell it what packages to bootstrap with?
+#  maybe i should 
+# - [ ] thumbdrive 'shared drive' mode (incompatible with GPT mode??)
+# - [ ] GPT mode
+# - [ ] disable MBR bootloader
+# - [ ] disable EFI bootloader
+#   the bootloaders are so damn finicky
+# - [ ] when in MBR mode: only use the extended partition if given more than 4 partitions
+# - [ ] 
+
+( # this subshell for the benefit of the possible trap EXIT
+
+if [ -f "$TARGET_DISK" ]; then
+  TARGET_DISK="$(losetup --show -f "$TARGET_DISK")"
+  trap 'losetup -d "$TARGET_DISK"' EXIT # 'EXIT' is a XXX bashism
+  # also this means only one cleanup is possible
+fi
+
+sfdisk "$TARGET_DISK" <<EOF
+label: dos
+
+# make a single extended partition to cover the whole disk
+# an extended partition covers everything.
+type=extended
+
+# thumbdrive mode: share partition, which should be readable by most systems
+size=8G, type=c
+
+# ESP and also /boot
+# note: /boot doesn't *have* to be a separate partition: syslinux in MBR mode and grub are both capable of finding and booting directly from /
+#  but in that case you can't make / encrypted
+size=1G, type=uefi, name="/boot", bootable
+
+# type=linux is the default for the rest
+size=31G, name="/"
+size=2G,  type=swap, name="swap"
+name="/home"
+# last partition => takes the rest of the space
+EOF
+
+echo $?
+
+losetup -l
+
+ls /dev/loop*
+partprobe "$TARGET_DISK" # possibly redundant? sfdisk should do this, but doesn't in some cases?
+ls /dev/loop*
+
+# maybe I can just hardcode the partition names for the moment
+
+# but there's the rub: I don't know how sfdisk will lay out the partitions...
+
+
+# https://wiki.archlinux.org/title/Installation_guide#Format_the_partitions
+
+mkfs.msdos -n "partage" "$TARGET_DISK"p5
+mkfs.msdos -n "EFI" "$TARGET_DISK"p6
+mkfs.ext4 -L "/" "$TARGET_DISK"p7
+mkswap "$TARGET_DISK"p8
+mkfs.ext4 -L "/home" "$TARGET_DISK"p9
+
+# TODO:
+#cryptsetup "$TARGET_DISK"
+#mkfs.dos -n "partage" "$TARGET_DISK"p2
+#mkfs.dos -n "partage" "$TARGET_DISK"p2
+#mkfs.dos -n "partage" "$TARGET_DISK"p2
+#mkfs.dos -n "partage" "$TARGET_DISK"p2
+
+
+
+
+# okay whatever let's just see how far i can go without root
+# and then decide if maybe that was dumb as fuck
+# I need to find what sector each partition is on right?
+
+
+(
+swapon "$TARGET_DISK"p8
+trap 'swapoff "$TARGET_DISK"p8' EXIT
+
+(
+# https://wiki.archlinux.org/title/Installation_guide#Mount_the_file_systems
+CHROOT="$(mktemp -d -t "arch-root-XXXXXXXXX")" # the installation guide says to use /mnt, but since this might be run from a working system, make an isolated mountpoint
+trap 'umount -v -R "$CHROOT"; rmdir -v "$CHROOT"' EXIT
+
+# from this point on things must be done as root...
+
+mount "$TARGET_DISK"p7 "$CHROOT"
+# careful here: the order of mounts needs to be aware of what filesystems nest inside what others
+# because we need to mkdir the mountpoints on each point properly...
+mkdir -p "$CHROOT""/home" # like, we wanna make sure this is owned by root
+mount "$TARGET_DISK"p9 "$CHROOT""/home" # this too...
+
+# https://wiki.archlinux.org/title/Installation_guide#Installation
+
+# https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet
+# Connecting to the net can't be automated -- easily
+# TODO: scan for ethernet portsBecause connecting to the net 
+if ! ping -c 3 archlinux.org >/dev/null; then
+  echo "error: network failure. Are you online? Follow https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet" >&2
+  exit 1
+fi
+
+# ^ maybe this can...wait? until we get down to actually installing the system? idk
+#
+
+# https://wiki.archlinux.org/title/Installation_guide#Update_the_system_clock
+# set the time so that https:// mirrors will work.
+# if this script is *not* run as root, skip; the clock is _probably_ right,
+# especially if running as non-root which implies we're being run from a standard Arch system on athis step
+if [ "$EUID" -eq 0 ]; then
+  timedatectl set-ntp true
+fi
+
+pacstrap -c -G -M "$CHROOT" base
+# -G == don't copy installer's archlinux-keyring
+# -M == 'don't copy mirrorlist'; instead, bootstrap it using reflector:
+# these are to prevent leakage from the installer into the installed system.
+# (the installed system can/should use reflector periodically to adapt its mirrors; especially, it should use --country)
+#reflector --score 10 -f 3 --save "$CHROOT"/etc/pacman.d/mirrorlist
+reflector --score 10 --save "$CHROOT"/etc/pacman.d/mirrorlist
+
+# https://wiki.archlinux.org/title/Installation_guide#Fstab
+
+# This is where it gets especially fiddly
+# because I additionally need to setup /etc/crypttab
+genfstab -U "$CHROOT" >> "$CHROOT"/etc/fstab
+
+# https://wiki.archlinux.org/title/Installation_guide#Boot_loader
+
+# the other parts of https://wiki.archlinux.org/title/Installation_guide#Configure_the_system
+# are covered by my arch-conf package
+
+## and then there's the tricky credentials part:
+# - the root passwd
+# - making a user account
+# - granting that user sudo / other relevant groups / rights
+
+echo 'root:hackme' | arch-chroot "$CHROOT" chpasswd
+
+# https://wiki.archlinux.org/title/Installation_guide#Reboot
+
+) # -> trap 'umount -R "$CHROOT"' EXIT
+
+) # -> trap 'swapoff "$TARGET_DISK"p8' EXIT
+
+) # -> trap 'losetup -d ...' EXIT 
+
+

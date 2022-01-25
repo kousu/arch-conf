@@ -5,7 +5,7 @@
 # 4. pacman -U kousu-nigiri*.pkg*
 
 pkgname=kousu-device-nigiri
-pkgver=v0.1.0
+pkgver=v0.1.1
 pkgrel=0
 pkgdesc="Configuration management for kousu's \"nigiri\" thumddrive system"
 arch=('any')

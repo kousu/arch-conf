@@ -45,6 +45,9 @@ depends=(
             # and making that edit by script is tricky. and also in the early boot that path is not always at /boot? ai yi yi
 
   net-tools # netstat, ifconfig
+  bind      # dig
+  whois
+  tcpdump
   geoip
   geoip-database-extra
   iwd # wifi
@@ -113,6 +116,9 @@ depends=(
   noto-fonts-emoji # Google's Android emoji fonts, with the colourful faces and whatnot
   # lightdm ?
   xclip
+
+  ## GUI :: Hardware
+  wireshark-qt
 
   transmission-qt
   #transmission-gtk # more traditional? But I'm trying out a KDE-based system...

@@ -2,9 +2,26 @@
 # clip: more intuitive interface to the clipboard:
 # - Put something onto the clipbaord: `echo something | clip`
 # - Get something out: `clip`, `clip | othercommand`
-# 
-if tty -s; then
-  xclip -selection clipboard -o
-else
+# - Copy a file: `clip filename.txt`
+# - Or a bunch of them: `clip file1 file2 file3`
+# - Mix a pipeline and a bunch of files:
+#   (echo '# Title'; echo '------------'; cat file1; pipeline; echo; cat file2 file3) | clip
+
+if [ -n "$1" ] && ! tty -s; then
+  echo "error: $0 cannot read from both a pipe and file(s) at the same time." 2>&1
+  # I could make it work
+  # e.g. I could detect this case and insert /dev/stdin in front of "$@"
+  # but there's a lot of questions:
+  # does stdin always go before the files? in the middle? at the end?
+  # if you need to mix a pipeline and files... just put the files in the pipeline:
+  # (cat file1; pipeline; cat file2 file3) | clip
+  exit 1
+elif [ -n "$1" ]
+  # clip file1 [file2 ...]
+  xclip -selection clipboard -i "$@"
+elif ! tty -s; then
+  # pipeline | clip
   xclip -selection clipboard -i
+else
+  xclip -selection clipboard -o
 fi

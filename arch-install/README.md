@@ -107,3 +107,8 @@ the hard part that i want to script is:
 - running luksFormat
 - setting up cryptswap (tricky!)
   - should it be... the same key all the time? a key generated at boot -- but not when de-hibernating)?  /dev/urandom at boot (so it changes on each boot
+
+
+# Related Work
+
+* @NovaViper's https://gitlab.com/NovaViper/aalis/ (https://bbs.archlinux.org/viewtopic.php?id=273531)

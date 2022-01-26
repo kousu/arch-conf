@@ -80,39 +80,49 @@ type=extended
 
 # thumbdrive mode: share partition, which should be readable by most systems
 size=8G, type=c
+#size=8M, type=c
 
 # ESP and also /boot
 # note: /boot doesn't *have* to be a separate partition: syslinux in MBR mode and grub are both capable of finding and booting directly from /
 #  but in that case you can't make / encrypted
 size=1G, type=uefi, name="/boot", bootable
+#size=256M, type=uefi, name="/boot", bootable
 
 # type=linux is the default for the rest
 size=31G, name="/"
+#size=10G, name="/"
 size=2G,  type=swap, name="swap"
 name="/home"
 # last partition => takes the rest of the space
 EOF
 
-echo $?
+echo $?  # DEBUG
 
-losetup -l
+losetup -l  # DEBUG
 
-ls /dev/loop*
+ls /dev/loop*  #DEBUG
 partprobe "$TARGET_DISK" # possibly redundant? sfdisk should do this, but doesn't in some cases?
-ls /dev/loop*
+ls /dev/loop*  # DEBUG
 
 # maybe I can just hardcode the partition names for the moment
 
 # but there's the rub: I don't know how sfdisk will lay out the partitions...
+# well actually I do: everything after the extended partition starts numbering at 5
 
 
 # https://wiki.archlinux.org/title/Installation_guide#Format_the_partitions
 
+# goddammit fucking things
+
 mkfs.msdos -n "partage" "$TARGET_DISK"p5
-mkfs.msdos -n "EFI" "$TARGET_DISK"p6
+#mkfs.msdos -n "partage" "$TARGET_DISK"5
+mkfs.msdos -n "boot" "$TARGET_DISK"p6 # should be -n /boot but / isn't allowed on FAT
+#mkfs.msdos -n "boot" "$TARGET_DISK"6 # should be -n /boot but / isn't allowed on FAT
 mkfs.ext4 -L "/" "$TARGET_DISK"p7
+#mkfs.ext4 -L "/" "$TARGET_DISK"7
 mkswap "$TARGET_DISK"p8
 mkfs.ext4 -L "/home" "$TARGET_DISK"p9
+#mkfs.ext4 -L "/home" "$TARGET_DISK"8
 
 # TODO:
 #cryptsetup "$TARGET_DISK"
@@ -128,8 +138,17 @@ mkfs.ext4 -L "/home" "$TARGET_DISK"p9
 # and then decide if maybe that was dumb as fuck
 # I need to find what sector each partition is on right?
 
+# to work out:
+# - [ ] loop devices get 'p' injected to their partitiondevices (/dev/loop0p2) but sd devices don't...
+# - [ ] get cryptsetup involved
+# - [ ] make grub/syslinux a flag
+# - [ ] make mbr/efi a flag (or, each a separate option)
 
 (
+#OUTER_SWAPS=$(genfstab -U / | awk '$3 == "swap"')
+#OUTER_SWAPS=$(genfstab -U / | grep swap) # XXX this will catch any mountpoints named 'swap'
+OUTER_SWAPS=$(genfstab -U /)
+
 swapon "$TARGET_DISK"p8
 trap 'swapoff "$TARGET_DISK"p8' EXIT
 
@@ -141,10 +160,16 @@ trap 'umount -v -R "$CHROOT"; rmdir -v "$CHROOT"' EXIT
 # from this point on things must be done as root...
 
 mount "$TARGET_DISK"p7 "$CHROOT"
+#mount "$TARGET_DISK"7 "$CHROOT"
 # careful here: the order of mounts needs to be aware of what filesystems nest inside what others
 # because we need to mkdir the mountpoints on each point properly...
 mkdir -p "$CHROOT""/home" # like, we wanna make sure this is owned by root
 mount "$TARGET_DISK"p9 "$CHROOT""/home" # this too...
+#mount "$TARGET_DISK"9 "$CHROOT""/home" # this too...
+
+mkdir -p "$CHROOT""/boot"
+mount "$TARGET_DISK"p6 "$CHROOT""/boot"
+#mount "$TARGET_DISK"6 "$CHROOT""/boot"
 
 # https://wiki.archlinux.org/title/Installation_guide#Installation
 
@@ -167,7 +192,22 @@ if [ "$EUID" -eq 0 ]; then
   timedatectl set-ntp true
 fi
 
-pacstrap -c -G -M "$CHROOT" base
+pacstrap -c -G -M "$CHROOT" base linux linux-firmware
+pacstrap -c -G -M "$CHROOT" syslinux
+#pacstrap -c -G -M "$CHROOT" grub
+pacstrap -c -G -M "$CHROOT" intel-ucode amd-ucode # microcode updates: https://wiki.archlinux.org/title/Microcode
+pacstrap -c -G -M "$CHROOT" sudo # XXX this should really be handled by..the..other..thing.
+
+## 
+pacstrap -c -G -M "$CHROOT" vi iwd iproute2 # DEBUG
+arch-chroot "$CHROOT" tee /etc/systemd/network/wired.network <<EOF
+[Match]
+Name=*
+
+[Network]
+DHCP=yes
+EOF
+arch-chroot "$CHROOT" systemctl enable systemd-networkd systemd-resolved iwd
 # -G == don't copy installer's archlinux-keyring
 # -M == 'don't copy mirrorlist'; instead, bootstrap it using reflector:
 # these are to prevent leakage from the installer into the installed system.
@@ -179,9 +219,56 @@ reflector --score 10 --save "$CHROOT"/etc/pacman.d/mirrorlist
 
 # This is where it gets especially fiddly
 # because I additionally need to setup /etc/crypttab
-genfstab -U "$CHROOT" >> "$CHROOT"/etc/fstab
+# NB: uses -U so mountpoints are found by UUID, which should make them insensitive to be
+
+# workaround: genfstab will include swap *from the outer system*
+# this isn't an issue if using the default Arch install image, because that has no swap
+# but just in case: figure out what swap is from the outer system
+#  `grep -vxF -f` does set subtraction and is a wild command courtesy of https://catonmat.net/set-operations-in-unix-shell
+
+genfstab -U "$CHROOT" | grep -vxF -f <(echo "$OUTER_SWAPS") >> "$CHROOT"/etc/fstab
+
 
 # https://wiki.archlinux.org/title/Installation_guide#Boot_loader
+
+# MBR: https://wiki.archlinux.org/title/Syslinux#Automatic_install
+arch-chroot "$CHROOT" syslinux-install_update -i -a -m
+#arch-chroot "$CHROOT" grub-install --target=i386-pc "$TARGET_DISK"
+
+# EFI: https://wiki.archlinux.org/title/Syslinux#Installation_on_UEFI
+# $ESP/efi/boot/bootx64.efi is a well known path that most EFI systems
+# caveats:
+#  - some systems have 32 bit EFIs; they need to start from $ESP/efi/boot/bootx32.efi and to load the binaries from
+#     /usr/lib/syslinux/efi32/ (and it's not just syslinux.efi in there!)
+#    this will not work at all for 32 bit EFI hardware
+#    notably: 2007 macbooks are like this, and some
+arch-chroot "$CHROOT" mkdir -p /boot/efi/boot # this is a Well Known Path; if you use any other path, you need to use efibootmgr to tell the firmware about it, and then the disk will not be booatable on other hardware
+arch-chroot "$CHROOT" cp -r /usr/lib/syslinux/efi64/* /boot/efi/boot
+arch-chroot "$CHROOT" mv /boot/efi/boot/{syslinux,bootx64}.efi # use the Well Known Path
+
+#arch-chroot "$CHROOT" grub-install --target=x86_64-efi --efi-directory=/boot/ --bootloader-id=GRUB --removable
+#arch-chroot "$CHROOT" grub-install --target=i386-efi --efi-directory=/boot/ --bootloader-id=GRUB --removable
+#arch-chroot "$CHROOT" grub-mkconfig -o /boot/grub/grub.cfg
+
+# now the really tricky part: setting up the kernel arguments
+# syslinux installs with root=/dev/sda3 as a default; replace with with the UUID of the real root for portability
+# get the root disk so we can tell the bootloader about it
+ROOT_UUID="$(genfstab -U "$CHROOT" | awk '$2 == "/" { print $1 }')"
+# -> this could also be extracted with lsblk and findmnt -- that's what genfstab uses internally -- but this is shorter and guaranteed to match fstab
+arch-chroot "$CHROOT" sed -i 's/root=[^ ]\+/root='"$ROOT_UUID"'/' /boot/syslinux/syslinux.cfg
+
+#read -p "check your goddamn work in $CHROOT"
+# https://wiki.archlinux.org/title/Microcode#Early_loading ( optional - without this the system *will still boot* and *will still use microcode updates*, it's just that the boot process itself won't. This ..shouldn't matter, unless you have some really glitchy and broken system.)
+# also, if these packages aren't installed..then...just...nothing happens? I think?
+arch-chroot "$CHROOT" sed -i 's|INITRD |INITRD ../amd-ucode.img,../intel-ucode.img,|' /boot/syslinux/syslinux.cfg
+
+# MBR .cfg -> EFI .cfg (they should be almost identical)
+arch-chroot "$CHROOT" cp /boot/{syslinux,efi/boot}/syslinux.cfg
+
+# except the paths are slightly different:
+# the EFI is one level deeper than syslinux's usual default
+arch-chroot "$CHROOT" sed -i 's|../|../../|g' /boot/efi/boot/syslinux.cfg
+
 
 # the other parts of https://wiki.archlinux.org/title/Installation_guide#Configure_the_system
 # are covered by my arch-conf package
@@ -191,7 +278,15 @@ genfstab -U "$CHROOT" >> "$CHROOT"/etc/fstab
 # - making a user account
 # - granting that user sudo / other relevant groups / rights
 
-echo 'root:hackme' | arch-chroot "$CHROOT" chpasswd
+# To log in: just type 'root' but then you're immediately forced to set a password.
+arch-chroot "$CHROOT" passwd -de root
+
+if [ -n "$SUDO_USER" ]; then
+  # add an admin account, with the same name as the calling user
+  # (this is kind of janky)
+  arch-chroot "$CHROOT" useradd -m -G wheel,disk,network,lp $SUDO_USER
+  arch-chroot "$CHROOT" passwd -de $SUDO_USER
+fi
 
 # https://wiki.archlinux.org/title/Installation_guide#Reboot
 
@@ -200,5 +295,3 @@ echo 'root:hackme' | arch-chroot "$CHROOT" chpasswd
 ) # -> trap 'swapoff "$TARGET_DISK"p8' EXIT
 
 ) # -> trap 'losetup -d ...' EXIT 
-
-

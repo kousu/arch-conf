@@ -57,6 +57,26 @@ sudo partprobe /dev/loop*
 to get `/dev/loop0p1`, `/dev/loop0p2`, .. to show up.
 To test, you need losetup and qemu and 
 
+[kousu@nigiri arch-install]$ sudo pacman -S --noconfirm qemu 
+[kousu@nigiri arch-install]$ qemu-system-x86_64 --enable-kvm -m 2G -M q35 -hda /tmp/arch2.img 
+
+Test UEFI booting:
+
+( from https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Plain_QEMU_without_libvirt ; maybe there's better docs ?)
+The key thing is 
+
+[kousu@nigiri arch-install]$ sudo pacman -S --noconfirm qemu edk2-ovmf
+[kousu@nigiri arch-install]$ sudo qemu-system-x86_64 --enable-kvm -M q35 -m 2G -bios /usr/share/edk2-ovmf/x64/OVMF_CODE.fd -hda /tmp/arch2.img 
+
+# actually no you have to do it this way; for some reason -bios will *boot* into a uefi environment but it won't boot syslinux or grub from there
+cp /usr/share/edk2-ovmf/x64/OVMF_VARS.fd /tmp/MY_VARS
+[kousu@nigiri arch-install]$ qemu-system-x86_64 --enable-kvm -M q35 -m 2G -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_CODE.fd -drive if=pflash,format=raw,file=/tmp/MY_VARS.fd -hda /tmp/arch.img
+
+or
+[kousu@nigiri arch-install]$ qemu-system-x86_64 --enable-kvm -M q35 -m 2G -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_CODE.fd -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_VARS.fd -hda /tmp/arch.img
+
+
+-M q35 is to use a modern system, where -hda implies a *SATA* disk; the default, -M pc, implies an IDE disk, and it seems like Arch doesn't even ship drivers for IDE disks anymore??
 
 
 ----------

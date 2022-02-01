@@ -45,6 +45,7 @@ depends=(
             # and making that edit by script is tricky. and also in the early boot that path is not always at /boot? ai yi yi
 
   iwd # wifi
+  sysstat   # iostat, some other things..
   net-tools # netstat, ifconfig
   openconnect  # VPN
 

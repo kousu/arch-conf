@@ -268,7 +268,11 @@ arch-chroot "$CHROOT" cp /boot/{syslinux,efi/boot}/syslinux.cfg
 # except the paths are slightly different:
 # the EFI is one level deeper than syslinux's usual default
 arch-chroot "$CHROOT" sed -i 's|../|../../|g' /boot/efi/boot/syslinux.cfg
-
+# make all this part into a subroutine
+# and also...can I adjust it so it *detects* where boot is and installs there?
+# maybe the rule can be: if it's an MBR disk, install an MBR
+# if there's a ESP partition, install there (check the partition type..with..sfdisk?)
+# these cases *can* overlap: you can have an MBR disk with an EFI partition. But you can't have a GPT disk with an MBR bootloader.
 
 # the other parts of https://wiki.archlinux.org/title/Installation_guide#Configure_the_system
 # are covered by my arch-conf package
@@ -287,6 +291,11 @@ if [ -n "$SUDO_USER" ]; then
   arch-chroot "$CHROOT" useradd -m -G wheel,disk,network,lp $SUDO_USER
   arch-chroot "$CHROOT" passwd -de $SUDO_USER
 fi
+
+# promote 'wheel' -> sudo
+echo '%wheel ALL=(ALL) ALL' | arch-chroot "$CHROOT" tee /etc/sudoers.0/0wheel
+arch-chroot "$CHROOT" chmod 600 /etc/sudoers.0/0wheel
+
 
 # https://wiki.archlinux.org/title/Installation_guide#Reboot
 

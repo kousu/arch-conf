@@ -1,0 +1,6 @@
+[Basic Settings]
+# turn off the search indexer because it is VERY SLOW -- especially run on top of luksFormat --integrity hmac-sha256
+# I could perhaps only turn it off for ~/src and other directories with lots of small files
+# (in fact the default settings exclude a lot of programming-associated file extensions already)
+# but i'd rather just not use it at all
+Indexing-Enabled=false

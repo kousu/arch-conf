@@ -1,0 +1,7 @@
+[General]
+BrowserApplication=firefox.desktop
+
+[KDE]
+ColorScheme=BreezeLight
+LookAndFeelPackage=org.kde.breezedark.desktop
+SingleClick=false

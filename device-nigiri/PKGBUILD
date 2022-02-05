@@ -44,6 +44,7 @@ depends=(
             # basically you need to edit your kernel command line to *prepend* initrd=/boot/amd-ucode.img,/boot/intel-ucode.img,
             # and making that edit by script is tricky. and also in the early boot that path is not always at /boot? ai yi yi
 
+  broadcom-wl # if we were booted on a system with only broadcom wifi we would be stuck without these drivers
   iwd # wifi
   sysstat   # iostat, some other things..
   net-tools # netstat, ifconfig

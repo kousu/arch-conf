@@ -69,6 +69,9 @@ depends=(
   sshfs
   youtube-dl
 
+  # requires some extra setup (included in src/ and below): https://wiki.archlinux.org/title/podman#Rootless_Podman
+  podman-docker
+
   #fio   # speed testing
 
   # CLI :: Network monitoring
@@ -213,6 +216,14 @@ depends=(
 # Instead, I've committed the contents of this package *directly* to src/.
 
 install="arch-conf.install"
+
+backup=(
+  # we deploy initially empty copies of these files
+  # so that useradd(1) will grant rootless container rights to regular users
+  # but they can't *stay* empty, so they must be in this list or they'll get overwritten by updates
+  /etc/subuid
+  /etc/subgid
+)
 
 package() {
   # often PKGBUILDs use install(1) here, because it lets them control permissions

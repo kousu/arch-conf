@@ -56,6 +56,8 @@ EOF
 /shadow-
 /gshadow-
 /group-
+/subuid-
+/subgid-
 
 # this file gets updated by other tools like resolveconf,
 # systemd-networkd, vpnc, NetworkManager, so often that it

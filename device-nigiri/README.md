@@ -39,14 +39,19 @@ git clone https://github.com/kousu/arch-conf && cd arch-conf/device-nigiri
 
 ## Building
 
-1. `makepkg -d`
+1. `makepkg -fsri`
 
-You need `-d` because otherwise `makepkg` will insist you have all dependencies
-installed on the build system -- even though most of them aren't _build_ dependencies.
+```{note}
+You can use `-d` instead of `-sr`: `-sr` means: 'temporarily install missing dependencies';
+`-d` means 'ignore missing dependencies'. Both effectively do the same thing, but the former
+is a little bit of a stronger test; but sometimes too strong, because it demands installing
+run-time dependencies too, which aren't necessarily needed (and may be quite large) by
+just building the package.
+```
 
 ## Installation
 
-2. `makepkg -d && sudo pacman -U kousu-device-nigiri-*.pkg.tar.zst`
+2. `makepkg -fsri && sudo pacman -U kousu-device-nigiri-*.pkg.tar.zst`
 
 I'm going to look into what running my own repo looks like; maybe I can do it on Github Pages? That would be nice and easy.
 
@@ -71,15 +76,10 @@ pkgver=v0.1.2
 pkgrel=2
 ```
 
-and re-run `makepkg -d` .... or you can skip the edit and run `makepkg -df` (but when you *publish* a new version you should make sure to bump it so `pacman` will understand it should be doing an upgrade).
-
-
-Then just install the updated package:
+and re-run
 
 ```
-makepkg -d && \
- sudo pacman -U kousu-device-nigiri-*.pkg.tar.zst && \
- sudo reboot
+makepkg -fsri
 ```
 
 ## Users
@@ -112,26 +112,59 @@ and that the deployed system is at all times identical -- or close to identical 
 you would have if you erased and reinstalled from scratch.
 
 `pacman -Qe`, the list of software that was directly installed, should be rooted at `kousu-device-nigiri`,
-perhaps with a few extras for things from the AUR:
+perhaps with a few extras for things from the [AUR](#AUR):
 
 ```
 $ pacman -Qqe
 kousu-device-nigiri
 pikaur
+zoom
 ```
 
 To keep this list clean, you can run
 
 ```
-pacman -Qqe | egrep -v 'kousu-.*' | pacman -D --asdeps -
+pacman -Qqe | grep -vFf <(pacman -Qqm) | pacman -D --asdeps -
 ```
+
+> This marks every package as a dependency
+> except (`grep -v`) those not packaged by Arch (`pacman -Qm`)
+> i.e. this package, any AUR packages, and any other ad-hoc package.
+>
+> `grep -vFf` is a [set-substraction operation](https://catonmat.net/set-operations-in-unix-shell)
+
+The goal is to have every package on the system implied by this one top-level package,
+and to minimize configuration drift -- the difference between the files on the existing system and the system you would have if you reinstalled from scratch.
+
+(Configuration drift covers: all of `/etc`, some parts of `/var`; it doesn't cover user data in `/home`; it should perhaps cover user-specific configuration, AKA dotfiles, like `/home/*/.config/`, `/home/*/.bashrc`, `~/.vimrc`, but I'm covering those by `/etc/skel/` since this is meant as a personal system). 
+
+Drift in packages:
+
+1. Run the above; then find orphans: `pacman -Qqttd`: these are top-level packages that are missing; move any you use into PKGBUILD, reinstall. Repeat to see if the list has shrunk. Repeat until the list is empty, or you don't want to keep anything else; then  in that case see below.
+
+```
+pacman -Qqe | grep -vFf <(pacman -Qqm) | pacman -D --asdeps -
+pacman -Qttdq # examine this list: it's packages you've installed but not recorded in PKGBUILD
+if ( there are packages to keep ); then
+  vi PKGBUILD   # add packages to this; bump the version number
+  makepkg -d
+  pacman -U *.zst
+fi
+
+# remove everything *else*
+# TODO: I could put this (very destructive) command in the .install script to force the system to respect the current config-management state
+pacman -Qttdq | sudo pacman -Rns --noconfirm -
+```
+
+Drift in contents (/etc, /var, /srv, /opt, etc, but not /home):
+1. ? (use ..diff?
+1. Maybe `paccheck` (https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Listing_all_changed_files_from_packages)
+3. `find /etc /usr /opt | LC_ALL=C pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5-` (https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Identify_files_not_owned_by_any_package)
+4. `lostfiles`
 
 `pacman -Qttd`, the list of [orphans](TODO), should be empty. Orphans can occur when you do `pacman -R` instead of `pacman -Rs` -- removing a top level package you installed, but leaving dependencies that came with it -- or when the dependency web changes during an update.
 This package installs a [pacman hook](https://wiki.archlinux.org/wiki/Pacman#Hooks) that will report orphans and remind you that to clean them up you ucan do:
 
-```
-pacman -Qttdq | sudo pacman -Rns --noconfirm -
-```
 
 The pacman cache is often one of the largest pieces on the system.
 
@@ -168,25 +201,28 @@ TODO:
 
 Dealing with [AUR](https://aur.archlinux.org) packages is tricky.
 
-If we depend on them directly then this package can't be installed on a fresh system,
-because it needs to have the build tools pre-installed (or, at least, something like pikaur).
-bootstrapping steps to get the build tools installed first.
+If we depend on them directly then there's a bootstrapping problem: a fresh system
+with just `pacman` won't have `base-devel` installed so can't build packages, nor
+can it find the AUR packages unless `pacman` is wrapped by `pikaur`.
 
-One option would be to bootstrap `pikaur` onto the system. This script will do that:
+You I _could_ bootstrap `pikaur` onto the system and replace `makepkg -d` with it `pikaur -P`.
+This snippet will do that:
 
 ```
+pacman -S base-devel --noconfirm &&
 pacman -S python-commonmark pyalpm --noconfirm &&
  curl -JLO https://aur.archlinux.org/cgit/aur.git/snapshot/pikaur.tar.gz &&
  tar -zxvf pikaur.tar.gz &&
  cd pikaur &&
  makepkg &&
  pacman -Rns python-commonmark &&
- pacman --noconfirm -U pikaur*.pkg.tar.zst
+ pacman --noconfirm -U pikaur*.pkg.tar.zst &&
+pikaur -P
 ```
 
-and after that we can use `pikaur -P` in place of `makepkg`.
+Then we could depend on AUR packages too. But it's inelegant.
 
-For now, I think what I'm going to do is pull the AUR packages into a separate
+For now, I think what I'm going to do is plan to put the AUR packages into a separate
 PKGBUILD, along with these bootstrapping instructions.
 Maybe I could even pull them into `post_install`? Check if `pikaur` is installed and if not, do this?
 

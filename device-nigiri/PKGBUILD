@@ -164,8 +164,6 @@ depends=(
 
   ## GUI :: Web
   firefox
-  firefox-clearurls
-  firefox-decentraleyes
   firefox-extension-passff
   firefox-extension-privacybadger
   firefox-ublock-origin
@@ -184,6 +182,8 @@ depends=(
   # https://aur.archlinux.org/packages/apostrophe - a competitor to ghostwriter, in GTK instead of KDE
   # https://aur.archlinux.org/packages/dtach - it's better than tmux
   # xkcdpass  # password generator
+  # firefox-clearurls - web privacy aid
+  # firefox-decentraleyes - ditto
 )
 
 # `source` has some basic support for handling local files

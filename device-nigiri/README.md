@@ -19,13 +19,13 @@ You should be running ArchLinux.
 You will need to have `pacman` and `base-devel` installed, so:
 
 ```
-pacman -S --noconfirm base base-devel
+pacman -S --needed --noconfirm base base-devel
 ```
 
 Also, you're gonna have to have `git` so add that:
 
 ```
-pacman -S git
+pacman -S --needed git
 ```
 
 Then download this repo:
@@ -41,7 +41,8 @@ git clone https://github.com/kousu/arch-conf && cd arch-conf/device-nigiri
 
 1. `makepkg -d`
 
-You need `-d` because .. reasons (TODO explain)
+You need `-d` because otherwise `makepkg` will insist you have all dependencies
+installed on the build system -- even though most of them aren't _build_ dependencies.
 
 ## Installation
 
@@ -49,6 +50,13 @@ You need `-d` because .. reasons (TODO explain)
 
 I'm going to look into what running my own repo looks like; maybe I can do it on Github Pages? That would be nice and easy.
 
+If you are [installing Arch](https://wiki.archlinux.org/title/Installation_guide) fresh,
+copy the package to the installation system somehow (`curl`, use an extra thumbdrive, etc),
+then instead of `pacstrap /mnt base`, use
+
+```
+pacstrap -U kousu-device-nigiri-*.pkg.tar.zst
+```
 
 ## Updates
 

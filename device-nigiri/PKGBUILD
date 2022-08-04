@@ -148,11 +148,14 @@ depends=(
   packagekit-qt5
 
   # for a tinier DE:
-  # i3wm
-  # arandr
-  # xorg-xbacklight
+  #i3-wm
+  #dmenu
+  #i3status
+  #i3lock
+  #arandr
+  #xorg-xbacklight
   #redshift  # KDE has a setting for this built in
-  # passmenu
+  #passmenu
 
   ## GUI :: Media
   audacity

@@ -1,5 +1,5 @@
 rm -f ~/.ssh/agent  # a crashe might leave this socket with nothing listening, which breaks restarting it
 eval $(ssh-agent -a ~/.ssh/agent -t 45m)
 workrave &  # TODO: or ln -s /usr/share/applications/workrave.desktop ~/.config/autostart/workrave.desktop?
-yakuake &   # TODO: or ln -s /usr/share/applications/org.kde.yakuake.desktop ~/.config/autostart/org.kde.yakuake.desktop
+#yakuake &   # TODO: or ln -s /usr/share/applications/org.kde.yakuake.desktop ~/.config/autostart/org.kde.yakuake.desktop
 exec startplasma-x11

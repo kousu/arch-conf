@@ -160,6 +160,8 @@ depends=(
   ## GUI :: Media
   audacity
   ardour
+  # mixxx # DJ app
+  # xwax  # ditto
 
   ## GUI :: Productivity
   workrave

@@ -165,7 +165,6 @@ depends=(
   ## GUI :: Web
   firefox
   firefox-extension-passff
-  firefox-extension-privacybadger
   firefox-ublock-origin
 
   ## GUI :: Comms
@@ -184,6 +183,7 @@ depends=(
   # xkcdpass  # password generator
   # firefox-clearurls - web privacy aid
   # firefox-decentraleyes - ditto
+  # firefox-extension-privacybadger
 )
 
 # `source` has some basic support for handling local files

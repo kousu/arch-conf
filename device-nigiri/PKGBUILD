@@ -153,9 +153,23 @@ depends=(
   #i3status
   #i3lock
   #arandr
+  #pavucontrol # volume control
+  #
   #xorg-xbacklight
   #redshift  # KDE has a setting for this built in
   #passmenu
+  #geeqie # image viewer; alts: eog, eom, feh, gwenview
+  #xarchiver # alts: file-roller
+  #thunar
+  #thunar-archive-plugin
+  #thunar-volma
+  #l3afpad
+  #xfce4-terminal # alts: xterm, rxvt, gnome-terminal, termite?
+  
+  #gvfs
+  #gvfs-smb
+  #gvfs-mtp
+  #udisks2
 
   ## GUI :: Media
   audacity

@@ -46,10 +46,13 @@ depends=(
             # basically you need to edit your kernel command line to *prepend* initrd=/boot/amd-ucode.img,/boot/intel-ucode.img,
             # and making that edit by script is tricky. and also in the early boot that path is not always at /boot? ai yi yi
 
+  light
   broadcom-wl # if we were booted on a system with only broadcom wifi we would be stuck without these drivers
   iwd # wifi
   sysstat   # iostat, some other things..
+  iftop
   iotop
+  nethogs
   net-tools # netstat, ifconfig
   #inetutils # for hostname(1); also has telnet(1), rsh(1), and other deprecated commands
   strace
@@ -79,7 +82,7 @@ depends=(
 
   #fio   # speed testing
 
-  # CLI :: Network monitoring
+  # CLI :: Network
   bind      # dig
   whois
   tcpdump
@@ -113,6 +116,13 @@ depends=(
   which
 
   git
+  git-filter-repo
+  #git-lfs
+  #git-annex
+
+  zip
+  unrar
+  unzip
 
   python
   python-pip
@@ -120,6 +130,18 @@ depends=(
 
   #nodejs
   #npm
+
+  jq
+  htmlq
+
+  strip-nondeterminism
+  parallel
+
+  android-tools # adb! fastest way to get files in and out of a phone
+
+  # decompiler
+  rizin
+  rz-ghidra
 
   # TUI
   vi     # editor
@@ -203,15 +225,19 @@ depends=(
   ardour
   # mixxx # DJ app
   # xwax  # ditto
+  # inkscape # SVG editor
 
   ## GUI :: Productivity
   workrave
 
   ## GUI :: Editors
-  libreoffice-fresh # documents/spreadsheets/presentations/etc
+  #libreoffice-fresh # documents/spreadsheets/presentations/etc
   ghostwriter # kde-applications-meta pulls in kate; maybe just use that?
   xournalpp   # PDF editor; mostly good for signing legal documents.
   #qpdf       # another PDF editor, less tools but more accurate
+
+  ## GUI :: Programming
+  rz-cutter
 
   ## GUI :: Web
   firefox
@@ -232,11 +258,14 @@ depends=(
   # there's no aur package manager in the standard arch packages -- probably because they want you to prove you can deal with the aur before you start pulling in packages from it willy-nilly
 
   # Things I would like from the AUR:
+  # pikaur
   # https://aur.archlinux.org/packages/apostrophe - a competitor to ghostwriter, in GTK instead of KDE
   # https://aur.archlinux.org/packages/dtach - it's better than tmux
+  # dtach     # tmux but simpler
   # xkcdpass  # password generator
   # firefox-clearurls - web privacy aid
   # firefox-extension-privacybadger
+  # softu2f-git # credential manager (virtual YubiKey)
 
   ## Games
   #xboard

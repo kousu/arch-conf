@@ -1,0 +1,45 @@
+pkgname=kousu-work
+pkgrel=1
+pkgdesc="Configuration management for kousu's job life"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+#license=("MIT") # there..is no license? not really?
+
+# This numbers the package versions by how many commits went into it: every published commit is a newer package.
+# This will break if we ever rebase the master branch. Don't do that.
+# Also: if we use this across a monorepo this has the quirk/feature that
+#       every package built out of it has the same version, but that won't be preserved if we split them up.
+pkgver="$(git log --pretty=oneline | wc -l)"
+
+depends=(
+  kousu-device-nigiri
+  # TODO: dependencies should flow like
+  #       kousu-device-{nigiri,etc,etc,} -> kousu-work -> kousu-base
+
+  chromium  # sometimes you just need to test something in the monopoly browser
+
+  # docs
+  libreoffice-fresh  # docs/spreadsheets/presentations
+
+  # data
+  git-lfs
+  git-annex
+
+  # infra
+  ansible          # config management via ssh
+  python-dnspython # optional for parts of ansible
+  python-openstackclient # config management via the OpenStack API
+  python-designateclient # part of openstack: manages DNS
+  restic           # backups
+
+  # remote desktop
+  remmina
+  freerdp       # Windows screen sharing
+  libvncserver  # VNC screen sharing (macOS, some Unixes)
+
+  # AUR packages (must be installed separately):
+  # zoom
+  # webex-bin
+  # fsleyes # specialized image viewer for .nii voxel files
+
+)

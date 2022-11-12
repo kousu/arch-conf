@@ -49,7 +49,10 @@ depends=(
   broadcom-wl # if we were booted on a system with only broadcom wifi we would be stuck without these drivers
   iwd # wifi
   sysstat   # iostat, some other things..
+  iotop
   net-tools # netstat, ifconfig
+  #inetutils # for hostname(1); also has telnet(1), rsh(1), and other deprecated commands
+  strace
   openconnect  # VPN
 
   alsa-utils
@@ -63,8 +66,10 @@ depends=(
   sudo
   openssh
   openbsd-netcat
+  socat
   pass # password manager
   pass-otp
+  pwgen # alternate password generator
   rsync
   sshfs
   youtube-dl
@@ -108,7 +113,13 @@ depends=(
   which
 
   git
+
   python
+  python-pip
+  python-wheel
+
+  #nodejs
+  #npm
 
   # TUI
   vi     # editor
@@ -120,6 +131,7 @@ depends=(
   #xorg-xinit # weirdly you can install X without xorg-xinit on Arch; I guess because lightdm/gdm/etc can serve its purpose?
   #xorg-server # weirdly, xorg-xinit doesn't pull this in; you'd think it would.
   sx # alternative to xorg-xinit; promises to be simpler; is it actually?
+  #xorg-xhost
   xorg-xmodmap
   xorg-xkill
   xorg-xev
@@ -143,6 +155,7 @@ depends=(
   bluedevil  # KDE plugin for Bluetooth
   plasma-pa  # KDE plugin for audio management
   plasma-systemmonitor # KDE task manager (i.e. GUI version of top)
+  plasma5-applets-weather-widget
   kscreen    # KDE plugin for screen management? I think?
   khotkeys   # KDE plugin to configure/listen for custom shortcut keys
 
@@ -195,12 +208,17 @@ depends=(
   workrave
 
   ## GUI :: Editors
+  libreoffice-fresh # documents/spreadsheets/presentations/etc
   ghostwriter # kde-applications-meta pulls in kate; maybe just use that?
+  xournal-pp  # PDF editor; mostly good for signing legal documents.
+  #qpdf       # another PDF editor, less tools but more accurate
 
   ## GUI :: Web
   firefox
   firefox-extension-passff
   firefox-ublock-origin
+  #chromium
+  #gnome-recipes # online cookbook
 
   ## GUI :: Comms
   dino
@@ -219,6 +237,13 @@ depends=(
   # firefox-clearurls - web privacy aid
   # firefox-decentraleyes - ditto
   # firefox-extension-privacybadger
+
+  ## Games
+  #xboard
+  #gnuchess
+  #openra
+  #endless-sky
+  #kgeography
 )
 
 # `source` has some basic support for handling local files

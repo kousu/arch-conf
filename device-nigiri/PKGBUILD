@@ -14,7 +14,7 @@ url="https://github.com/kousu/arch-conf"
 #  # This will break if we ever rebase the master branch. Don't do that.
 #  # It also breaks when run under pikaur, so it's not really an option
 #pkgver="$(git log --pretty=oneline | wc -l)"
-pkgver=94
+pkgver=95
 pkgrel=1
 
 depends=(
@@ -267,12 +267,6 @@ depends=(
 install="arch-conf.install"
 
 backup=(
-  # we deploy initially empty copies of these files
-  # so that useradd(1) will grant rootless container rights to regular users
-  # but they can't *stay* empty, so they must be in this list or they'll get overwritten by updates
-  etc/subuid
-  etc/subgid
-
   # TODO:
   # /etc/locale.conf ?
   # /etc/hostname ?

@@ -215,6 +215,7 @@ depends=(
 
   ## GUI :: Web
   firefox
+  firefox-decentraleyes
   firefox-extension-passff
   firefox-ublock-origin
   #chromium
@@ -235,7 +236,6 @@ depends=(
   # https://aur.archlinux.org/packages/dtach - it's better than tmux
   # xkcdpass  # password generator
   # firefox-clearurls - web privacy aid
-  # firefox-decentraleyes - ditto
   # firefox-extension-privacybadger
 
   ## Games

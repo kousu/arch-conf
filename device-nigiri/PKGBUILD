@@ -189,7 +189,7 @@ depends=(
   #kdevelop-meta
 
   discover       # GUI for pacman (cool!)
-  packagekit-qt5
+  packagekit-qt5 #  -> plugin that actually makes it work on Arch
 
   # for a tinier DE:
   #i3-wm
@@ -264,7 +264,7 @@ depends=(
 
   ## Games
   #xboard
-  #gnuchess
+  #gnuchess  # "optional" for xboard, but not really: it's the AI to play against
   #openra
   #endless-sky
   #kgeography

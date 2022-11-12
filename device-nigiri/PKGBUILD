@@ -249,19 +249,6 @@ depends=(
   ## GUI :: Media
   vlc # ?? or maybe i should just use whatever comes with KDE?
 
-  # how do I handle packages from the aur?
-  # there's no aur package manager in the standard arch packages -- probably because they want you to prove you can deal with the aur before you start pulling in packages from it willy-nilly
-
-  # Things I would like from the AUR:
-  # pikaur
-  # https://aur.archlinux.org/packages/apostrophe - a competitor to ghostwriter, in GTK instead of KDE
-  # https://aur.archlinux.org/packages/dtach - it's better than tmux
-  # dtach     # tmux but simpler
-  # xkcdpass  # password generator
-  # firefox-clearurls - web privacy aid
-  # firefox-extension-privacybadger
-  # softu2f-git # credential manager (virtual YubiKey)
-
   ## Games
   #xboard
   #gnuchess  # "optional" for xboard, but not really: it's the AI to play against

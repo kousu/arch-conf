@@ -1,0 +1,31 @@
+pkgname=kousu-aur-base
+pkgrel=1
+pkgdesc="Configuration management for kousu's job life (AUR packages)"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+#license=("MIT") # there..is no license? not really?
+
+pkgver="$(git log --pretty=oneline | wc -l)"
+
+depends=(
+  kousu-device-nigiri  # TODO: kousu-base
+
+  ## CLI :: System
+  pikaur  # here's the boostrapping loop:
+	  # the point of having this PKGBUILD is so pikaur can run it
+	  # but once it's installed this is okay
+
+
+  dtach   # it's better than tmux
+
+  xkcdpass    # password generator
+  softu2f-git # credential manager (virtual YubiKey)
+	      # arguably this is part of "Web", since the only apps that can use it at the moment are websites
+
+  ## GUI :: Editors
+  #apostrophe  # markdown editor; like ghostwriter
+
+  ## GUI :: Web
+  firefox-clearurls               # web privacy aid
+  firefox-extension-privacybadger
+)

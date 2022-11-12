@@ -12,7 +12,9 @@ url="https://github.com/kousu/arch-conf"
 
 #  # This numbers the package versions by how many commits went into it: every published commit is a newer package.
 #  # This will break if we ever rebase the master branch. Don't do that.
-pkgver="$(git log --pretty=oneline | wc -l)"
+#  # It also breaks when run under pikaur, so it's not really an option
+#pkgver="$(git log --pretty=oneline | wc -l)"
+pkgver=94
 pkgrel=1
 
 depends=(

@@ -210,7 +210,7 @@ depends=(
   ## GUI :: Editors
   libreoffice-fresh # documents/spreadsheets/presentations/etc
   ghostwriter # kde-applications-meta pulls in kate; maybe just use that?
-  xournal-pp  # PDF editor; mostly good for signing legal documents.
+  xournalpp   # PDF editor; mostly good for signing legal documents.
   #qpdf       # another PDF editor, less tools but more accurate
 
   ## GUI :: Web

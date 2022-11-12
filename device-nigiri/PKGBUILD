@@ -6,7 +6,7 @@
 
 pkgname=kousu-device-nigiri
 pkgver=v0.1.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Configuration management for kousu's \"nigiri\" thumddrive system"
 arch=('any')
 url="https://github.com/kousu/arch-conf"

@@ -5,20 +5,15 @@
 # 4. pacman -U kousu-nigiri*.pkg*
 
 pkgname=kousu-device-nigiri
-pkgver=v0.1.4
-pkgrel=2
 pkgdesc="Configuration management for kousu's \"nigiri\" thumddrive system"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 #license=("MIT") # there..is no license? not really?
 
-
-# TODO: try
-#pkgver() {
 #  # This numbers the package versions by how many commits went into it: every published commit is a newer package.
 #  # This will break if we ever rebase the master branch. Don't do that.
-#  git log --pretty=oneline | wc -l
-#}
+pkgver="$(git log --pretty=oneline | wc -l)"
+pkgrel=1
 
 depends=(
   # Base system

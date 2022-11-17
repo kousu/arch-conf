@@ -6,7 +6,7 @@ url="https://github.com/kousu/arch-conf"
 #license=("MIT") # there..is no license? not really?
 
 #pkgver="$(git log --pretty=oneline | wc -l)" # number based on git commits; but this doesn't work with pikaur, which does a shallow clone
-pkgver=94
+pkgver=96
 
 depends=(
   kousu-device-nigiri  # TODO: kousu-base
@@ -22,6 +22,9 @@ depends=(
   xkcdpass    # password generator
   softu2f-git # credential manager (virtual YubiKey)
 	      # arguably this is part of "Web", since the only apps that can use it at the moment are websites
+
+  ## GUI :: Desktop Environment
+  plasma5-applets-weather-widget-2
 
   ## GUI :: Editors
   #apostrophe  # markdown editor; like ghostwriter

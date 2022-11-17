@@ -14,7 +14,7 @@ url="https://github.com/kousu/arch-conf"
 #  # This will break if we ever rebase the master branch. Don't do that.
 #  # It also breaks when run under pikaur, so it's not really an option
 #pkgver="$(git log --pretty=oneline | wc -l)"
-pkgver=95
+pkgver=96
 pkgrel=1
 
 depends=(
@@ -174,7 +174,6 @@ depends=(
   bluedevil  # KDE plugin for Bluetooth
   plasma-pa  # KDE plugin for audio management
   plasma-systemmonitor # KDE task manager (i.e. GUI version of top)
-  plasma5-applets-weather-widget
   kscreen    # KDE plugin for screen management? I think?
   khotkeys   # KDE plugin to configure/listen for custom shortcut keys
 

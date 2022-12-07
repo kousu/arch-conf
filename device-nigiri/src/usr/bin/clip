@@ -8,7 +8,7 @@
 #   (echo '# Title'; echo '------------'; cat file1; pipeline; echo; cat file2 file3) | clip
 
 if [ -n "$1" ] && ! tty -s; then
-  echo "error: $0 cannot read from both a pipe and file(s) at the same time." 2>&1
+  echo "error: $0 cannot read from pipes and file(s) at the same time." 2>&1
   # I could make it work
   # e.g. I could detect this case and insert /dev/stdin in front of "$@"
   # but there's a lot of questions:
@@ -16,12 +16,14 @@ if [ -n "$1" ] && ! tty -s; then
   # if you need to mix a pipeline and files... just put the files in the pipeline:
   # (cat file1; pipeline; cat file2 file3) | clip
   exit 1
-elif [ -n "$1" ]
+elif [ -n "$1" ]; then
   # clip file1 [file2 ...]
   xclip -selection clipboard -i "$@"
 elif ! tty -s; then
   # pipeline | clip
+  # <paste.txt clip
   xclip -selection clipboard -i
 else
+  # clip > paste.txt
   xclip -selection clipboard -o
 fi

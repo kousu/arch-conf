@@ -196,6 +196,7 @@ depends=(
   #i3-wm
   #dmenu
   #i3status
+  #dex # default i3 config file uses this to run ~/.config/autostart
   #i3lock
   #arandr
   #pavucontrol # volume control

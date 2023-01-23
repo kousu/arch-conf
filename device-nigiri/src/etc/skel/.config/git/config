@@ -9,6 +9,10 @@
 	# *force* linear history when merging
 	ff = only
 
+	# use 3-way diff when conflicts show up
+	# https://blog.nilbus.com/take-the-pain-out-of-git-conflict-resolution-use-diff3/
+	conflictStyle = diff3
+
 [push]
 	# automatically push to the branch with the matching name i.e. what you think should happen
 	default = current

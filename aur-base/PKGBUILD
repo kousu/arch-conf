@@ -32,6 +32,6 @@ depends=(
   #apostrophe  # markdown editor; like ghostwriter
 
   ## GUI :: Web
-  firefox-clearurls               # web privacy aid
+  #firefox-clearurls               # web privacy aid # TODO: unmaintained and removed; re-maintain it.
   firefox-extension-privacybadger
 )

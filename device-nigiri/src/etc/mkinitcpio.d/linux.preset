@@ -11,7 +11,7 @@ PRESETS=('default' 'fallback')
 # Build into the default boot path for 64-bit EFI ($ESP/boot/bootx64.efi)
 # which means that there's no need to modify the system EFI settings.
 default_uki="/boot/efi/boot/bootx64.efi"
-default_options="--splash=/usr/share/systemd/bootctl/splash-arch.bmp"
+default_options="--splash=/usr/share/wallpapers/symbiontworld.bmp"
 
 fallback_uki="/boot/efi/boot/archlinux-linux-fallback.efi"
 fallback_options="-S autodetect"

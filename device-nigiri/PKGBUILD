@@ -72,7 +72,6 @@ depends=(
   pwgen # alternate password generator
   rsync
   sshfs
-  youtube-dl
 
   # requires some extra setup (included in src/ and below): https://wiki.archlinux.org/title/podman#Rootless_Podman
   podman-docker
@@ -216,13 +215,6 @@ depends=(
   #gvfs-smb
   #gvfs-mtp
   #udisks2
-
-  ## GUI :: Media
-  audacity
-  ardour
-  # mixxx # DJ app
-  # xwax  # ditto
-  # inkscape # SVG editor
 
   ## GUI :: Productivity
   workrave

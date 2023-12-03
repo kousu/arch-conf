@@ -15,6 +15,9 @@ pkgver=96
 depends=(
   kousu-device-nigiri
 
+  # hardware
+  # alsa-card-profiles # is this needed? it's for making fancy professional soundcards work, I think
+
   # graphics
   inkscape # svg editor
   gimp     # raster editor

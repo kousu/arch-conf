@@ -137,8 +137,8 @@ depends=(
   android-tools # adb! fastest way to get files in and out of a phone
 
   # decompiler
-  rizin
-  rz-ghidra
+  #rizin
+  #rz-ghidra
 
   # TUI
   vi     # editor
@@ -234,7 +234,7 @@ depends=(
   #qpdf       # another PDF editor, less tools but more accurate
 
   ## GUI :: Programming
-  rz-cutter
+  #rz-cutter
 
   ## GUI :: Web
   firefox

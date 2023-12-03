@@ -1,4 +1,6 @@
-# mkinitcpio preset file for the 'linux' package
+# mkinitcpio preset that builds a https://wiki.archlinux.org/title/Unified_kernel_image
+# which is an EFI-bootable file that bundles the contents of /etc/kernel/cmdline, a splash image,
+# and the kernel and initrd into one single file, without a second-stage bootloader like GRUB or syslinux.
 
 ALL_config="/etc/mkinitcpio.conf"
 ALL_kver="/boot/vmlinuz-linux"
@@ -6,17 +8,10 @@ ALL_microcode=(/boot/*-ucode.img)
 
 PRESETS=('default' 'fallback')
 
-#default_config="/etc/mkinitcpio.conf"
-default_image="/boot/initramfs-linux.img"
-#default_options=""
-
-#fallback_config="/etc/mkinitcpio.conf"
-fallback_image="/boot/initramfs-linux-fallback.img"
-fallback_options="-S autodetect"
-
-# When booting on a EFI system, boot directly into the kernel, with no second-stage bootloader.
-# /boot/bootx64.efi is 64-bit EFI's default bootloader.
-# https://wiki.archlinux.org/title/Unified_kernel_image
+# Build into the default boot path for 64-bit EFI ($ESP/boot/bootx64.efi)
+# which means that there's no need to modify the system EFI settings.
 default_uki="/boot/efi/boot/bootx64.efi"
 default_options="--splash=/usr/share/systemd/bootctl/splash-arch.bmp"
+
 fallback_uki="/boot/efi/boot/archlinux-linux-fallback.efi"
+fallback_options="-S autodetect"

@@ -16,6 +16,7 @@ depends=(
 	  # the point of having this PKGBUILD is so pikaur can run it
 	  # but once it's installed this is okay
 
+  orbiton # an experimental, modeless editor, stripped down but still with some fancy features from more complicated IDEs
 
   dtach   # it's better than tmux
 
@@ -35,3 +36,10 @@ depends=(
   #firefox-clearurls               # web privacy aid # TODO: unmaintained and removed; re-maintain it.
   firefox-extension-privacybadger
 )
+
+package() {
+  cp -rp * "${pkgdir}"
+
+  chmod 755 "${pkgdir}"/etc/profile.d
+  chmod 644 "${pkgdir}"/etc/profile.d/*
+}

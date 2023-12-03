@@ -216,9 +216,6 @@ depends=(
   #gvfs-mtp
   #udisks2
 
-  ## GUI :: Productivity
-  workrave
-
   ## GUI :: Editors
   #libreoffice-fresh # documents/spreadsheets/presentations/etc
   ghostwriter # kde-applications-meta pulls in kate; maybe just use that?

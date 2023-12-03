@@ -36,6 +36,7 @@ depends=(
   restic           # backups
 
   # remote desktop
+  virt-manager  # remote VMs via SPICE or VNC; needs libvirt on the other end.
   remmina
   freerdp       # Windows screen sharing
   libvncserver  # VNC screen sharing (macOS, some Unixes)

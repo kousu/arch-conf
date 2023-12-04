@@ -29,6 +29,7 @@ depends=(
   # hardware
   linux  # the kernel. on Arch, this is an *optional* package, so that you can install vanilla Arch inside a container.
   linux-firmware
+  dmidecode # reads low-level BIOS information
   gptfdisk  # needed by syslinux if on a GPT+MBR disk
   efibootmgr # needed to install syslinux on EFI systems
   syslinux  # TODO: this package needs manual set up: you need to fiddle with /boot/syslinux/syslinux.cfg or /boot/EFI/syslinux/syslinux.cfg or /boot/EFI/BOOT/syslinux.cfg to edit the kernel command line to tell it where the root disk is; in ansible terms, it needs a 'lineinfile'
@@ -87,6 +88,7 @@ depends=(
   nmap
   geoip
   geoip-database-extra
+  #macchanger
 
   # CLI :: Programming
   #'base-devel' ### XXX not a package. this is a package group.
@@ -112,6 +114,7 @@ depends=(
   sudo
   texinfo
   which
+  words
 
   git
   git-filter-repo
@@ -125,6 +128,7 @@ depends=(
   python
   python-pip
   python-wheel
+  python-build
 
   #nodejs
   #npm
@@ -136,6 +140,8 @@ depends=(
   parallel
 
   android-tools # adb! fastest way to get files in and out of a phone
+  #jad
+  #hollywood  # 'hacking'
 
   # decompiler
   #rizin
@@ -146,6 +152,7 @@ depends=(
   #vim
   htop   # resource/process monitor
   ranger # curses file browser
+  #lynx, or elinks, links, w3m # terminal browser
 
   # GUI
   #xorg-xinit # weirdly you can install X without xorg-xinit on Arch; I guess because lightdm/gdm/etc can serve its purpose?
@@ -160,6 +167,7 @@ depends=(
   noto-fonts-emoji # Google's Android emoji fonts, with the colourful faces and whatnot
   # lightdm ?
   xclip
+  peek  # screen recorder
 
   ## GUI :: Hardware
   wireshark-qt
@@ -192,6 +200,9 @@ depends=(
 
   discover       # GUI for pacman (cool!)
   packagekit-qt5 #  -> plugin that actually makes it work on Arch
+
+  # for a more interesting DE:
+  # install the 'maui' group
 
   # for a tinier DE:
   #i3-wm
@@ -232,7 +243,8 @@ depends=(
   firefox-decentraleyes
   firefox-extension-passff
   firefox-ublock-origin
-  #chromium
+  # XXX there's now also extra/ublock-origin?
+  #chromium # very, very large
   gnome-recipes  # online cookbook
 
   ## GUI :: Comms

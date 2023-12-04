@@ -25,8 +25,14 @@ depends=(
   libreoffice-fresh  # docs/spreadsheets/presentations
 
   # data
+  s3cmd
   git-lfs
   git-annex
+  dos2unix
+
+  # screen sharing
+  asciinema
+  peek
 
   # infra
   ansible          # config management via ssh
@@ -37,6 +43,7 @@ depends=(
 
   # remote desktop
   virt-manager  # remote VMs via SPICE or VNC; needs libvirt on the other end.
+  #virt-viewer   # ditto, but this is more stripped down
   remmina
   freerdp       # Windows screen sharing
   libvncserver  # VNC screen sharing (macOS, some Unixes)

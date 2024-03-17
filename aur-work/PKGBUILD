@@ -17,4 +17,8 @@ depends=(
 
   # MRI
   fsleyes # specialized image viewer for .nii voxel files
+
+  # productivity
+  # https://codeberg.org/unfa/HyperTimer
+  hypertimer-bin
 )

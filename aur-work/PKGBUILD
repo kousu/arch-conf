@@ -5,7 +5,7 @@ arch=('any')
 url="https://github.com/kousu/arch-conf"
 #license=("MIT") # there..is no license? not really?
 
-pkgver=97
+pkgver=98
 
 depends=(
   kousu-work

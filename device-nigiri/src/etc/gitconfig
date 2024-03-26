@@ -21,6 +21,9 @@
 	# master copy that's published for sharing.
 	rebase = true
 
+[log]
+	showSignature = true
+
 # allow some sort of diffing of non-text formats by coercing them to text
 # tips from https://superuser.com/questions/706042/how-can-i-diff-binary-files-in-git
 # these need to work in concert with /etc/gitattributes

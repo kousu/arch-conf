@@ -176,54 +176,10 @@ depends=(
   #transmission-gtk # more traditional? But I'm trying out a KDE-based system...
 
   ## GUI :: Desktop Environment
-  #breeze-gtk # themes GTK apps to match the KDE ones..but I don't know how to use it yet.
-  plasma-desktop
-  plasma-workspace-wallpapers # extra KDE wallpapers
-  powerdevil # KDE plugin for power management
-  bluedevil  # KDE plugin for Bluetooth
-  plasma-pa  # KDE plugin for audio management
-  plasma-systemmonitor # KDE task manager (i.e. GUI version of top)
-  kscreen    # KDE plugin for screen management? I think?
-  khotkeys   # KDE plugin to configure/listen for custom shortcut keys
+  kousu-de-kde
+  #kousu-de-maui  # for a more interesting DE
+  #kousu-de-i3
 
-  # thse are kde-applications-meta, split out so I can be choosier
-  #kde-accessibility-meta
-  #kde-education-meta
-  kde-graphics-meta
-  #kde-multimedia-meta
-  #kde-network-meta
-  #kde-pim-meta
-  kde-sdk-meta
-  kde-system-meta
-  kde-utilities-meta
-  #kdevelop-meta
-
-  discover       # GUI for pacman (cool!)
-  packagekit-qt5 #  -> plugin that actually makes it work on Arch
-
-  # for a more interesting DE:
-  # install the 'maui' group
-
-  # for a tinier DE:
-  #i3-wm
-  #dmenu
-  #i3status
-  #dex # default i3 config file uses this to run ~/.config/autostart
-  #i3lock
-  #arandr
-  #pavucontrol # volume control
-  #
-  #xorg-xbacklight
-  #redshift  # KDE has a setting for this built in
-  #passmenu
-  #geeqie # image viewer; alts: eog, eom, feh, gwenview
-  #xarchiver # alts: file-roller
-  #thunar
-  #thunar-archive-plugin
-  #thunar-volma
-  #l3afpad
-  #xfce4-terminal # alts: xterm, rxvt, gnome-terminal, termite?
-  
   #gvfs
   #gvfs-smb
   #gvfs-mtp

@@ -91,18 +91,6 @@ EOF
   sed -i '/sshd_config.d/d' /etc/ssh/sshd_config # get rid of any pre-existing lines
   echo 'Include /etc/ssh/sshd_config.d/*.conf' >> /etc/ssh/sshd_config
 
-  # Make sure everyone uses the same ssh-agent, whether logged in via ssh or X.
-  # /etc/skel/.bash_profile doesn't have any analog to /etc/profile.d/.
-  # It's owned by the bash packge so instead of conflicting with that,
-  # do this dumb hack to insert a line;
-  # this is to match the `ssh-agent -a ~/.ssh/agent` line in /etc/skel/.config/sx/sxrc
-  # What I *really* want is some way to spawn ssh-agent if it's not already running, on every user login session
-  # whether via X or ssh or getty.
-  # surely there's a better way?
-  # this is line ansible's shitty lineinfile: operator.
-  sed -i '/SSH_AUTH_SOCK=/d' /etc/skel/.bash_profile # get rid of any pre-existing lines
-  echo 'export SSH_AUTH_SOCK=~/.ssh/agent' >> /etc/skel/.bash_profile
-
   systemctl enable reflector.timer
   systemctl enable reflector.service
   # TODO: how to set --country Canada --fastest 3 in /etc/xdg/reflector/reflector.conf?

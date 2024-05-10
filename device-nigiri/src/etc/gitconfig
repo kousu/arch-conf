@@ -14,7 +14,7 @@
 	# automatically push to the branch with the matching name i.e. what you think should happen
 	default = current
 	# assume branch names are the same on both sides by default (can be overridden with git branch --set-upstream-to)
-	autoSetupRemote true
+	autoSetupRemote = true
 
 [pull]
 	# always *rebase* when pulling in a remote branch that's diverged from our local copy

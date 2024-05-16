@@ -1,0 +1,7 @@
+# auto-DHCP on all wired connections
+# when systemd-networkd is running
+[Match]
+Name=en*
+
+[Network]
+DHCP=yes

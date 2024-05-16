@@ -51,5 +51,7 @@ depends=(
 )
 
 package() {
-  cp -rp * "${pkgdir}"
+  #cp -rp * "${pkgdir}"
+  # commented out because there's nothing to copy at the moment
+  echo -n
 }

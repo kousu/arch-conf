@@ -28,7 +28,7 @@ EOF
   #       this seems like the sort of thing a hook should handle https://wiki.archlinux.org/title/Pacman#Hooks
   locale-gen
 
-  systemctl enable iwd systemd-resolved
+  systemctl enable --now iwd systemd-networkd systemd-resolved
 
   # TODO: I should probably...pull my etckeeper setup out to a separate package
   # debian's etckeeper package initializes fully and correctly at install time

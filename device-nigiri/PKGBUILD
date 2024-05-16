@@ -231,25 +231,12 @@ package() {
 
   chmod 750 "${pkgdir}"/etc/sudoers.d
   chmod 600 "${pkgdir}"/etc/sudoers.d/*
-
-  # KDE config files are all 0600, and dirs are 0755
-  # this doesn't set that; this sets 0600 for files and 0700 for dirs. But that's probably good enough.
-  chmod -R u=rwX,go= "${pkgdir}"/etc/skel/.config/{k*,baloo*}
 }
 
-# and then i want to also figure out how/where to set KDE system defaults
-# with GTK I know it's 'dconf' or 'gconf' (why are there two? who knows)
-# and Firefox defaults too; plus extra Firefox extensions
-
-
-# To control KDE settings:
-# - add a file to src/etc/skel/.config/kdedefaults/
-#   you can figure out what you need to edit by making a change in the GUI, then examining ~/.config/{kdeglobals,kwinrc}
-#   whatever settings you see, copy them to the corresponding file *under* ~/.config/kdedefaults/.
 # To control GTK/GNOME settings:
-# - ...
+# - 'dconf' or 'gconf' (why are there two? who knows)
 # To control Firefox settings:
-# - ...
+# - Firefox defaults javascripts; plus extra Firefox extensions
 # To control xsession settings:
 # - if you're using sx, or xinit, or ...whazzit ~/.xsession
 #

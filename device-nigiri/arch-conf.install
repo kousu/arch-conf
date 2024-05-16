@@ -42,7 +42,7 @@ EOF
 
   if [ -f /etc/etckeeper/etckeeper.conf ]; then
     if [ ! -d /etc/.git ]; then  # make this idempotent
-      if ! egrep -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
+      if ! grep -E -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
         # this is like lineinfile: in ansible
         # because it doesn't look like this thing contains a .d directory for its config I can use
         (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf

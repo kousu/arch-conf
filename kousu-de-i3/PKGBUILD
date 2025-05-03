@@ -34,12 +34,14 @@ depends=(
   dmenu
   i3status
   dex # default i3 config file uses this to run ~/.config/autostart
-  xautolock
-  i3lock
+  brightnessctl
+  xss-lock
+  xsecurelock
+  #xautolock
+  #i3lock
   arandr
   pavucontrol # volume control
   
-  xorg-xbacklight
   redshift  # KDE has a setting for this built in
   passmenu
   eom # image viewer; alts: geeqie, eog, feh, gwenview
@@ -48,6 +50,7 @@ depends=(
   thunar-archive-plugin
   thunar-volman
   l3afpad
+  #featherpad # l3afpad + tabs, regex search, syntax highlighting
   xfce4-terminal # alts: xterm, rxvt, gnome-terminal, termite?
 )
 

@@ -159,6 +159,7 @@ depends=(
   # lightdm ?
   xclip
   peek  # screen recorder
+  xfce4-artwork # for default background
 
   ## GUI :: Hardware
   wireshark-qt

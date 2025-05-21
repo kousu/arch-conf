@@ -1,3 +1,1 @@
-workrave &  # TODO: or ln -s /usr/share/applications/workrave.desktop ~/.config/autostart/workrave.desktop?
-#yakuake &   # TODO: or ln -s /usr/share/applications/org.kde.yakuake.desktop ~/.config/autostart/org.kde.yakuake.desktop
 exec i3

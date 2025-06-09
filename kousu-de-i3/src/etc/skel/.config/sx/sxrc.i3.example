@@ -1,7 +1,0 @@
-
-xautolock -time 60 -locker "i3lock" &
-workrave &  # TODO: or ln -s /usr/share/applications/workrave.desktop ~/.config/autostart/workrave.desktop?
-redshift-gtk &
-
-( [ -x ~/.fehbg ] && ~/.fehbg ) &
-exec i3

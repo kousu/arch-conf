@@ -19,6 +19,7 @@ depends=(
   # alsa-card-profiles # is this needed? it's for making fancy professional soundcards work, I think
 
   # graphics
+  #pinta # -> TODO: only in aur, sooo pull to a separate package?
   inkscape # svg editor
   gimp     # raster editor
 

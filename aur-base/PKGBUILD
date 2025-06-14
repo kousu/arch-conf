@@ -18,7 +18,9 @@ depends=(
 
   orbiton # an experimental, modeless editor, stripped down but still with some fancy features from more complicated IDEs
 
-  dtach   # it's better than tmux
+  #dtach-ng   # it's better than tmux
+  # XXX disabled until https://github.com/xPMo/dtach/pull/3
+  # XXX replaces dtach due to bullshit: https://github.com/crigler/dtach/issues/22
 
   xkcdpass    # password generator
   softu2f-git # credential manager (virtual YubiKey)

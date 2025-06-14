@@ -1,3 +1,7 @@
 [user]
 	name = kousu
 	email = nick@kousu.ca
+
+# i forget what tool uses this but it's something
+[github]
+	user = kousu

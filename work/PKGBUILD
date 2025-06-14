@@ -11,6 +11,7 @@ url="https://github.com/kousu/arch-conf"
 #       every package built out of it has the same version, but that won't be preserved if we split them up.
 #pkgver="$(git log --pretty=oneline | wc -l)"
 pkgver=99
+pkgrel=2
 
 depends=(
   kousu-device-nigiri
@@ -64,6 +65,7 @@ depends=(
 
   ## Programming
   code  # vscode. sigh. it's the only good one
+  ttf-fira-code
   # TODO: there's typst, rust, go and javascript plugins that need packages 
   julia
 

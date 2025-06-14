@@ -1,4 +1,4 @@
 #!/bin/sh
 
 # set your background image for i3 here :)
-feh --no-fehbg --bg-fill '/usr/share/backgrounds/xfce/Valo_1.jpg'
+xwallpaper --focus '/usr/share/backgrounds/xfce/Valo_1.jpg'

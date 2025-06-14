@@ -51,4 +51,6 @@
     textconv = hexdump -v -C
     binary = true
 
+[protocol "file"]
+    allow = always
 

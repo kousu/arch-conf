@@ -47,8 +47,6 @@ EOF
         # because it doesn't look like this thing contains a .d directory for its config I can use
         (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf
       fi
-      etckeeper init # assumption: this is idempotent
-      etckeeper vcs config user.name root  # etckeeper gets mad without this.
       cat >> /etc/.gitignore <<EOF
 
 # usermod(8) backup files
@@ -69,6 +67,8 @@ EOF
 # as far as etckeeper is concerned
 .updated
 EOF
+      etckeeper init # assumption: this is idempotent
+      etckeeper vcs config user.name root  # etckeeper gets mad without this.
 
     fi
   fi

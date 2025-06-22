@@ -10,7 +10,7 @@ url="https://github.com/kousu/arch-conf"
 # Also: if we use this across a monorepo this has the quirk/feature that
 #       every package built out of it has the same version, but that won't be preserved if we split them up.
 #pkgver="$(git log --pretty=oneline | wc -l)"
-pkgver=99
+pkgver=100
 
 depends=(
   #kousu-device-nigiri
@@ -66,3 +66,7 @@ depends=(
   #hydrogen # basic but effective drum sequencer
   #ft2-clone # tracker
 )
+
+package() {
+  cp -rp * "${pkgdir}"
+}

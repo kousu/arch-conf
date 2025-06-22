@@ -28,7 +28,7 @@ depends=(
 
   # hardware
   linux  # the kernel. on Arch, this is an *optional* package, so that you can install vanilla Arch inside a container.
-  linux-firmware
+  linux-firmware-intel
   dmidecode # reads low-level BIOS information
   intel-ucode
   amd-ucode # TODO: these two packages have an optional but difficult amount of manaul setup:

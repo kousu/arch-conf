@@ -70,5 +70,6 @@ depends=(
   ttf-fira-code
   # TODO: there's typst, rust, go and javascript plugins that need packages 
   julia
+  matlab-support # XXX aur
 
 )

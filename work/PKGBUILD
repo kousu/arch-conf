@@ -21,6 +21,7 @@ depends=(
   libfido2 #XXX is this still needed? yubikeys kind of Just Work now
 
   workrave  # work timer / RSI alarm
+  blanket   # white noise focus sounds
 
   chromium  # sometimes you just need to test something in the monopoly browser
 

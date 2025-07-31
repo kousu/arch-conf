@@ -10,8 +10,8 @@ url="https://github.com/kousu/arch-conf"
 # Also: if we use this across a monorepo this has the quirk/feature that
 #       every package built out of it has the same version, but that won't be preserved if we split them up.
 #pkgver="$(git log --pretty=oneline | wc -l)"
-pkgver=99
-pkgrel=2
+pkgver=100
+pkgrel=1
 
 depends=(
   kousu-device-nigiri
@@ -60,6 +60,8 @@ depends=(
   citations   # Gnome .bib manager
   # RECOMMENDED: also install code and the tinymist package and configure it to build on save, show outputs in system viewer, and format on save using typstyl; TODO: pull that into config management too, I just don't know exactly what that entails atm?
   #texlive-bin
+
+  pdfgrep
 
   # needed to sign up for courses
   icedtea-web

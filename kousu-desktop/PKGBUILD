@@ -69,7 +69,6 @@ depends=(
   socat
   pass # password manager
   pass-otp
-  pass-xkcd
   pwgen # alternate password generator
   rsync
   fdupes

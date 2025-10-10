@@ -235,11 +235,9 @@ backup=(
   etc/locale.conf
 )
 
-prepare() {
-  cp -r "${startdir}/source/." "${srcdir}"
-}
-
 package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
   # often PKGBUILDs use install(1) here, because it lets them control permissions
   # but install(1) can't do folders recursively; so instead, just cp -r, and set any permissions directly with chmod
   # that's safe enough: this is *building* a package for later deployment, not installing on a live system where a temporary gap in permissions is a risk

@@ -22,6 +22,10 @@ backup=(
   etc/mkinitcpio.d/linux.preset
 )
 
+prepare() {
+  cp -r "${startdir}/source/." "${srcdir}"
+}
+
 package() {
   cp -rp * "${pkgdir}"
 }

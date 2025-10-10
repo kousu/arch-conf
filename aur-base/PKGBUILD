@@ -35,10 +35,3 @@ depends=(
   #firefox-clearurls               # web privacy aid # TODO: unmaintained and removed; re-maintain it.
   firefox-extension-privacybadger
 )
-
-package() {
-  #cp -rp * "${pkgdir}"
-  (echo -n)
-  #chmod 755 "${pkgdir}"/etc/profile.d
-  #chmod 644 "${pkgdir}"/etc/profile.d/*
-}

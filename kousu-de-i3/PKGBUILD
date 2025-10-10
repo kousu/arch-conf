@@ -46,6 +46,8 @@ depends=(
   arandr
   pavucontrol # volume control
   scrot       # screenshots
+
+  gvfs  # automounting drives (from GNOME but used by Thunar)
   
   redshift  # KDE has a setting for this built in
   passmenu

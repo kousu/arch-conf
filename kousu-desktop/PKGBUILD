@@ -154,7 +154,7 @@ depends=(
   # GUI
   #xorg-xinit # weirdly you can install X without xorg-xinit on Arch; I guess because lightdm/gdm/etc can serve its purpose?
   #xorg-server # weirdly, xorg-xinit doesn't pull this in; you'd think it would.
-  sx # alternative to xorg-xinit; promises to be simpler; is it actually? # XXX this is only in the aur
+  #sx # alternative to xorg-xinit; promises to be simpler; is it actually? # XXX this is only in the aur
   #xorg-xhost
   xorg-xmodmap
   xorg-xkill

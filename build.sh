@@ -1,7 +1,24 @@
 #!/bin/bash
 #
+# Build several PKGBUILDs together.
+# The correct dependency order is found and needed dependencies built first.
+# Everything built is exported to a local file:// repo at $PKGDEST.
+#
+# This means a group of related unofficial/private packages can all be built without
+# disrupting the build system too much -- makepkg requires tracking down and installing
+# the dependencies one by one and pikaur can find them automatically but only if they're on the AUR.
+#
 # SPDX-License-Identifier: GPL-3.0-or-later
-# This code is based on code from the archlinux devtools project.
+# This incorporates code from the archlinux devtools project.
+
+
+# Questions writing this raises for me:
+# Q: how did Arch bootstrap its repos?
+# Q: could arch bootstrap its repos from source at the moment?
+#    Would it require someone to manually work out the build order
+#    and manually run `makepkg` for each of the thousands of packages?
+# Q: Or could arch bootstrap from source with `makepkg -d`?
+
 
 # load makepkg lib, for below
 MAKEPKG_LIBRARY=${MAKEPKG_LIBRARY:-'/usr/share/makepkg'}
@@ -34,10 +51,6 @@ parsedeps() {
 		done
 	fi
 }
-
-# Q: how did Arch bootstrap its repos?
-# Q: could arch bootstrap its repos from source at the moment? Would it require someone to manually work out the build order and manually set up the build everyt manually buu manual intervention?
-# Q: could arch bootstrap its repos from source simply by `find . -name PKGBUILD -exec makepkg -d`
 
 finddeps() {
     # Find upstream dependencies, write as edges "B" "A" meaning "A depends on B"
@@ -80,6 +93,8 @@ sudo mkdir -p "$PKGDEST"
 sudo chown "$USER" "$PKGDEST"  #XXX is this a dangerous idea? it's a privilege escalation vector.
 repo-add "$PKGDEST"/site.db.tar.zst # init repo if needed
 
+
+# Configure makechrootpkg's container
 CHROOT=/var/lib/archbuild/site
 sudo mkdir -p "$CHROOT"
 if [ ! -d "$CHROOT"/root ]; then
@@ -97,26 +112,29 @@ else
   # make sure container is updated
   arch-nspawn $CHROOT/root pacman -Syu
 fi
+# update the repo path in case PKGDEST has changed; XXX fragile
+arch-nspawn $CHROOT/root sed -i "s|^Server = file://.*$|Server = file://$PKGDEST|" /etc/pacman.conf
+
 
 # build packages in *topological sort order* (i.e. deepest dependency first) thanks to `tsort`,
 # and build into the local site repo so that later local packages can depend on earlier local packages.
 finddeps "$@" | tsort | while read target; do
-  (cd "$target"
-
-    # compute output file by leaning on makepkg's internal code
-    # (or: use makepkg --packagelist; but it gets Complicated when there's split and debug sub-packages involved)
+  ( # subshell to undo 'cd' at end
+    cd "$target"
+    # determine if output already exists by reproducing makepkg's internal code
+    # (could use makepkg --packagelist; but it sometimes outputs multiple lines)
+    # because makepkg checks, but makechrootpkg doesn't: https://bugs.archlinux.org/task/63092.html
     . PKGBUILD
     fullver=$(get_full_version)
     pkgarch=$(get_pkg_arch)
     pkg=$PKGDEST/${pkgname}-${fullver}-${pkgarch}${PKGEXT}
 
     if [[ -f "${pkg}" ]]; then
-	echo "${pkgname} has already been built. Skipping."
+      echo "${pkgname} has already been built. Skipping."
     else
-        makechrootpkg -c -r "$CHROOT"
-        repo-add "$PKGDEST"/site.db.tar.zst "${pkg}" # expose new package in repo
-        arch-nspawn $CHROOT/root pacman -Sy  # resync build container to pick up the new package
+      makechrootpkg -c -r "$CHROOT"
+      repo-add "$PKGDEST"/site.db.tar.zst "${pkg}" # expose new package in repo
+      arch-nspawn $CHROOT/root pacman -Sy  # resync build container to pick up the new package
     fi
-
   )
 done

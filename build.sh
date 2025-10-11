@@ -49,16 +49,18 @@ finddeps() {
 
     local target dep kind
     for target in "$@"; do
-      parsedeps "$target" | while read -r dep kind; do
+      if [ -f "$target/PKGBUILD" ]; then
+        echo "$target" "$target" # add a loop back on each dep for the
+        parsedeps "$target" | while read -r dep kind; do
 
-        if [ "$kind" = "(makedepends)" -o "$kind" = "(depends)" ]; then
-          echo "$dep" "$target"
-        fi
+          if [ "$kind" = "(makedepends)" -o "$kind" = "(depends)" ]; then
+            echo "$dep" "$target"
+          fi
 
-        # recurse:
-        finddeps "$dep"
-
-      done
+          # recurse:
+          finddeps "$dep"
+        done
+      fi
     done
 }
 

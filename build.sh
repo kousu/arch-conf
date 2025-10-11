@@ -89,6 +89,9 @@ finddeps() {
 # I'm imaging or updating at the moment.
 
 export PKGDEST=/var/cache/pacman/site # -> output packages from container to here
+#export PKGDEST=.
+
+export PKGDEST="$(realpath "$PKGDEST")"
 sudo mkdir -p "$PKGDEST"
 sudo chown "$USER" "$PKGDEST"  #XXX is this a dangerous idea? it's a privilege escalation vector.
 repo-add "$PKGDEST"/site.db.tar.zst # init repo if needed
@@ -108,9 +111,6 @@ Server = file://$PKGDEST
 # Disable signature checking on local packages -- because we don't have signing configured
 SigLevel = Optional TrustAll
 EOF
-else
-  # make sure container is updated
-  arch-nspawn $CHROOT/root pacman -Syu
 fi
 # update the repo path in case PKGDEST has changed; XXX fragile
 arch-nspawn $CHROOT/root sed -i "s|^Server = file://.*$|Server = file://$PKGDEST|" /etc/pacman.conf
@@ -120,7 +120,8 @@ arch-nspawn $CHROOT/root sed -i "s|^Server = file://.*$|Server = file://$PKGDEST
 # and build into the local site repo so that later local packages can depend on earlier local packages.
 finddeps "$@" | tsort | while read target; do
   ( # subshell to undo 'cd' at end
-    cd "$target"
+  cd "$target"
+  if [ -f PKGBUILD ]; then
     # determine if output already exists by reproducing makepkg's internal code
     # (could use makepkg --packagelist; but it sometimes outputs multiple lines)
     # because makepkg checks, but makechrootpkg doesn't: https://bugs.archlinux.org/task/63092.html
@@ -132,9 +133,11 @@ finddeps "$@" | tsort | while read target; do
     if [[ -f "${pkg}" ]]; then
       echo "${pkgname} has already been built. Skipping."
     else
-      makechrootpkg -c -r "$CHROOT"
+      makechrootpkg -c -r "$CHROOT" -u
+      # does not using -c speed up the build?
+      # does using makepkg -sr work here?
       repo-add "$PKGDEST"/site.db.tar.zst "${pkg}" # expose new package in repo
-      arch-nspawn $CHROOT/root pacman -Sy  # resync build container to pick up the new package
     fi
+  fi
   )
 done

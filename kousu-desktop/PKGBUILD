@@ -139,6 +139,7 @@ depends=(
   parallel
 
   android-tools # adb! fastest way to get files in and out of a phone
+  android-udev
   #jad
   #hollywood  # 'hacking'
 

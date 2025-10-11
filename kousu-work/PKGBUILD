@@ -53,10 +53,9 @@ depends=(
 
   ## Academic typesetting
   typst
-  typstyle
   tinymist
   citations   # Gnome .bib manager
-  # RECOMMENDED: also install code and the tinymist package and configure it to build on save, show outputs in system viewer, and format on save using typstyl; TODO: pull that into config management too, I just don't know exactly what that entails atm?
+  # RECOMMENDED: also install code and the tinymist package and configure it to build on save, show outputs in system viewer, and format on save using typstyle; TODO: pull that into config management too, I just don't know exactly what that entails atm?
   #texlive-bin
 
   pdfgrep
@@ -70,6 +69,5 @@ depends=(
   ttf-fira-code
   # TODO: there's typst, rust, go and javascript plugins that need packages 
   julia
-  matlab-support # XXX aur
 
 )

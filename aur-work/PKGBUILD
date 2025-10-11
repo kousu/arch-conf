@@ -17,4 +17,10 @@ depends=(
   # productivity
   # https://codeberg.org/unfa/HyperTimer
   hypertimer-bin
+
+  # typesetting
+  typstyle  # for Typst.app
+
+  # programming
+  matlab-support
 )

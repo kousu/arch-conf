@@ -10,7 +10,11 @@ _pkgver() {
 pkgver="$(_pkgver)"
 pkgrel=1
 
+install="${pkgname}.install"
+
 depends=(
+  networkmanager # we actually use iwd but GNOME only speaks this; luckily NetworkManager can talk to iwd for us.
+
   # `pacman -Qg gnome` minus the apps I don't want
   epiphany  # web browser
   gdm
@@ -49,6 +53,12 @@ depends=(
   papers   # document viewer
   showtime # video player
   snapshot # camera
-  sushi    # part of nautilus
+  sushi    # part of nautilus
 
 )
+
+package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
+  cp -rp * "${pkgdir}"
+}

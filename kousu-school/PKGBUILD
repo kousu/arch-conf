@@ -1,0 +1,18 @@
+pkgname=kousu-school
+pkgdesc="Configuration management for kousu's school life"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  # needed to sign up for courses
+  icedtea-web
+  java-environment=17
+  
+  #matlab-support # XXX AUR
+)

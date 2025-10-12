@@ -11,59 +11,18 @@ pkgrel=1
 
 depends=(
   kousu-desktop
+  kousu-sysadmin
+  kousu-papers
 
   libfido2 #XXX is this still needed? yubikeys kind of Just Work now
 
   workrave  # work timer / RSI alarm
   blanket   # white noise focus sounds
 
-  chromium  # sometimes you just need to test something in the monopoly browser
-
   # docs
   libreoffice-fresh  # docs/spreadsheets/presentations
+)
 
-  # data
-  dos2unix
-
-  # screen sharing
-  asciinema
-
-  # infra
-
-  # remote desktop
-  virt-manager  # remote VMs via SPICE or VNC; needs libvirt on the other end.
-  #virt-viewer   # ditto, but this is more stripped down
-  remmina
-  freerdp       # Windows screen sharing
-  libvncserver  # VNC screen sharing (macOS, some Unixes)
-
-  ## Academic typesetting :: GUI
-  # TODO: evaluate which of these I want to settle on; I think I've used texstudio before and it's the most solid but also clunkiest
-  #gnome-latex
-  #gummi
-  #hevea
-  #kile
-  #rubber
-  #texstudio
-  #texmaker
-
-  ## Academic typesetting
-  typst
-  tinymist
-  citations   # Gnome .bib manager
-  # RECOMMENDED: also install code and the tinymist package and configure it to build on save, show outputs in system viewer, and format on save using typstyle; TODO: pull that into config management too, I just don't know exactly what that entails atm?
-  #texlive-bin
-
-  pdfgrep
-
-  # needed to sign up for courses
-  icedtea-web
-  java-environment=17
-
-  ## Programming
-  code  # vscode. sigh. it's the only good one
-  ttf-fira-code
-  # TODO: there's typst, rust, go and javascript plugins that need packages 
-  julia
-
+optdepends=(
+  kousu-school
 )

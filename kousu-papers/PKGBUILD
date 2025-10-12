@@ -12,6 +12,7 @@ pkgrel=1
 depends=(
   # docs
   libreoffice-fresh  # docs/spreadsheets/presentations
+  libreoffice-fresh-fr
 
   ## Academic typesetting :: GUI
   # TODO: evaluate which of these I want to settle on; I think I've used texstudio before and it's the most solid but also clunkiest

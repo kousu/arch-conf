@@ -14,6 +14,11 @@ depends=(
   dos2unix
   curl
 
+  # virtualization
+  # TODO: test this; especially, test you can run windows 11
+  gnome-boxes
+  swtpm
+
   # web
   chromium  # sometimes you just need to test something in the monopoly browser
 

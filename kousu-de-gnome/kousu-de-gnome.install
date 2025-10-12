@@ -1,0 +1,9 @@
+#!/bin/bash
+
+post_upgrade() {
+  systemctl enable --now NetworkManager # NB: we actually use iwd; but this is here to glue GNOME into it
+}
+
+pre_remove() {
+  systemctl disable --now NetworkManager # NB: we actually use iwd; but this is here to glue GNOME into it
+}

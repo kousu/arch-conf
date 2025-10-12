@@ -1,5 +1,5 @@
-pkgname=kousu-art
-pkgdesc="Configuration management for kousu's job life"
+pkgname=kousu-art-graphics
+pkgdesc="Configuration management for kousu's image editing"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 #license=("MIT") # there..is no license? not really?
@@ -11,7 +11,10 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
-  kousu-art-audio
-  kousu-art-graphics
-  kousu-art-video
+  kousu-desktop
+
+  # graphics
+  inkscape # svg editor
+  #krita   # paint
+  gimp     # raster editor
 )

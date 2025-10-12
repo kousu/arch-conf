@@ -1,0 +1,62 @@
+pkgname=kousu-art-audio
+pkgdesc="Configuration management for kousu's music production"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  kousu-desktop
+
+  # hardware
+  # alsa-card-profiles # is this needed? it's for making fancy professional soundcards work, I think
+
+  # music :: editing
+  audacity
+  sonic-visualiser
+
+  # music :: djing
+  yt-dlp
+  mixxx # DJ app
+  xwax  # ditto
+
+  # music :: production
+  # most from https://archlinux.org/groups/x86_64/pro-audio/; but curated to what I actually use
+  # but look there for more ideas from time to time, there's good stuff
+  ardour
+  samplv1
+  synthv1
+  drumkv1
+  padthv1
+  #linuxsampler # not sure if good
+  mda.lv2   # some synths, some filters
+  fabla     # drum sampler (warning: inefficient)
+  drumgizmo
+  geonkick
+  amsynth
+  surge-xt
+  bchoppr  # also a slicer?
+  polyphone # .sf2 editor
+  stochas   # randomized rhythm generator
+  infamousplugins  # filters
+  cmt       # filters
+  #wah-plugins
+  #wolf-spectrum # not sure if good?
+  #wolf-shaper
+  #vamp-aubio-plugins # not sure if good!
+  #rubberband-lv2
+
+  lmms
+  #hydrogen # basic but effective drum sequencer
+  #ft2-clone # tracker
+)
+
+package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
+  cp -rp * "${pkgdir}"
+}

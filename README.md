@@ -187,19 +187,6 @@ This system is a fairly plain KDE-based deal.
 Log in at the getty(1) prompt (the terminal prompt) with your user, then either use the terminal,
 or run [sx(1)](https://packages.archlinux.org/package/sx) to get into the GUI.
 
-## Contents
-
-Because the goal here isn't to package pre-existing software for use on Arch,
-but rather to customize a complete Arch system, most of the work is done kept in files,
-directly in `src/`, instead of using PKGBUILD's `sources=()` array, and what doesn't
-fit in as a file is done as a `.install` script hook.
-
-> [!warning]
->
-> `package()` is run in `$srcdir`, however `$srcdir != 'src/'`, at least not necessarily.
-> Instead, because we're not using `sources`, every `package()` function here starts by enforcing
-> `cd ${startdir}/src`
-
 ## Cleaning
 
 My goal here is that your system's configuration recorded in `pacman -Qe` should be pretty minimal,
@@ -383,6 +370,18 @@ pkgrel=1
     but if we did that we should also set `epoch=1`
 
 
+### Contents
+
+Because the goal here isn't to package pre-existing software for use on Arch,
+but rather to customize a complete Arch system, most of the work is done kept in files,
+directly in `src/`, instead of using PKGBUILD's `sources=()` array, and what doesn't
+fit in as a file is done as a `.install` script hook.
+
+> [!warning]
+>
+> `package()` is run in `$srcdir`, however `$srcdir != 'src/'`, at least not necessarily.
+> Instead, because we're not using `sources`, every `package()` function here starts by enforcing
+> `cd ${startdir}/src`
 
 ## Discussion
 
@@ -416,7 +415,9 @@ Another downside is that there are some operations that _do_ need to be procedur
 
 ## Working with this
 
-The trick is to express configuration as config files instead of as commands that change state. So, instead of `systemctl enable`, directly create symlinks in `/etc/systemd`; instead of `ip addr add` use a tool like `iwd`, `netctl`, `netplan`, `NetworkManager`, and figure out and *deploy* the config files it would write for itself; instead of ``. Pick your apps and daemons that understand `.d` directories (e.g. ..., ..., ..., `/etc/cron.d/`, ...), make use of them: they are there specifically so multiple packages can combine their efforts without stepping on each other.
+The trick is to express configuration as much as possible as config files instead of as commands that change state. So, instead of `systemctl enable`, directly create symlinks in `/etc/systemd`; instead of `ip addr add` use a tool like `iwd`, `netctl`, `netplan`, `NetworkManager`, and figure out and *deploy* the config files it would write for itself; instead of ``. Pick your apps and daemons that understand `.d` directories (e.g. ..., ..., ..., `/etc/cron.d/`, ...), make use of them: they are there specifically so multiple packages can combine their efforts without stepping on each other.
+
+In the rare cases you cannot express configuration as files on the system, use a post-install script, or maybe deploy cronjobs (or systemd timers, if that's your thing).
 
 ## Related Work
 

@@ -1,4 +1,4 @@
-pkgname=kousu-de-kde
+pkgname=kousu-desktop-kde
 pkgdesc="Configuration management for KDE"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
@@ -11,6 +11,8 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
+  kousu-desktop
+
   ## GUI :: Desktop Environment :: KDE
   #breeze-gtk # themes GTK apps to match the KDE ones..but I don't know how to use it yet.
   plasma-desktop

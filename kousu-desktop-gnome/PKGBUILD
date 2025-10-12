@@ -1,4 +1,4 @@
-pkgname=kousu-de-gnome
+pkgname=kousu-desktop-gnome
 pkgdesc="Configuration management for kousu's GNOME install"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
@@ -13,6 +13,8 @@ pkgrel=1
 install="${pkgname}.install"
 
 depends=(
+  kousu-desktop
+
   networkmanager # we actually use iwd but GNOME only speaks this; luckily NetworkManager can talk to iwd for us.
 
   # unsure about:

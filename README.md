@@ -157,13 +157,39 @@ to install only a subset of packages, just replace the glob with manually pickin
 > I'm going to look into what running my own repo looks like; maybe I can do it on Github Pages? That would be nice and easy.
 
 If you are [installing Arch](https://wiki.archlinux.org/title/Installation_guide) fresh,
-copy the package to the installation system somehow (`curl`, use an extra thumbdrive, etc),
-then instead of `pacstrap /mnt base`, use
+run `./build.sh *` as above, then copy the `pkg/` folder over to your new system via thumbdrive/scp/whatever.
+
+The tidy way is to set this up as a repo,
+and then install a single top-level package,
+probably one of the "kousu-device" packages,
+which will then be the *only* explicitly installed package on your system.
 
 ```
-pacstrap -U kousu-device-nigiri-*.pkg.tar.zst
+# mkdir -p /var/cache/pacman/site
+# rsync -a pkg/ /var/cache/pacman/site/
+# tee -a /etc/pacman.conf >/dev/null <<EOF
+[site]
+# the arch devtools magically recognize directories in the containerized
+# pacman.conf and _bind mount_ them to the same paths inside as out.
+Server = file:///var/cache/pacman/site
+# Disable signature checking on local packages -- because we don't have signing configured
+SigLevel = Optional TrustAll
+[site]
+EOF
+# pacstrap /mnt kousu-device-nigiri
+# rsync -a pkg /mnt/var/cache/pacman/site/
 ```
 
+Once the system is bootstrapped you can clone this repo to it
+and configure `PKGDEST=/var/cache/pacman/site` to make edits.
+
+The quicker-and-dirty way is you can pick out the packages you need,
+but then you need to trace out the dependencies and you can't set up
+automatic updates:
+
+```
+pacstrap /mnt -U pkg/kousu-device-nigiri-*.pkg.tar.zst pkg/kousu-desktop-*.pkg.tar.zst pkg/kousu-de-kde-*.pkg.tar.zst
+```
 
 ## Users
 

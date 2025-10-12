@@ -1,0 +1,54 @@
+pkgname=kousu-de-gnome
+pkgdesc="Configuration management for kousu's GNOME install"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+#license=("MIT") # there..is no license? not really?
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  # `pacman -Qg gnome` minus the apps I don't want
+  epiphany  # web browser
+  gdm
+  gnome-backgrounds
+  gnome-calculator
+  gnome-calendar
+  gnome-characters
+  gnome-clocks
+  gnome-color-manager
+  gnome-connections # VNC/RDP/SPICE
+  gnome-console
+  gnome-contacts
+  gnome-control-center
+  gnome-disk-utility
+  gnome-keyring
+  gnome-logs
+  gnome-maps
+  gnome-menus
+  gnome-recipes
+  gnome-remote-desktop
+  gnome-shell
+  #gnome-software
+  gnome-system-monitor
+  gnome-text-editor
+  gnome-tour
+  gnome-user-docs
+  gnome-user-share
+  gnome-weather
+  grilo-plugins
+  gvfs
+  gvfs-smb
+  gvfs-mtp
+  loupe    # image viewer
+  nautilus # file browser
+  orca     # screen reader
+  papers   # document viewer
+  showtime # video player
+  snapshot # camera
+  sushi    # part of nautilus
+
+)

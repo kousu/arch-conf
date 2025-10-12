@@ -1,0 +1,37 @@
+pkgname=kousu-papers
+pkgdesc="Configuration management for apps for writing papers"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  # docs
+  libreoffice-fresh  # docs/spreadsheets/presentations
+
+  ## Academic typesetting :: GUI
+  # TODO: evaluate which of these I want to settle on; I think I've used texstudio before and it's the most solid but also clunkiest
+  #gnome-latex
+  #gummi
+  #hevea
+  #kile
+  #rubber
+  #texstudio
+  #texmaker
+
+  ## Academic typesetting
+  typst
+  tinymist
+  citations   # Gnome .bib manager
+  # RECOMMENDED: also install code and the tinymist package and configure it to build on save, show outputs in system viewer, and format on save using typstyle; TODO: pull that into config management too, I just don't know exactly what that entails atm?
+  #texlive-bin
+
+  pdfgrep
+
+  code  # vscode. sigh. it's the only good editor for typst
+  ttf-fira-code
+)

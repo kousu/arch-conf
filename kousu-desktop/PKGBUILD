@@ -75,7 +75,6 @@ depends=(
 
   ## GUI :: Editors
   #libreoffice-fresh # documents/spreadsheets/presentations/etc
-  apostrophe  # .md focus mode editor
   xournalpp   # PDF editor; mostly good for signing legal documents.
   #qpdf       # another PDF editor, less tools but more accurate
   obsidian    # Notebook
@@ -110,6 +109,10 @@ depends=(
   #openra
   #endless-sky
   #kgeography
+)
+
+optdepends=(
+  'apostrophe: .md focus mode editor; BEWARE: pulls in pandoc which pulls in almost all of haskell'
 )
 
 package() {

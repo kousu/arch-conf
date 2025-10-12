@@ -13,6 +13,7 @@
 
 # TODO:
 # - [ ] Provide -c (clean container between builds) as a flag
+# - [ ] Bug: setting PKGDEST anywhere under /tmp breaks in odd ways?
 
 
 # Questions writing this raises for me:

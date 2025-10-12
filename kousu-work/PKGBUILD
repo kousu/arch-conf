@@ -26,3 +26,9 @@ depends=(
 optdepends=(
   kousu-ets
 )
+
+package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
+  cp -rp * "${pkgdir}"
+}

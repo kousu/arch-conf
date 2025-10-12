@@ -1,9 +1,3 @@
-# Note: to *bootstrap* a system using this, you need to:
-# 1. have pacman installed
-# 2. pacman -S --noconfirm base-devel
-# 3. makepkg --nodeps # because you won't have the dependencies yet and makepkg assumes you need them to build (even if they're only runtime dependencies; which, in this case, they are)
-# 4. pacman -U kousu-nigiri*.pkg*
-
 # TODO:
 # - [ ] split this to kousu-base and kousu-desktop, the desktop being just the GUI parts
 
@@ -11,14 +5,12 @@ pkgname=kousu-desktop
 pkgdesc="Configuration management for kousu"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
-#license=("MIT") # there..is no license? not really?
 
-#  # This numbers the package versions by how many commits went into it: every published commit is a newer package.
-#  # This will break if we ever rebase the master branch. Don't do that.
-#  # It also breaks when run under pikaur, so it's not really an option
-#pkgver="$(git log --pretty=oneline | wc -l)"
-pkgver=101
+pkgver=0
 pkgrel=1
+pkgver() {
+  echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)"
+}
 
 depends=(
   # Base system

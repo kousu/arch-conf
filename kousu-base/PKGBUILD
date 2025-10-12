@@ -47,6 +47,7 @@ depends=(
   openbsd-netcat
   socat
   rsync
+  magic-wormhole
   fdupes
   sshfs
 

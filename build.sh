@@ -122,8 +122,10 @@ fi
 #   _outside_ the container, where /etc/pacman.d/site.conf doesn't exist. Too bad,
 #   it would be cleaner...
 #
-sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
-sudo arch-chroot "$CHROOT"/root tee -a /etc/pacman.conf >/dev/null <<EOF
+for U in root "$USER"; do
+if ! [ -d "$CHROOT"/"$U" ]; then continue; fi
+sudo arch-chroot "$CHROOT"/"$U" sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
+sudo arch-chroot "$CHROOT"/"$U" tee -a /etc/pacman.conf >/dev/null <<EOF
 # --- BEGIN makechrootpkg ---
 [site]
 # the arch devtools magically recognize directories in the containerized
@@ -133,6 +135,7 @@ Server = file://$PKGDEST
 SigLevel = Optional TrustAll
 # --- END makechrootpkg ---
 EOF
+done
 
 ## Extend makechrootpkg's sudo privileges until
 ## done, meaning the build can be left unattended.

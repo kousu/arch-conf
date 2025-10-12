@@ -1,0 +1,248 @@
+#!/bin/sh
+#
+# Install archlinux.
+#
+# You can download the standard installer https://archlinux.org/download/
+# boot it on the target machine, and copy this to it (via wget, curl, or a spare thumbdrive),
+# or plug the target harddrive directly in to an existing Arch system and
+# bootstrap from there.
+
+# This aims at a single-user, EFI laptop with a single SSD:
+#
+# Partition table on the SSD is GPT:
+# - cleartext /boot - 1G
+# - encrypted LVM containing
+#   - swap         - 2G   (small)
+#   - /            - 100G
+#   - /var         - 100G
+#   #-/opt         - not used
+#   #-/srv         - not used
+#   - /home        - remainder
+#
+# The kernel is its own bootloader ([UKI](https://wiki.archlinux.org/title/Unified_kernel_image); controlled by /etc/mkinitcpio.d/linux.preset)
+#
+# The encryption _passes TRIM commands through_ to improve performance/lifetime of your SSD.
+# This leaks disk usage statistics, which is a risk.
+# Personally, I don't care that people can prove how much/little I use each of my devices, only that they can't see inside them without my consent.
+#
+# Refs:
+# - https://wiki.archlinux.org/title/Installation_guide
+# - https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LVM_on_LUKS
+# - https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
+# - https://asalor.blogspot.com/2011/08/trim-dm-crypt-problems.html
+
+# TODO:
+# - [ ] scale partition layout to the given disk size
+# - [ ] make swap optional
+# - [ ] take the hostname on the command line?
+# - [ ] Support syslinux and not just UKI?
+# - [ ] Support MBR?
+# - [ ] Support "writable" partition (for thumbdrive mode)
+# - [ ] make suspend-to-disk work
+# - [ ] repack the standard installer to include this script
+# - [ ] don't hardcode "cryptlvm" or "lvsys"? because they might collide with devices on the host?
+# - [ ] Move /etc/cmdline.d/root.conf into kousu-base/kousu-base.install?
+#
+#    It would be some tricky awk, but in theory possible to deduce the root device
+#    and if it's nested inside a cryptdev
+# - [ ] make encryption unattended
+#
+#   Similar to how i do trust-on-first-login for taking ownership of the accounts,
+#    generate a unique keyfile instead of prompting the user for a password.
+#
+#   Place it on /boot/crypto_keyfile.bin (or embed it in the initramfs, though idk how to do that)
+#    Tell the initramfs about it via the [`cryptkey`](https://wiki.archlinux.org/title/Dm-crypt/System_configuration#cryptkey),
+#    kernel parameter:`cryptkey=label=boot:vfat:/crypto_keyfile.bin`
+#    Nag the user (via /etc/profile.d?) to either:
+#    - generate a new keyfile and keep it on a thumbdrive
+#    - generate a new password
+#    - add it with `cryptsetup luksAddKey`
+#    - use `cryptsetup luksRemoveKey /boot/crypto_keyfile.bin` to destroy access.
+#    (a helper script could be good here?)
+
+
+set -e -o pipefail
+
+DEFAULT_PKGS=(
+  # this is roughly https://geo.mirror.pkgbuild.com/iso/latest/arch/pkglist.x86_64.txt
+  # you can @ me if it's out of date
+  base syslinux refind rsync reflector sshfs tmux tpm2-tools parted partclone openvpn openssh linux linux-firmware gpart gptfdisk  ddrescue dhcpcd  broadcom-wl smartmontools  openbsd-netcat memtest86+ modemmanager mobile-broadband-provider-info wireless_tools wpa_supplicant vim zsh bind bc btrfs-progs ccid cifs-utils clonezilla darkhttpd dmraid dnsmasq dnssec-anchors ecryptfs-utils edk2-shell ethtool exfatprogs f2fs-tools fatresize fsarchiver grub hdparm intel-ucode irssi iw iwd jfsutils less lftp lsb-release lvm2 lsscsi lynx man-db man-pages mdadm memtest86+-efi mpg123 nano nfs-utils nfsidmap nftables nmap nvme-cli oath-toolkit openconnect openpgp-card-tools partimage pptpclient screen squashfs-tools sudo sysfsutils systemd-resolvconf testdisk terminus-font tcpdump wireless-regdb espeakup alsa-utils b43-fwcutter amd-ucode bcachefs-tools hidapi nbd xfsprogs wvdial  usbutils mc
+  )
+
+
+usage() {
+  echo "usage: $0: /dev/disk"
+}
+
+if [ -z "$1" ]; then
+  usage
+  exit 1
+fi
+
+TARGET_DISK="$1"; shift
+PKGS=("$@")
+if [ -z "$PKGS" ]; then
+  # TODO: maybe replicate
+  # https://geo.mirror.pkgbuild.com/iso/latest/arch/pkglist.x86_64.txt
+  # at the very least, the system should be bootable and have pacman and NETWORK, so that it can be built up
+  PKGS=("${DEFAULT_PKGS[@]}")
+fi
+
+
+if [ ! \( -b "$TARGET_DISK" -o -f "$TARGET_DISK" \) ]; then
+  echo "error: disk $TARGET_DISK must be a block device or a disk image (a regular file)"
+  exit 1
+fi
+
+set -u  # NB: set *after* parsing args to make it easier
+
+
+## https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet
+# Connecting to the net can't be automated -- easily
+if ! ping -c 3 archlinux.org >/dev/null; then
+  echo "error: network failure. Are you online? Follow https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet" >&2
+  exit 1
+fi
+
+## https://wiki.archlinux.org/title/Installation_guide#Update_the_system_clock
+# set the time so that https:// mirrors will work.
+timedatectl set-ntp true
+
+
+( # this subshell for the benefit of the possible trap EXIT
+
+if [ -f "$TARGET_DISK" ]; then
+  LOOPDEV="$(set -x; losetup --show -f "$TARGET_DISK")"
+  TARGET_DISK=$LOOPDEV
+  trap 'losetup -d "$LOOPDEV"' EXIT # 'EXIT' is a XXX bashism
+  # also this means only one cleanup is possible
+fi
+
+
+## https://wiki.archlinux.org/title/Installation_guide#Partition_the_disks
+#
+# An assumption is that we only have one disk -- you can always format more disks after installation.
+# Exotic setups involving having your OS split across a RAID(/a multi-disk LVM) are out of scope.
+
+(
+set -x;
+sfdisk "$TARGET_DISK" <<EOF
+label: gpt
+
+size=1G, type=uefi, name="/boot"
+type=linux, name="lvm"
+EOF
+
+partprobe "$TARGET_DISK" # possibly redundant? sfdisk should do this for us.
+)
+
+if [ -b "$TARGET_DISK"p1 ]; then
+  # disk is a type (loop, nvme, ...) that names partitions like loop2p1, loop2p2 ...
+  TARGET_DISK="$TARGET_DISK"p
+fi
+
+### https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LVM_on_LUKS
+
+(
+(set -x; cryptsetup luksFormat "$TARGET_DISK"2)
+(set -x; cryptsetup open  --allow-discards --persistent  "$TARGET_DISK"2 cryptlvm)
+trap 'cryptsetup close cryptlvm' EXIT
+
+(
+(set -x; pvcreate /dev/mapper/cryptlvm)
+(set -x; vgcreate lvsys /dev/mapper/cryptlvm)
+trap 'vgchange -a n lvsys' EXIT  # deactivate lvm on exit (otherwise it holds LUKS open)
+
+(set -x
+lvcreate -L 2G -n swap lvsys
+lvcreate -L 100G -n root lvsys
+lvcreate -L 100G -n var lvsys
+lvcreate -l 100%FREE -n home lvsys
+lvreduce -L -512M -n lvsys/home  # leave some room for e2scrub(8) to work
+)
+
+
+## https://wiki.archlinux.org/title/Installation_guide#Format_the_partitions
+
+(set -x;
+mkfs.fat -F32 -n "boot" "$TARGET_DISK"1
+mkswap /dev/lvsys/swap
+mkfs.ext4 -L root /dev/lvsys/root
+mkfs.ext4 -L var /dev/lvsys/var
+mkfs.ext4 -L home /dev/lvsys/home
+)
+
+
+## https://wiki.archlinux.org/title/Installation_guide#Mount_the_file_systems
+(
+(set -x; swapon /dev/lvsys/swap)
+trap 'swapoff /dev/lvsys/swap' EXIT
+
+  # the extra subshells are because we only get one clean-up trap per process
+
+(
+CHROOT="$(mktemp -d -t "arch-root-XXXXXXXXX")" # the installation guide says to use /mnt, but since this might be run from a working system, make an isolated mountpoint
+
+(set -x;
+mount /dev/lvsys/root "$CHROOT"
+mount --mkdir /dev/lvsys/var "$CHROOT"/var
+mount --mkdir /dev/lvsys/home "$CHROOT"/home
+mount --mkdir "$TARGET_DISK"1 "$CHROOT"/boot
+)
+trap 'umount -v --recursive "$CHROOT"; rmdir -v "$CHROOT"' EXIT
+
+
+# configure UKI bootloader
+# we have to tell it the root device to boot from
+mkdir -p "$CHROOT"/etc/cmdline.d
+crypt_uuid="$(blkid -s UUID -o value "$TARGET_DISK"2)"
+echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm root=/dev/lvsys/root rw" > "$CHROOT"/etc/cmdline.d/root.conf
+mkdir -p "$CHROOT"/boot/efi/boot   # also mkinitcpio will fail unless this exists? TODO: double check if this is necessary
+
+## Install the system
+(set -x; pacstrap -c "$CHROOT" "${PKGS[@]}")
+
+## UKI fallback:
+# if ${PKGS[@]} didn't create a bootable kernel,
+# reconfigure and do it again. this is really really fragile.
+if ! [ -f "$CHROOT"/boot/efi/boot/bootx64.efi ]; then
+  arch-chroot "$CHROOT" mkdir -p /etc/mkinitcpio.d /etc/mkinitcpio.conf.d
+  arch-chroot "$CHROOT" tee /etc/mkinitcpio.d/linux.preset >/dev/null  <<EOF
+ALL_kver="/boot/vmlinuz-linux"
+PRESETS=('default')
+default_uki="/boot/efi/boot/bootx64.efi"
+default_options="--splash=/usr/share/systemd/bootctl/splash-arch.bmp"
+EOF
+  arch-chroot "$CHROOT" tee /etc/mkinitcpio.conf.d/hooks.conf >/dev/null <<EOF
+HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block lvm2 encrypt filesystems fsck)
+EOF
+  (set -x; pacstrap -c "$CHROOT" linux lvm2)
+fi
+
+## https://wiki.archlinux.org/title/Installation_guide#Configure_the_system
+(set -x; genfstab -U "$CHROOT" >> "$CHROOT"/etc/fstab)
+
+# (The other configuration steps are covered by my arch-conf packages)
+
+
+## Credentials / Ownership
+
+# Force root to set its password on first log in
+# (this won't work through ssh or su or other "remote" logins
+#  but it will through getty or gdm)
+(set -x; arch-chroot "$CHROOT" passwd -de root)
+
+
+set -x  # display all the cleanup traps
+
+# https://wiki.archlinux.org/title/Installation_guide#Reboot
+
+) # -> trap 'umount -R "$CHROOT"' EXIT
+
+) # -> trap 'swapoff "$TARGET_DISK"p8' EXIT
+
+) # -> trap 'vgchange -a n lvsys' EXIT
+
+) # -> trap 'cryptsetup close cryptlvm' EXIT
+
+) # -> trap 'losetup -d ...' EXIT

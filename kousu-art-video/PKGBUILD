@@ -1,4 +1,4 @@
-pkgname=kousu-art
+pkgname=kousu-art-video
 pkgdesc="Configuration management for kousu's job life"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
@@ -11,7 +11,13 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
-  kousu-art-audio
-  kousu-art-graphics
-  kousu-art-video
+  kousu-desktop
+
+  # hardware
+  # alsa-card-profiles # is this needed? it's for making fancy professional soundcards work, I think
+
+  # video/music
+  yt-dlp
+  pitivi     # video editor (Gnome)
+  #kdenlive  # video editor (KDE)
 )

@@ -18,6 +18,7 @@ depends=(
 
   # Programming
   julia
+  octave
 )
 
 conflicts=(kousu-device-bomp kousu-device-nigiri)

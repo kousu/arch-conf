@@ -41,17 +41,17 @@ parsedeps() {
 		for dep in "${depends[@]}"; do
 			# lose the version comparator, if any
 			depname=${dep%%[<>=]*}
-			[[ -f "$depname/PKGBUILD" ]] && echo "$depname (depends)"
+			if [[ -f "$depname/PKGBUILD" ]]; then echo "$depname (depends)"; fi
 		done
 		for dep in "${makedepends[@]}"; do
 			# lose the version comparator, if any
 			depname=${dep%%[<>=]*}
-			[[ -f "$depname/PKGBUILD" ]] && echo "$depname (makedepends)"
+			if [[ -f "$depname/PKGBUILD" ]]; then echo "$depname (makedepends)"; fi
 		done
 		for dep in "${optdepends[@]/:*}"; do
 			# lose the version comaparator, if any
 			depname=${dep%%[<>=]*}
-			[[ -f "$depname/PKGBUILD" ]] && echo "$depname (optdepends)"
+			if [[ -f "$depname/PKGBUILD" ]]; then echo "$depname (optdepends)"; fi
 		done
 	fi
 }

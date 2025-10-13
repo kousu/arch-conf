@@ -104,6 +104,7 @@ install="${pkgname}.install"
 
 backup=(
   # user-editable config files
+  etc/.gitignore
   etc/locale.conf
 )
 

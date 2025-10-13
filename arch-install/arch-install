@@ -45,7 +45,7 @@
 #
 #    It would be some tricky awk, but in theory possible to deduce the root device
 #    and if it's nested inside a cryptdev
-# - [ ] make encryption unattended
+# - [x] make encryption unattended
 #
 #   Similar to how i do trust-on-first-login for taking ownership of the accounts,
 #    generate a unique keyfile instead of prompting the user for a password.
@@ -144,8 +144,12 @@ fi
 ### https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LVM_on_LUKS
 
 (
-(set -x; cryptsetup luksFormat "$TARGET_DISK"2)
-(set -x; cryptsetup open  --allow-discards --persistent  "$TARGET_DISK"2 cryptlvm)
+
+KEY=$(mktemp -d -t arch-install-key-XXXXXXXXX)/bootstrap_keyfile.bin
+(set -x; dd if=/dev/urandom of="${KEY}" bs=1 count=64)
+
+(set -x; cryptsetup luksFormat --key-file "${KEY}" "$TARGET_DISK"2)
+(set -x; cryptsetup open --allow-discards --persistent --key-file "${KEY}" "$TARGET_DISK"2 cryptlvm)
 trap 'cryptsetup close cryptlvm' EXIT
 
 (
@@ -191,12 +195,14 @@ mount --mkdir "$TARGET_DISK"1 "$CHROOT"/boot
 )
 trap 'umount -v --recursive "$CHROOT"; rmdir -v "$CHROOT"' EXIT
 
+mv "${KEY}" "$CHROOT"/boot/bootstrap_keyfile.bin
+
 
 # configure UKI bootloader
 # we have to tell it the root device to boot from
 mkdir -p "$CHROOT"/etc/cmdline.d
 crypt_uuid="$(blkid -s UUID -o value "$TARGET_DISK"2)"
-echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm root=/dev/lvsys/root rw" > "$CHROOT"/etc/cmdline.d/root.conf
+echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm cryptkey=LABEL=boot:vfat:/bootstrap_keyfile.bin root=/dev/lvsys/root rw" > "$CHROOT"/etc/cmdline.d/root.conf
 mkdir -p "$CHROOT"/boot/efi/boot   # also mkinitcpio will fail unless this exists? TODO: double check if this is necessary
 
 ## Install the system
@@ -213,11 +219,36 @@ PRESETS=('default')
 default_uki="/boot/efi/boot/bootx64.efi"
 default_options="--splash=/usr/share/systemd/bootctl/splash-arch.bmp"
 EOF
+  arch-chroot "$CHROOT" tee /etc/mkinitcpio.conf.d/modules.conf >/dev/null <<EOF
+MODULES=(vfat)
+EOF
   arch-chroot "$CHROOT" tee /etc/mkinitcpio.conf.d/hooks.conf >/dev/null <<EOF
 HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block lvm2 encrypt filesystems fsck)
 EOF
   (set -x; pacstrap -c "$CHROOT" linux lvm2)
 fi
+
+  arch-chroot "$CHROOT" tee /etc/profile.d/bootstrap_keyfile.sh >/dev/null <<EOF
+if [ -f /boot/bootstrap_keyfile.bin ]; then
+  echo
+  echo ">> Your disks are **encrypted** but you are currently enjoying"
+  echo "   unattended booting from the *cleartext key* /boot/bootstrap_keyfile.bin."
+  echo
+  echo "   You SHOULD take full ownership of your system by replacing"
+  echo "   it with a password or keyfile of your own."
+  echo
+  echo "   When you have thought of a password and are ready to claim, run"
+  echo
+  echo "     sudo cryptsetup luksAddKey --force-password --key-file /boot/bootstrap_keyfile.bin UUID=${crypt_uuid}"
+  echo "     sudo cryptsetup luksRemoveKey --key-file /boot/bootstrap_keyfile.bin UUID=${crypt_uuid}"
+  echo "     sudo rm /boot/bootstrap_keyfile.bin"
+  echo
+  echo "   This prevents anyone from turning on your machine or even"
+  echo "   accessing the files forensically without your consent."
+  echo
+fi
+EOF
+
 
 ## https://wiki.archlinux.org/title/Installation_guide#Configure_the_system
 (set -x; genfstab -U "$CHROOT" >> "$CHROOT"/etc/fstab)

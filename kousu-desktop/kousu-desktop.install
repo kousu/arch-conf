@@ -1,0 +1,21 @@
+#!/bin/bash
+
+_deploy() {
+  systemctl enable bluetooth
+}
+
+
+post_install() {
+  _deploy
+}
+
+
+post_upgrade() {
+  _deploy
+}
+
+
+pre_remove() {
+  systemctl disable bluetooth # ???
+}
+

@@ -124,32 +124,44 @@ In `build.sh` we use `makechrootpkg` but you can play with swapping
 
 ## Installation
 
-Install packages manually, without automatic dependency resolution:
+First, set up a [local repo](https://man.archlinux.org/man/pacman.conf.5#USING_YOUR_OWN_REPOSITORY)
 
 ```
-cd ${package_name}
-sudo pacman -U ${package_name}-*.pkg.tar.zst [${package_name_2}-*.pkg.tar.zst ...]
-```
-
-Or, if you used `build.sh`:
-
-```
-sudo pacman -U /var/cache/pacman/site/${package_name}-*.pkg.tar.zst
-```
-
-
-*If* you want automatic dependency resolution, you will need to add
-the output folder as a custom local pacman repo. See [pacman.conf(5)](https://man.archlinux.org/man/pacman.conf.5#USING_YOUR_OWN_REPOSITORY) for the details but the gist is add this to `/etc/pacman.conf`
-
-```
+$ sudo mkdir -p /var/cache/pacman/site
+$ sudo repo-add /var/cache/pacman/site/site.db.tar.zst
+$ tee -a /etc/pacman.conf >/dev/null <<EOF
 [site]
-Server = file:///home/you/path/to/this_folder
+# the arch devtools magically recognize directories in the containerized
+# pacman.conf and _bind mount_ them to the same paths inside as out.
+Server = file:///var/cache/pacman/site
+# Disable signature checking on local packages -- because we don't have signing configured
+SigLevel = Optional TrustAll
+[site]
+EOF
 ```
 
-and then sync up and install a package -- ideally one of the top level ones:
+Then copy the built packages into it (if you are bootstrapping a different system then find a way to copy the `pkg/` folder over to it):
 
 ```
-sudo pacman -Sy kousu-device-nigiri
+$ sudo cp -r pkg/. /var/cache/pacman/site  # don't ignore the "."!
+```
+
+Then you can install from it; I recommend picking only a single top-level package;
+so that it is the only explicitly installed package on your system and if you decide
+to switch out the details any irrelevant parts can be identified and cleaned up automatically.
+
+```
+$ sudo pacman -Sy kousu-device-nigiri
+```
+
+### Manual
+
+In a pinch you can of course install packages manually without the extra steps of using a separate repo folder,
+but this is without automatic dependency resolution:
+
+```
+cd pkg/ # or cd ${package_name}/ if you used makepkg
+sudo pacman -U ${package_name}-*.pkg.tar.zst [${package_name_2}-*.pkg.tar.zst ...]
 ```
 
 ### pikaur
@@ -180,45 +192,35 @@ pikaur -Pi */PKGBUILD
 to install only a subset of packages, just replace the glob with manually picking the packages you want.
 
 
-## Deployment
+## Development
 
-> [!tip]
-> I'm going to look into what running my own repo looks like; maybe I can do it on Github Pages? That would be nice and easy.
+On a system you are building and testing these packages on,
+I recommend setting this up as a local repo as if you were installing from it.
 
-If you are [installing Arch](https://wiki.archlinux.org/title/Installation_guide) fresh,
-run `./build.sh *` as above, then copy the `pkg/` folder over to your new system via thumbdrive/scp/whatever.
-
-The tidy way is to set this up as a repo,
-and then install a single top-level package,
-probably one of the "kousu-device" packages,
-which will then be the *only* explicitly installed package on your system.
+Then your development iteration loops like:
 
 ```
-# mkdir -p /var/cache/pacman/site
-# rsync -a pkg/ /var/cache/pacman/site/
-# tee -a /etc/pacman.conf >/dev/null <<EOF
-[site]
-# the arch devtools magically recognize directories in the containerized
-# pacman.conf and _bind mount_ them to the same paths inside as out.
-Server = file:///var/cache/pacman/site
-# Disable signature checking on local packages -- because we don't have signing configured
-SigLevel = Optional TrustAll
-[site]
-EOF
-# pacstrap /mnt kousu-device-nigiri
-# rsync -a pkg /mnt/var/cache/pacman/site/
+$ # edit packages
+$ ./build.sh
+$ sudo cp -r pkg/. /var/cache/pacman/site  # don't ignore the '.'!
+$ sudo pacman -Syu  # update packages
+$ # test system
+$ # repeat
 ```
 
-Once the system is bootstrapped you can clone this repo to it
-and configure `PKGDEST=/var/cache/pacman/site` to make edits.
+> [!warning]
+>
+> You **could** skip the second line by instead
+>
+> 1. `sudo chown $USER /var/cache/pacman/site`
+> 2. Edit `/etc/makepkg.conf` to set`PKGDEST=/var/cache/pacman/site`
+>
+> Then builds automatically appear in your package repo. Neat, right?
+>
+> But it is unsafe: anyone with access to your account can slip a
+> malicious package in. Don't build this habit,
 
-The quicker-and-dirty way is you can pick out the packages you need,
-but then you need to trace out the dependencies and you can't set up
-automatic updates:
 
-```
-pacstrap /mnt -U pkg/kousu-device-nigiri-*.pkg.tar.zst pkg/kousu-desktop-*.pkg.tar.zst pkg/kousu-de-kde-*.pkg.tar.zst
-```
 
 ## Users
 
@@ -227,16 +229,18 @@ Installing this package *does not* create a user, because I am not sure how to u
 You should do:
 
 ```
-# adduser -G wheel,lp,network -m your-chosen-username
-# passwd your-chosen-username
+# adduser -G wheel,network -m your-chosen-username
+# passwd -de your-chosen-username
 ```
 
 `-m` will make sure to deploy the dotfiles from /etc/skel.
 
-The groups here are important! `wheel` means `sudo` rights; `lp` means Bluetooth rights (weirdly?).
+The groups here are important! `wheel` means `sudo` rights, `network` means `iwd` and `NetworkManager` rights.
+
+`-de` means that you will have to pick a password the first time you log in.
 
 
-## Cleaning
+## Keeping the System State Pristine
 
 My goal here is that your system's configuration recorded in `pacman -Qe` should be pretty minimal,
 and that the deployed system is at all times identical -- or close to identical -- to the system

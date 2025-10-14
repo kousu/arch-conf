@@ -43,10 +43,10 @@ EOF
   sed -i '/sshd_config.d/d' /etc/ssh/sshd_config # get rid of any pre-existing lines
   echo 'Include /etc/ssh/sshd_config.d/*.conf' >> /etc/ssh/sshd_config
 
-  systemctl enable --now iwd systemd-networkd systemd-resolved
+  systemctl enable iwd systemd-networkd systemd-resolved
 
   # see discussion in https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
-  systemctl enable --now fstrim.timer
+  systemctl enable fstrim.timer
 
   systemctl enable reflector.timer
   systemctl enable reflector.service

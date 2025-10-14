@@ -23,8 +23,7 @@ depends=(
 
   xkcdpass    # password generator
   words
-  pass-xkcd   # ^ integrates the above with pass(1)
-  softu2f-git # credential manager (virtual YubiKey)
+  #softu2f-git # credential manager (virtual YubiKey)
 	      # arguably this is part of "Web", since the only apps that can use it at the moment are websites
 
   #hollywood   # shennaigans

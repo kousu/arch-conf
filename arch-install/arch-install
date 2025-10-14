@@ -35,6 +35,8 @@
 # - [ ] scale partition layout to the given disk size
 # - [ ] make swap optional
 # - [ ] take the hostname on the command line?
+# - [ ] take an admin user to create on the command line?
+# - [ ] BUG: host system swaps get included in fstab; they need to be filtered out from genfstab
 # - [ ] Support syslinux and not just UKI?
 # - [ ] Support MBR?
 # - [ ] Support "writable" partition (for thumbdrive mode)
@@ -156,7 +158,7 @@ fi
 KEY=$(mktemp -d -t arch-install-key-XXXXXXXXX)/bootstrap_keyfile.bin
 (set -x; dd if=/dev/urandom of="${KEY}" bs=1 count=64)
 
-(set -x; cryptsetup luksFormat --key-file "${KEY}" "$TARGET_DISK"2)
+(set -x; cryptsetup luksFormat --batch-mode --key-file "${KEY}" "$TARGET_DISK"2)
 (set -x; cryptsetup open --allow-discards --persistent --key-file "${KEY}" "$TARGET_DISK"2 cryptlvm)
 trap 'cryptsetup close cryptlvm' EXIT
 

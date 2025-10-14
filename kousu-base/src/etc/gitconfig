@@ -1,0 +1,2 @@
+[include]
+    path = /etc/gitconfig.d/kousu-base.conf

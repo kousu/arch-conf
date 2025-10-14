@@ -239,7 +239,7 @@ EOF
   (set -x; pacstrap -c "$CHROOT" linux lvm2)
 fi
 
-  arch-chroot "$CHROOT" tee /etc/profile.d/bootstrap_keyfile.sh >/dev/null <<EOF
+arch-chroot "$CHROOT" tee /etc/profile.d/bootstrap_keyfile.sh >/dev/null <<EOF
 if [ -f /boot/bootstrap_keyfile.bin ]; then
   echo
   echo ">> Your disks are **encrypted** but you are currently enjoying"
@@ -264,6 +264,11 @@ EOF
 
 ## https://wiki.archlinux.org/title/Installation_guide#Configure_the_system
 (set -x; genfstab -U "$CHROOT" >> "$CHROOT"/etc/fstab)
+
+# Bootstrap wifi from the installer's env
+if [ -d "$CHROOT"/var/lib/iwd ] && [ -d /var/lib/iwd ]; then
+  cp -r /var/lib/iwd/. "$CHROOT"/var/lib/iwd   #NB: the /. is important, it means "copy contents into iwd/" instead of making a nested iwd/iwd/
+fi
 
 # (The other configuration steps are covered by my arch-conf packages)
 

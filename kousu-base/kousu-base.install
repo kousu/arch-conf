@@ -43,17 +43,6 @@ EOF
   sed -i '/sshd_config.d/d' /etc/ssh/sshd_config # get rid of any pre-existing lines
   echo 'Include /etc/ssh/sshd_config.d/*.conf' >> /etc/ssh/sshd_config
 
-  # force git to use a .d directory
-  # Useful in general, but particularly because makechrootpkg(1)
-  # injects its own /etc/gitconfig which means downstream package
-  # fails to build when building with that method.
-  if ! grep -q '/etc/gitconfig.d/00-defaults.conf' /etc/gitconfig 2>/dev/null; then
-      cat << EOF | tee -a /etc/gitconfig
-[include]
-    path = /etc/gitconfig.d/00-defaults.conf
-EOF
-  fi
-
   systemctl enable --now iwd systemd-networkd systemd-resolved
 
   # see discussion in https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
@@ -90,14 +79,6 @@ post_install() {
       # this is like lineinfile: in ansible
       # because it doesn't look like this thing contains a .d directory for its config I can use
       (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf
-    fi
-
-    if ! [ -f /etc/sudoers.d/builduser-pacman ]; then
-      # **during a makechrootpkg build** don't track /etc/gitconfig.
-      # makechrootpkg also wants to edit that file and it ties a knot of conflicts.
-      cat >> /etc/.gitignore <<EOF
-/gitconfig
-EOF
     fi
 
     etckeeper init

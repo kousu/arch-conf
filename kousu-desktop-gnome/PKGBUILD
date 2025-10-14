@@ -80,4 +80,7 @@ package() {
   cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
 
   cp -rp * "${pkgdir}"
+
+  chmod 775 "${pkgdir}"/var/lib/AccountsService/
+  chmod -R u=rwX,go= "${pkgdir}"/var/lib/AccountsService/users
 }

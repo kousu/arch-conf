@@ -1,0 +1,79 @@
+--- D.dconf	2025-10-14 06:34:01.794072418 -0400
++++ E.dconf	2025-10-14 06:51:50.157102941 -0400
+@@ -10,9 +10,15 @@
+ 
+ [org/gnome/Console]
+ font-scale=1.0
+-last-window-maximised=false
++last-window-maximised=true
+ last-window-size=(732, 528)
+ 
++[org/gnome/Geary]
++migrated-config=true
++window-height=736
++window-maximize=true
++window-width=683
++
+ [org/gnome/TextEditor]
+ last-save-directory='file:///home/kousu'
+ 
+@@ -22,8 +28,13 @@
+ window-maximized=false
+ window-width=439
+ 
++[org/gnome/calendar]
++active-view='month'
++window-maximized=true
++window-size=(768, 600)
++
+ [org/gnome/control-center]
+-last-panel='keyboard'
++last-panel='wellbeing'
+ window-state=(980, 640, false)
+ 
+ [org/gnome/desktop/app-folders]
+@@ -49,25 +60,42 @@
+ name='suse-yast.directory'
+ translate=true
+ 
++[org/gnome/desktop/break-reminders]
++selected-breaks=['eyesight', 'movement']
++
++[org/gnome/desktop/break-reminders/eyesight]
++play-sound=true
++
++[org/gnome/desktop/break-reminders/movement]
++duration-seconds=uint32 180
++interval-seconds=uint32 1800
++play-sound=true
++
+ [org/gnome/desktop/input-sources]
+ sources=[('xkb', 'us')]
+-xkb-options=['compose:rctrl', 'lv3:menu_switch']
++xkb-options=['compose:rctrl', 'lv3:ralt_switch']
+ 
+ [org/gnome/desktop/interface]
+ color-scheme='prefer-dark'
+ 
+ [org/gnome/desktop/notifications]
+-application-children=['org-gnome-characters', 'org-gnome-software', 'org-gnome-settings']
++application-children=['org-gnome-characters', 'org-gnome-software', 'org-gnome-settings', 'org-gnome-console']
+ 
+ [org/gnome/desktop/notifications/application/org-gnome-characters]
+ application-id='org.gnome.Characters.desktop'
+ 
++[org/gnome/desktop/notifications/application/org-gnome-console]
++application-id='org.gnome.Console.desktop'
++
+ [org/gnome/desktop/notifications/application/org-gnome-settings]
+ application-id='org.gnome.Settings.desktop'
+ 
+ [org/gnome/desktop/notifications/application/org-gnome-software]
+ application-id='org.gnome.Software.desktop'
+ 
++[org/gnome/desktop/session]
++idle-delay=uint32 300
++
+ [org/gnome/evolution-data-server]
+ migrated=true
+ 

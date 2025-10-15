@@ -1,0 +1,377 @@
+--- E.dconf	2025-10-14 06:51:50.157102941 -0400
++++ F.dconf	2025-10-14 20:22:31.473001499 -0400
+@@ -1,18 +1,44 @@
++[com/rafaelmardojai/Blanket]
++playing=false
++volume=1.0
++
++[com/rafaelmardojai/Blanket/e52f7134-cff9-463b-9f7d-3740d2cc1d57]
++sounds-mute={'birds': false}
++sounds-volume={'birds': 0.5}
++
+ [de/haeckerfelix/Shortwave]
+ library-sorting='name'
+ library-sorting-type='ascending'
+-playback-last-station='{"changeuuid":"b5da5b35-4c3d-49ca-97d7-d339772c3f31","stationuuid":"9614e0a1-0601-11e8-ae97-52543be04c81","name":"SomaFM Fluid (128k MP3)","url":"https://somafm.com/fluid.pls","url_resolved":"https://ice1.somafm.com/fluid-128-mp3","homepage":"https://somafm.com/fluid/","favicon":"https://somafm.com/img3/fluid-400.jpg","tags":"chilled trap,future soul,hiphop,woozy electronica","country":"The United States Of America","countrycode":"US","state":"California","language":"english","languagecodes":"EN","votes":5386,"lastchangetime":"2025-10-13 20:14:58","lastchangetime_iso8601":"2025-10-13T20:14:58Z","codec":"MP3","bitrate":128,"hls":0,"lastcheckok":1,"lastchecktime":"2025-10-13 20:20:11","lastchecktime_iso8601":"2025-10-13T20:20:11Z","lastcheckoktime":"2025-10-13 20:20:11","lastcheckoktime_iso8601":"2025-10-13T20:20:11Z","lastlocalchecktime":"2025-10-13 11:30:23","clicktimestamp":"2025-10-14 09:33:32","clicktimestamp_iso8601":"2025-10-14T09:33:32Z","clickcount":14,"clicktrend":5,"ssl_error":0,"geo_lat":37.809784,"geo_long":-121.286316,"has_extended_info":false}'
+-playback-volume=0.45624999999999999
++playback-last-station='{"changeuuid":"91838819-f281-4e70-a08b-43d95dcfb31d","stationuuid":"9614e0a1-0601-11e8-ae97-52543be04c81","name":"SomaFM Fluid (128k MP3)","url":"https://somafm.com/fluid.pls","url_resolved":"https://ice4.somafm.com/fluid-128-mp3","homepage":"https://somafm.com/fluid/","favicon":"https://somafm.com/img3/fluid-400.jpg","tags":"chilled trap,future soul,hiphop,woozy electronica","country":"The United States Of America","countrycode":"US","state":"California","language":"english","languagecodes":"EN","votes":5386,"lastchangetime":"2025-10-14 11:36:52","lastchangetime_iso8601":"2025-10-14T11:36:52Z","codec":"MP3","bitrate":128,"hls":0,"lastcheckok":1,"lastchecktime":"2025-10-14 11:36:55","lastchecktime_iso8601":"2025-10-14T11:36:55Z","lastcheckoktime":"2025-10-14 11:36:55","lastcheckoktime_iso8601":"2025-10-14T11:36:55Z","lastlocalchecktime":"2025-10-13 20:08:56","clicktimestamp":"2025-10-14 10:44:05","clicktimestamp_iso8601":"2025-10-14T10:44:05Z","clickcount":15,"clicktrend":6,"ssl_error":0,"geo_lat":37.809784,"geo_long":-121.286316,"has_extended_info":false}'
++playback-volume=0.35625000000000001
+ recording-mode='decide'
+ recording-track-directory='/home/kousu/Music'
+ window-height=675
+ window-width=975
+ 
++[org/freedesktop/folks]
++primary-store='eds:4534ee747a47cb4e811a6789e1a67e37d97f80f4'
++
++[org/gnome/Connections]
++first-run=false
++
+ [org/gnome/Console]
+-font-scale=1.0
+-last-window-maximised=true
++font-scale=0.90000000000000002
++last-window-maximised=false
+ last-window-size=(732, 528)
+ 
++[org/gnome/Contacts]
++did-initial-setup=true
++window-fullscreen=false
++window-height=600
++window-maximized=false
++window-width=800
++
++[org/gnome/Extensions]
++window-height=576
++window-maximized=false
++window-width=1024
++
+ [org/gnome/Geary]
+ migrated-config=true
+ window-height=736
+@@ -29,13 +55,13 @@
+ window-width=439
+ 
+ [org/gnome/calendar]
+-active-view='month'
+-window-maximized=true
++active-view='agenda'
++window-maximized=false
+ window-size=(768, 600)
+ 
+ [org/gnome/control-center]
+-last-panel='wellbeing'
+-window-state=(980, 640, false)
++last-panel='power'
++window-state=(980, 640, true)
+ 
+ [org/gnome/desktop/app-folders]
+ folder-children=['System', 'Utilities', 'YaST', 'Pardus']
+@@ -60,6 +86,14 @@
+ name='suse-yast.directory'
+ translate=true
+ 
++[org/gnome/desktop/background]
++color-shading-type='solid'
++picture-options='zoom'
++picture-uri='file:///home/kousu/.local/share/backgrounds/2025-10-14-20-03-21-1759624326524633.jpg'
++picture-uri-dark='file:///home/kousu/.local/share/backgrounds/2025-10-14-20-03-21-1759624326524633.jpg'
++primary-color='#000000000000'
++secondary-color='#000000000000'
++
+ [org/gnome/desktop/break-reminders]
+ selected-breaks=['eyesight', 'movement']
+ 
+@@ -76,10 +110,21 @@
+ xkb-options=['compose:rctrl', 'lv3:ralt_switch']
+ 
+ [org/gnome/desktop/interface]
++accent-color='yellow'
+ color-scheme='prefer-dark'
++show-battery-percentage=true
+ 
+ [org/gnome/desktop/notifications]
+-application-children=['org-gnome-characters', 'org-gnome-software', 'org-gnome-settings', 'org-gnome-console']
++application-children=['org-gnome-characters', 'org-gnome-software', 'org-gnome-settings', 'org-gnome-console', 'gnome-about-panel', 'gnome-wellbeing-panel', 'org-gnome-epiphany', 'gnome-power-panel', 'org-gnome-evolution-alarm-notify']
++
++[org/gnome/desktop/notifications/application/gnome-about-panel]
++application-id='gnome-about-panel.desktop'
++
++[org/gnome/desktop/notifications/application/gnome-power-panel]
++application-id='gnome-power-panel.desktop'
++
++[org/gnome/desktop/notifications/application/gnome-wellbeing-panel]
++application-id='gnome-wellbeing-panel.desktop'
+ 
+ [org/gnome/desktop/notifications/application/org-gnome-characters]
+ application-id='org.gnome.Characters.desktop'
+@@ -87,18 +132,62 @@
+ [org/gnome/desktop/notifications/application/org-gnome-console]
+ application-id='org.gnome.Console.desktop'
+ 
++[org/gnome/desktop/notifications/application/org-gnome-epiphany]
++application-id='org.gnome.Epiphany.desktop'
++
++[org/gnome/desktop/notifications/application/org-gnome-evolution-alarm-notify]
++application-id='org.gnome.Evolution-alarm-notify.desktop'
++
+ [org/gnome/desktop/notifications/application/org-gnome-settings]
+ application-id='org.gnome.Settings.desktop'
+ 
+ [org/gnome/desktop/notifications/application/org-gnome-software]
+ application-id='org.gnome.Software.desktop'
+ 
++[org/gnome/desktop/peripherals/keyboard]
++numlock-state=true
++
++[org/gnome/desktop/peripherals/mouse]
++left-handed=false
++
++[org/gnome/desktop/peripherals/touchpad]
++click-method='areas'
++natural-scroll=false
++tap-to-click=true
++two-finger-scrolling-enabled=true
++
++[org/gnome/desktop/screen-time-limits]
++daily-limit-enabled=true
++
++[org/gnome/desktop/screensaver]
++color-shading-type='solid'
++picture-options='zoom'
++picture-uri='file:///home/kousu/.local/share/backgrounds/2025-10-14-20-03-21-1759624326524633.jpg'
++primary-color='#000000000000'
++secondary-color='#000000000000'
++
++[org/gnome/desktop/search-providers]
++sort-order=['org.gnome.Settings.desktop', 'org.gnome.Contacts.desktop', 'org.gnome.Nautilus.desktop']
++
+ [org/gnome/desktop/session]
+ idle-delay=uint32 300
+ 
++[org/gnome/epiphany/state]
++is-maximized=false
++window-size=(723, 776)
++
++[org/gnome/epiphany/web]
++last-download-directory='/home/kousu/Downloads/Software/OSes'
++
+ [org/gnome/evolution-data-server]
+ migrated=true
+ 
++[org/gnome/evolution-data-server/calendar]
++reminders-past=['45688f1ac31d988b23e981448ec3ff938bca7776\n82e46a3b050f202e40f2ddf3ee29876279625296\t20251014T190000Z\n1760466600\n1760468400\n1760472000\nBEGIN:VEVENT\r\nUID:291c0caa-de7d-46c9-a679-6e38df35f81d\r\nDTSTART;TZID=America/Toronto:20251014T150000\r\nDTEND;TZID=America/Toronto:20251014T160000\r\nDTSTAMP:20241025T194625Z\r\nRRULE:FREQ=WEEKLY;BYDAY=TU;WKST=SU\r\nSTATUS:CONFIRMED\r\nSUMMARY:Call Dad\r\nLAST-MODIFIED:20251014T111111Z\r\nX-EVOLUTION-CALDAV-ETAG:\r\n 6e5ddd95413dfd8d0840790ddee194d6c35f8a385e6b76a38b75a41271eb8fc0\r\nRECURRENCE-ID:20251014T190000Z\r\nBEGIN:VALARM\r\nX-EVOLUTION-ALARM-UID:82e46a3b050f202e40f2ddf3ee29876279625296\r\nACTION:DISPLAY\r\nDESCRIPTION:Call Dad\r\nTRIGGER;RELATED=START:-PT30M\r\nACKNOWLEDGED:20251014T111111Z\r\nEND:VALARM\r\nEND:VEVENT\r\n']
++
++[org/gnome/evolution]
++default-address-book='4534ee747a47cb4e811a6789e1a67e37d97f80f4'
++
+ [org/gnome/gnome-system-monitor]
+ current-tab='resources'
+ maximized=false
+@@ -110,14 +199,27 @@
+ [org/gnome/gnome-system-monitor/proctree]
+ col-26-visible=false
+ col-26-width=0
++columns-order=[0, 12, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
++sort-col=15
++sort-order=0
+ 
+ [org/gnome/nautilus/preferences]
+ default-folder-viewer='icon-view'
+ migrated-gtk-settings=true
+ 
+ [org/gnome/nautilus/window-state]
++initial-size=(890, 550)
+ initial-size-file-chooser=(890, 550)
+ 
++[org/gnome/portal/filechooser/obsidian]
++last-folder-path='/home/kousu/Notebook/Ponder'
++
++[org/gnome/portal/filechooser/org.gnome.Epiphany]
++last-folder-path='/home/kousu/Downloads/Software/OSes'
++
++[org/gnome/portal/filechooser/org.gnome.Settings]
++last-folder-path='/home/kousu/Pictures/wallpapers/scenery'
++
+ [org/gnome/portal/filechooser/org.gnome.TextEditor]
+ last-folder-path='/home/kousu'
+ 
+@@ -131,6 +233,9 @@
+ night-light-schedule-to=7.5
+ night-light-temperature=uint32 3496
+ 
++[org/gnome/settings-daemon/plugins/housekeeping]
++donation-reminder-last-shown=int64 1760440670533983
++
+ [org/gnome/settings-daemon/plugins/media-keys]
+ custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/']
+ 
+@@ -144,9 +249,48 @@
+ command='gnome-text-editor -n'
+ name='pad'
+ 
++[org/gnome/settings-daemon/plugins/power]
++power-button-action='interactive'
++
++[org/gnome/settings-daemon/plugins/sharing/gnome-user-share-webdav]
++enabled-connections=@as []
++
+ [org/gnome/shell]
++disabled-extensions=['native-window-placement@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com', 'system-monitor@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'window-list@gnome-shell-extensions.gcampax.github.com']
++enabled-extensions=['status-icons@gnome-shell-extensions.gcampax.github.com', 'Vitals@CoreCoding.com', 'windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'caffeine@patapon.info', 'apps-menu@gnome-shell-extensions.gcampax.github.com', 'appindicatorsupport@rgcjonas.gmail.com', 'places-menu@gnome-shell-extensions.gcampax.github.com', 'workrave@workrave.org']
++favorite-apps=['org.gnome.Epiphany.desktop', 'org.gnome.Nautilus.desktop', 'obsidian.desktop', 'org.gnome.Console.desktop']
+ welcome-dialog-last-shown-version='49.0'
+ 
++[org/gnome/shell/app-switcher]
++current-workspace-only=true
++
++[org/gnome/shell/extensions/appindicator]
++icon-brightness=0.0
++icon-contrast=0.0
++icon-opacity=240
++icon-saturation=0.0
++icon-size=14
++tray-pos='left'
++
++[org/gnome/shell/extensions/caffeine]
++indicator-position-max=1
++
++[org/gnome/shell/extensions/vitals]
++alphabetize=true
++fixed-widths=true
++hide-icons=true
++hide-zeros=false
++include-static-gpu-info=true
++menu-centered=false
++position-in-panel=0
++show-battery=false
++show-gpu=false
++show-memory=true
++show-network=true
++storage-measurement=0
++storage-path='/home'
++use-higher-precision=true
++
+ [org/gnome/shell/weather]
+ automatic-location=true
+ locations=[<(uint32 2, <('Montreal', 'CYUL', true, [(0.79354303905785273, -1.2871803233458181)], [(0.79354303905785273, -1.2871803233458181)])>)>]
+@@ -162,9 +306,98 @@
+ show-hidden=false
+ sort-directories-first=false
+ 
++[org/gtk/settings/file-chooser]
++date-format='regular'
++location-mode='path-bar'
++show-hidden=false
++show-size-column=true
++show-type-column=true
++sidebar-width=167
++sort-column='name'
++sort-directories-first=false
++sort-order='ascending'
++type-format='category'
++window-position=(26, 23)
++window-size=(1203, 758)
++
++[org/virt-manager/virt-manager]
++manager-window-height=550
++manager-window-width=550
++
++[org/virt-manager/virt-manager/confirm]
++forcepoweroff=true
++
++[org/virt-manager/virt-manager/connections]
++autoconnect=['qemu:///session']
++uris=['qemu:///session']
++
++[org/virt-manager/virt-manager/conns/qemu:session]
++window-size=(800, 600)
++
++[org/virt-manager/virt-manager/details]
++show-toolbar=true
++
++[org/virt-manager/virt-manager/urls]
++isos=['/home/kousu/Downloads/Software/OSes/debian-testing-amd64-netinst.iso']
++urls=['https://cdimage.debian.org/cdimage/daily-builds/daily/arch-latest/amd64/iso-cd/debian-testing-amd64-netinst.iso']
++
++[org/virt-manager/virt-manager/vmlist-fields]
++disk-usage=false
++network-traffic=false
++
++[org/virt-manager/virt-manager/vms/a61f0b88d3ee463fbf2658122add785d]
++autoconnect=1
++vm-window-size=(1366, 699)
++
++[org/virt-manager/virt-manager/vms/e98f5b3e93074f0d80a59c6f268fc406]
++autoconnect=1
++vm-window-size=(1280, 842)
++
++[org/workrave/breaks/daily-limit]
++enabled=true
++
++[org/workrave/breaks/micro-pause]
++enabled=true
++
++[org/workrave/breaks/rest-break]
++enabled=true
++
++[org/workrave/distribution]
++port=27273
++reconnect-attempts=3
++reconnect-interval=15
++
+ [org/workrave/general]
+ operation-mode=2
+ 
++[org/workrave/gui]
++force-x11=true
++trayicon-enabled=true
++
++[org/workrave/gui/applet]
++cycle-time=10
++fallback-enabled=true
++icon-enabled=true
++
++[org/workrave/gui/breaks/daily-limit]
++ignorable-break=true
++skippable-break=true
++
++[org/workrave/gui/breaks/micro-pause]
++ignorable-break=true
++skippable-break=true
++
++[org/workrave/gui/breaks/rest-break]
++enable-shutdown=true
++ignorable-break=true
++skippable-break=true
++
++[org/workrave/gui/main-window]
++cycle-time=10
++
++[org/workrave/sound]
++volume=100
++
+ [org/workrave/sound/events]
+ break-ignored='/usr/share/sounds/workrave/default/break-ignored.wav'
+ break-prelude='/usr/share/sounds/workrave/default/break-prelude.wav'
+@@ -176,3 +409,20 @@
+ micro-break-started='/usr/share/sounds/workrave/default/micro-break-started.wav'
+ rest-break-ended='/usr/share/sounds/workrave/default/rest-break-ended.wav'
+ rest-break-started='/usr/share/sounds/workrave/default/rest-break-started.wav'
++
++[org/workrave/timers/daily-limit]
++activity-sensitive=true
++limit=14400
++snooze=1200
++
++[org/workrave/timers/micro-pause]
++activity-sensitive=true
++auto-reset=30
++limit=180
++snooze=150
++
++[org/workrave/timers/rest-break]
++activity-sensitive=true
++auto-reset=600
++limit=2700
++snooze=180

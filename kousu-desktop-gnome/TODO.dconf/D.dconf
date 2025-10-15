@@ -1,0 +1,150 @@
+[de/haeckerfelix/Shortwave]
+library-sorting='name'
+library-sorting-type='ascending'
+playback-last-station='{"changeuuid":"b5da5b35-4c3d-49ca-97d7-d339772c3f31","stationuuid":"9614e0a1-0601-11e8-ae97-52543be04c81","name":"SomaFM Fluid (128k MP3)","url":"https://somafm.com/fluid.pls","url_resolved":"https://ice1.somafm.com/fluid-128-mp3","homepage":"https://somafm.com/fluid/","favicon":"https://somafm.com/img3/fluid-400.jpg","tags":"chilled trap,future soul,hiphop,woozy electronica","country":"The United States Of America","countrycode":"US","state":"California","language":"english","languagecodes":"EN","votes":5386,"lastchangetime":"2025-10-13 20:14:58","lastchangetime_iso8601":"2025-10-13T20:14:58Z","codec":"MP3","bitrate":128,"hls":0,"lastcheckok":1,"lastchecktime":"2025-10-13 20:20:11","lastchecktime_iso8601":"2025-10-13T20:20:11Z","lastcheckoktime":"2025-10-13 20:20:11","lastcheckoktime_iso8601":"2025-10-13T20:20:11Z","lastlocalchecktime":"2025-10-13 11:30:23","clicktimestamp":"2025-10-14 09:33:32","clicktimestamp_iso8601":"2025-10-14T09:33:32Z","clickcount":14,"clicktrend":5,"ssl_error":0,"geo_lat":37.809784,"geo_long":-121.286316,"has_extended_info":false}'
+playback-volume=0.45624999999999999
+recording-mode='decide'
+recording-track-directory='/home/kousu/Music'
+window-height=675
+window-width=975
+
+[org/gnome/Console]
+font-scale=1.0
+last-window-maximised=false
+last-window-size=(732, 528)
+
+[org/gnome/TextEditor]
+last-save-directory='file:///home/kousu'
+
+[org/gnome/Weather]
+locations=[<(uint32 2, <('Montreal', 'CYUL', true, [(0.79354303905785273, -1.2871803233458181)], [(0.79354303905785273, -1.2871803233458181)])>)>]
+window-height=506
+window-maximized=false
+window-width=439
+
+[org/gnome/control-center]
+last-panel='keyboard'
+window-state=(980, 640, false)
+
+[org/gnome/desktop/app-folders]
+folder-children=['System', 'Utilities', 'YaST', 'Pardus']
+
+[org/gnome/desktop/app-folders/folders/Pardus]
+categories=['X-Pardus-Apps']
+name='X-Pardus-Apps.directory'
+translate=true
+
+[org/gnome/desktop/app-folders/folders/System]
+apps=['org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.gnome.SystemMonitor.desktop']
+name='X-GNOME-Shell-System.directory'
+translate=true
+
+[org/gnome/desktop/app-folders/folders/Utilities]
+apps=['org.gnome.Connections.desktop', 'org.gnome.Papers.desktop', 'org.gnome.Loupe.desktop']
+name='X-GNOME-Shell-Utilities.directory'
+translate=true
+
+[org/gnome/desktop/app-folders/folders/YaST]
+categories=['X-SuSE-YaST']
+name='suse-yast.directory'
+translate=true
+
+[org/gnome/desktop/input-sources]
+sources=[('xkb', 'us')]
+xkb-options=['compose:rctrl', 'lv3:menu_switch']
+
+[org/gnome/desktop/interface]
+color-scheme='prefer-dark'
+
+[org/gnome/desktop/notifications]
+application-children=['org-gnome-characters', 'org-gnome-software', 'org-gnome-settings']
+
+[org/gnome/desktop/notifications/application/org-gnome-characters]
+application-id='org.gnome.Characters.desktop'
+
+[org/gnome/desktop/notifications/application/org-gnome-settings]
+application-id='org.gnome.Settings.desktop'
+
+[org/gnome/desktop/notifications/application/org-gnome-software]
+application-id='org.gnome.Software.desktop'
+
+[org/gnome/evolution-data-server]
+migrated=true
+
+[org/gnome/gnome-system-monitor]
+current-tab='resources'
+maximized=false
+show-dependencies=false
+show-whose-processes='user'
+window-height=720
+window-width=800
+
+[org/gnome/gnome-system-monitor/proctree]
+col-26-visible=false
+col-26-width=0
+
+[org/gnome/nautilus/preferences]
+default-folder-viewer='icon-view'
+migrated-gtk-settings=true
+
+[org/gnome/nautilus/window-state]
+initial-size-file-chooser=(890, 550)
+
+[org/gnome/portal/filechooser/org.gnome.TextEditor]
+last-folder-path='/home/kousu'
+
+[org/gnome/recipes]
+user='kousu'
+
+[org/gnome/settings-daemon/plugins/color]
+night-light-enabled=true
+night-light-schedule-automatic=false
+night-light-schedule-from=20.5
+night-light-schedule-to=7.5
+night-light-temperature=uint32 3496
+
+[org/gnome/settings-daemon/plugins/media-keys]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/']
+
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
+binding='<Super>Return'
+command='kgx'
+name='term'
+
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
+binding='<Super>backslash'
+command='gnome-text-editor -n'
+name='pad'
+
+[org/gnome/shell]
+welcome-dialog-last-shown-version='49.0'
+
+[org/gnome/shell/weather]
+automatic-location=true
+locations=[<(uint32 2, <('Montreal', 'CYUL', true, [(0.79354303905785273, -1.2871803233458181)], [(0.79354303905785273, -1.2871803233458181)])>)>]
+
+[org/gnome/shell/world-clocks]
+locations=@av []
+
+[org/gnome/software]
+check-timestamp=int64 1760437104
+first-run=false
+
+[org/gtk/gtk4/settings/file-chooser]
+show-hidden=false
+sort-directories-first=false
+
+[org/workrave/general]
+operation-mode=2
+
+[org/workrave/sound/events]
+break-ignored='/usr/share/sounds/workrave/default/break-ignored.wav'
+break-prelude='/usr/share/sounds/workrave/default/break-prelude.wav'
+daily-limit='/usr/share/sounds/workrave/default/daily-limit.wav'
+exercise-ended='/usr/share/sounds/workrave/default/exercise-ended.wav'
+exercise-step='/usr/share/sounds/workrave/default/exercise-step.wav'
+exercises-ended='/usr/share/sounds/workrave/default/exercises-ended.wav'
+micro-break-ended='/usr/share/sounds/workrave/default/micro-break-ended.wav'
+micro-break-started='/usr/share/sounds/workrave/default/micro-break-started.wav'
+rest-break-ended='/usr/share/sounds/workrave/default/rest-break-ended.wav'
+rest-break-started='/usr/share/sounds/workrave/default/rest-break-started.wav'

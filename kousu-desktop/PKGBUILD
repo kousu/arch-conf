@@ -111,7 +111,8 @@ depends=(
   vlc-plugin-mpeg2
   vlc-plugin-mpg123
   vlc-plugin-ogg
-  vlc-plugin-srt
+  vlc-plugin-srt   # subtitles
+  vlc-plugin-ass   # also subtitles
   vlc-plugin-theora
   vlc-plugin-vorbis
   vlc-plugin-vpx

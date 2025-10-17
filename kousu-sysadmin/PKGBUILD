@@ -27,6 +27,8 @@ depends=(
 
   # requires some extra setup (included in src/) # TODO: possibly pull this to a small separate package?
   podman-docker
+  distrobox   # built on podman, containers w/ seamless access to your system but isolated from changes to libraries in /usr
+              # more like an emulator than a container.
 
   # hardware
   fio   # speed testing

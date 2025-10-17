@@ -1,0 +1,301 @@
+--- F.dconf	2025-10-15 03:56:13.780233676 -0400
++++ H.dconf	2025-10-16 15:16:58.573363072 -0400
+@@ -25,7 +25,8 @@
+ [org/gnome/Console]
+ font-scale=0.90000000000000002
+ last-window-maximised=false
+-last-window-size=(732, 528)
++last-window-size=(1221, 657)
++theme='auto'
+ 
+ [org/gnome/Contacts]
+ did-initial-setup=true
+@@ -45,6 +46,9 @@
+ window-maximize=true
+ window-width=683
+ 
++[org/gnome/Showtime/State]
++is-maximized=false
++
+ [org/gnome/TextEditor]
+ last-save-directory='file:///home/kousu'
+ 
+@@ -59,8 +63,13 @@
+ window-maximized=false
+ window-size=(768, 600)
+ 
++[org/gnome/clocks/state/window]
++maximized=false
++panel-id='world'
++size=(870, 690)
++
+ [org/gnome/control-center]
+-last-panel='power'
++last-panel='privacy'
+ window-state=(980, 640, true)
+ 
+ [org/gnome/desktop/app-folders]
+@@ -111,11 +120,14 @@
+ 
+ [org/gnome/desktop/interface]
+ accent-color='yellow'
+-color-scheme='prefer-dark'
++color-scheme='default'
+ show-battery-percentage=true
+ 
+ [org/gnome/desktop/notifications]
+-application-children=['org-gnome-characters', 'org-gnome-software', 'org-gnome-settings', 'org-gnome-console', 'gnome-about-panel', 'gnome-wellbeing-panel', 'org-gnome-epiphany', 'gnome-power-panel', 'org-gnome-evolution-alarm-notify']
++application-children=['org-gnome-characters', 'org-gnome-software', 'org-gnome-settings', 'org-gnome-console', 'gnome-about-panel', 'gnome-wellbeing-panel', 'org-gnome-epiphany', 'gnome-power-panel', 'org-gnome-evolution-alarm-notify', 'org-gnome-nautilus', 'org-gnome-showtime', 'signal-desktop', 'firefox', 'vlc']
++
++[org/gnome/desktop/notifications/application/firefox]
++application-id='firefox.desktop'
+ 
+ [org/gnome/desktop/notifications/application/gnome-about-panel]
+ application-id='gnome-about-panel.desktop'
+@@ -138,12 +150,24 @@
+ [org/gnome/desktop/notifications/application/org-gnome-evolution-alarm-notify]
+ application-id='org.gnome.Evolution-alarm-notify.desktop'
+ 
++[org/gnome/desktop/notifications/application/org-gnome-nautilus]
++application-id='org.gnome.Nautilus.desktop'
++
+ [org/gnome/desktop/notifications/application/org-gnome-settings]
+ application-id='org.gnome.Settings.desktop'
+ 
++[org/gnome/desktop/notifications/application/org-gnome-showtime]
++application-id='org.gnome.Showtime.desktop'
++
+ [org/gnome/desktop/notifications/application/org-gnome-software]
+ application-id='org.gnome.Software.desktop'
+ 
++[org/gnome/desktop/notifications/application/signal-desktop]
++application-id='signal-desktop.desktop'
++
++[org/gnome/desktop/notifications/application/vlc]
++application-id='vlc.desktop'
++
+ [org/gnome/desktop/peripherals/keyboard]
+ numlock-state=true
+ 
+@@ -161,6 +185,7 @@
+ 
+ [org/gnome/desktop/screensaver]
+ color-shading-type='solid'
++lock-delay=uint32 120
+ picture-options='zoom'
+ picture-uri='file:///home/kousu/.local/share/backgrounds/2025-10-14-20-03-21-1759624326524633.jpg'
+ primary-color='#000000000000'
+@@ -170,20 +195,36 @@
+ sort-order=['org.gnome.Settings.desktop', 'org.gnome.Contacts.desktop', 'org.gnome.Nautilus.desktop']
+ 
+ [org/gnome/desktop/session]
+-idle-delay=uint32 300
++idle-delay=uint32 240
++
++[org/gnome/epiphany]
++ask-for-default=false
+ 
+ [org/gnome/epiphany/state]
+ is-maximized=false
+-window-size=(723, 776)
++window-size=(723, 736)
+ 
+ [org/gnome/epiphany/web]
+ last-download-directory='/home/kousu/Downloads/Software/OSes'
+ 
++[org/gnome/evince/default]
++continuous=true
++dual-page=false
++dual-page-odd-left=false
++enable-spellchecking=true
++fullscreen=false
++inverted-colors=false
++show-sidebar=true
++sidebar-page='links'
++sidebar-size=148
++sizing-mode='automatic'
++window-ratio=(0.98039215686274506, 0.75757575757575757)
++
+ [org/gnome/evolution-data-server]
+ migrated=true
+ 
+ [org/gnome/evolution-data-server/calendar]
+-reminders-past=['45688f1ac31d988b23e981448ec3ff938bca7776\n82e46a3b050f202e40f2ddf3ee29876279625296\t20251014T190000Z\n1760466600\n1760468400\n1760472000\nBEGIN:VEVENT\r\nUID:291c0caa-de7d-46c9-a679-6e38df35f81d\r\nDTSTART;TZID=America/Toronto:20251014T150000\r\nDTEND;TZID=America/Toronto:20251014T160000\r\nDTSTAMP:20241025T194625Z\r\nRRULE:FREQ=WEEKLY;BYDAY=TU;WKST=SU\r\nSTATUS:CONFIRMED\r\nSUMMARY:Call Dad\r\nLAST-MODIFIED:20251014T111111Z\r\nX-EVOLUTION-CALDAV-ETAG:\r\n 6e5ddd95413dfd8d0840790ddee194d6c35f8a385e6b76a38b75a41271eb8fc0\r\nRECURRENCE-ID:20251014T190000Z\r\nBEGIN:VALARM\r\nX-EVOLUTION-ALARM-UID:82e46a3b050f202e40f2ddf3ee29876279625296\r\nACTION:DISPLAY\r\nDESCRIPTION:Call Dad\r\nTRIGGER;RELATED=START:-PT30M\r\nACKNOWLEDGED:20251014T111111Z\r\nEND:VALARM\r\nEND:VEVENT\r\n']
++reminders-past=['45688f1ac31d988b23e981448ec3ff938bca7776\ndac11668fa9e13cd0fa4f4f97d739b40c0798b6f\t20251016T094500\n1760621700\n1760622300\n1760629500\nBEGIN:VEVENT\r\nUID:1e7156b2-7dd8-4089-87bf-da3b1d0e9357\r\nDTSTART;TZID=America/Toronto:20251016T094500\r\nDTEND;TZID=America/Toronto:20251016T114500\r\nDESCRIPTION:Help Tricia Evans sign their lease. Just be a backup pair of \r\n eyes.\r\nDTSTAMP:20251015T190339Z\r\nLOCATION:Vendôme métro\r\nSTATUS:CONFIRMED\r\nSUMMARY:Help tricia with lease\r\nX-EVOLUTION-CALDAV-ETAG:\r\n 80fe9469bf120dd5f79ebe24efbe97643636117cc8b1afd6a6dc61f41d74e0ea\r\nBEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:Help tricia with lease\r\nTRIGGER:-PT10M\r\nX-EVOLUTION-ALARM-UID:dac11668fa9e13cd0fa4f4f97d739b40c0798b6f\r\nEND:VALARM\r\nEND:VEVENT\r\n', '45688f1ac31d988b23e981448ec3ff938bca7776\n82e46a3b050f202e40f2ddf3ee29876279625296\t20251014T190000Z\n1760466600\n1760468400\n1760472000\nBEGIN:VEVENT\r\nUID:291c0caa-de7d-46c9-a679-6e38df35f81d\r\nDTSTART;TZID=America/Toronto:20251014T150000\r\nDTEND;TZID=America/Toronto:20251014T160000\r\nDTSTAMP:20241025T194625Z\r\nRRULE:FREQ=WEEKLY;BYDAY=TU;WKST=SU\r\nSTATUS:CONFIRMED\r\nSUMMARY:Call Dad\r\nLAST-MODIFIED:20251014T111111Z\r\nX-EVOLUTION-CALDAV-ETAG:\r\n 6e5ddd95413dfd8d0840790ddee194d6c35f8a385e6b76a38b75a41271eb8fc0\r\nRECURRENCE-ID:20251014T190000Z\r\nBEGIN:VALARM\r\nX-EVOLUTION-ALARM-UID:82e46a3b050f202e40f2ddf3ee29876279625296\r\nACTION:DISPLAY\r\nDESCRIPTION:Call Dad\r\nTRIGGER;RELATED=START:-PT30M\r\nACKNOWLEDGED:20251014T111111Z\r\nEND:VALARM\r\nEND:VEVENT\r\n']
+ 
+ [org/gnome/evolution]
+ default-address-book='4534ee747a47cb4e811a6789e1a67e37d97f80f4'
+@@ -191,6 +232,9 @@
+ [org/gnome/gnome-system-monitor]
+ current-tab='resources'
+ maximized=false
++resources-disk-expanded=false
++resources-mem-expanded=true
++resources-net-expanded=false
+ show-dependencies=false
+ show-whose-processes='user'
+ window-height=720
+@@ -203,13 +247,34 @@
+ sort-col=15
+ sort-order=0
+ 
++[org/gnome/maps]
++last-viewed-location=[45.529805799999998, -73.601823699999997]
++map-type='MapsVectorSource'
++transportation-type='pedestrian'
++window-maximized=true
++zoom-level=18
++
+ [org/gnome/nautilus/preferences]
+-default-folder-viewer='icon-view'
++default-folder-viewer='list-view'
+ migrated-gtk-settings=true
+ 
+ [org/gnome/nautilus/window-state]
+ initial-size=(890, 550)
+ initial-size-file-chooser=(890, 550)
++maximized=false
++
++[org/gnome/papers]
++night-mode=false
++
++[org/gnome/papers/default]
++annot-color='yellow'
++continuous=true
++dual-page=false
++dual-page-odd-left=false
++enable-spellchecking=true
++show-sidebar=true
++sizing-mode='automatic'
++window-height=736
+ 
+ [org/gnome/portal/filechooser/obsidian]
+ last-folder-path='/home/kousu/Notebook/Ponder'
+@@ -227,7 +292,7 @@
+ user='kousu'
+ 
+ [org/gnome/settings-daemon/plugins/color]
+-night-light-enabled=true
++night-light-enabled=false
+ night-light-schedule-automatic=false
+ night-light-schedule-from=20.5
+ night-light-schedule-to=7.5
+@@ -251,6 +316,9 @@
+ 
+ [org/gnome/settings-daemon/plugins/power]
+ power-button-action='interactive'
++sleep-inactive-ac-timeout=2700
++sleep-inactive-ac-type='nothing'
++sleep-inactive-battery-timeout=900
+ 
+ [org/gnome/settings-daemon/plugins/sharing/gnome-user-share-webdav]
+ enabled-connections=@as []
+@@ -258,7 +326,8 @@
+ [org/gnome/shell]
+ disabled-extensions=['native-window-placement@gnome-shell-extensions.gcampax.github.com', 'drive-menu@gnome-shell-extensions.gcampax.github.com', 'screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com', 'system-monitor@gnome-shell-extensions.gcampax.github.com', 'workspace-indicator@gnome-shell-extensions.gcampax.github.com', 'window-list@gnome-shell-extensions.gcampax.github.com']
+ enabled-extensions=['status-icons@gnome-shell-extensions.gcampax.github.com', 'Vitals@CoreCoding.com', 'windowsNavigator@gnome-shell-extensions.gcampax.github.com', 'caffeine@patapon.info', 'apps-menu@gnome-shell-extensions.gcampax.github.com', 'appindicatorsupport@rgcjonas.gmail.com', 'places-menu@gnome-shell-extensions.gcampax.github.com', 'workrave@workrave.org']
+-favorite-apps=['org.gnome.Epiphany.desktop', 'org.gnome.Nautilus.desktop', 'obsidian.desktop', 'org.gnome.Console.desktop']
++favorite-apps=['obsidian.desktop', 'firefox.desktop', 'org.gnome.Nautilus.desktop', 'org.gnome.Console.desktop']
++remember-mount-password=false
+ welcome-dialog-last-shown-version='49.0'
+ 
+ [org/gnome/shell/app-switcher]
+@@ -299,12 +368,15 @@
+ locations=@av []
+ 
+ [org/gnome/software]
+-check-timestamp=int64 1760437104
++check-timestamp=int64 1760833908
+ first-run=false
+ 
++[org/gtk/gtk4/settings/color-chooser]
++selected-color=(true, 0.87843137979507446, 0.10588235408067703, 0.14117647707462311, 1.0)
++
+ [org/gtk/gtk4/settings/file-chooser]
+ show-hidden=false
+-sort-directories-first=false
++sort-directories-first=true
+ 
+ [org/gtk/settings/file-chooser]
+ date-format='regular'
+@@ -318,7 +390,7 @@
+ sort-order='ascending'
+ type-format='category'
+ window-position=(26, 23)
+-window-size=(1203, 758)
++window-size=(1366, 689)
+ 
+ [org/virt-manager/virt-manager]
+ manager-window-height=550
+@@ -371,7 +443,7 @@
+ operation-mode=2
+ 
+ [org/workrave/gui]
+-force-x11=true
++force-x11=false
+ trayicon-enabled=true
+ 
+ [org/workrave/gui/applet]
+@@ -379,6 +451,9 @@
+ fallback-enabled=true
+ icon-enabled=true
+ 
++[org/workrave/gui/breaks]
++block-mode=2
++
+ [org/workrave/gui/breaks/daily-limit]
+ ignorable-break=true
+ skippable-break=true
+@@ -389,6 +464,7 @@
+ 
+ [org/workrave/gui/breaks/rest-break]
+ enable-shutdown=true
++exercises=2
+ ignorable-break=true
+ skippable-break=true
+ 
+@@ -399,16 +475,16 @@
+ volume=100
+ 
+ [org/workrave/sound/events]
+-break-ignored='/usr/share/sounds/workrave/default/break-ignored.wav'
+-break-prelude='/usr/share/sounds/workrave/default/break-prelude.wav'
+-daily-limit='/usr/share/sounds/workrave/default/daily-limit.wav'
+-exercise-ended='/usr/share/sounds/workrave/default/exercise-ended.wav'
+-exercise-step='/usr/share/sounds/workrave/default/exercise-step.wav'
+-exercises-ended='/usr/share/sounds/workrave/default/exercises-ended.wav'
+-micro-break-ended='/usr/share/sounds/workrave/default/micro-break-ended.wav'
+-micro-break-started='/usr/share/sounds/workrave/default/micro-break-started.wav'
+-rest-break-ended='/usr/share/sounds/workrave/default/rest-break-ended.wav'
+-rest-break-started='/usr/share/sounds/workrave/default/rest-break-started.wav'
++break-ignored='/usr/share/sounds/workrave/bells/break-ignored.wav'
++break-prelude='/usr/share/sounds/workrave/bells/break-prelude.wav'
++daily-limit='/usr/share/sounds/workrave/bells/daily-limit.wav'
++exercise-ended='/usr/share/sounds/workrave/bells/exercise-ended.wav'
++exercise-step='/usr/share/sounds/workrave/bells/exercise-step.wav'
++exercises-ended='/usr/share/sounds/workrave/bells/exercises-ended.wav'
++micro-break-ended='/usr/share/sounds/workrave/bells/micro-break-ended.wav'
++micro-break-started='/usr/share/sounds/workrave/bells/micro-break-started.wav'
++rest-break-ended='/usr/share/sounds/workrave/bells/rest-break-ended.wav'
++rest-break-started='/usr/share/sounds/workrave/bells/rest-break-started.wav'
+ 
+ [org/workrave/timers/daily-limit]
+ activity-sensitive=true
+@@ -417,12 +493,12 @@
+ 
+ [org/workrave/timers/micro-pause]
+ activity-sensitive=true
+-auto-reset=30
+-limit=180
+-snooze=150
++auto-reset=35
++limit=300
++snooze=165
+ 
+ [org/workrave/timers/rest-break]
+ activity-sensitive=true
+ auto-reset=600
+-limit=2700
+-snooze=180
++limit=3300
++snooze=240

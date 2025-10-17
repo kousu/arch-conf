@@ -1,0 +1,16 @@
+#!/bin/bash
+
+VER=R2025b
+
+post_install() {
+  # system-wide
+  # DOESN'T WORK YET
+  # the license authorizor wants to write-back to this folder maybe??
+  mpm install --release=${VER} --matlabroot=/usr/local/MATLAB/${VER} MATLAB Simscape_Electrical Simscape_Battery 
+  # maybe I could volume-mount this to /home/$USER/.local/MATLAB. Maybe that would work? but would the perms work?
+}
+
+
+pre_remove() {
+  rm -rf /usr/local/MATLAB
+}

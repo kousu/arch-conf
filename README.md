@@ -44,41 +44,48 @@ Build a top-level package and all its dependencies:
 ./build.sh kousu-device-nigiri
 ```
 
-Output goes to `${PKGDEST}`, which can be set in /etc/makepkg.conf, but is `.` if not specified.
+Output goes to `${PKGDEST}`, and that folder will be a valid pacman repo.
+This path can be set in /etc/makepkg.conf, but is `.` if not specified.
 
-> [!warning]
->
-> This folder will be a arch repo. You can add it to your host system's pacman.conf with
->
-> ```
-> [site]
-> SigLevel = Optional TrustAll
-> Server = file:////home/kousu/src/arch-conf/pkg
-> ````
->
-> however **beware**: this is an opening for a privilege escalation
-> if your build machine is also your daily usage machine.
-> Any malware that gets into your account could edit these files
-> to give themselves full control over your system the next time you `pacman -Syu`.
->
-> The conventional and safe usage is to distribute this folder to mirrors
-> where it will be downloaded by pacman to `/var/cache/pacman/pkg` as `root:root`
-> and no stray malware will be able to edit the contents.
->
-> I haven't figured out how to mitigate this here yet.
-> <!-- `makepkg` can build packages without root, unless `makepkg -s` in which case it needs root to install deps.
->       `makechrootpkg` needs root immediately to jump into the systemd-nspawn container it uses.
->       both make their output owned by their calling (unprivileged) user, though.
->       -->
+You can install packages one by one with `pacman -U pkg/whatever-version.tar.zst`
+but I **recommend** that you "Publish" after you build:
+
+```
+sudo mkdir -p /var/cache/pacman/site
+sudo cp -r ./pkg/. /usr/cache/pacman/site/
+```
+
+You can add that repo for using configuring your host system itself:
+
+```
+# /etc/pacman.conf
+[site]
+SigLevel = Optional TrustAll
+Server = file:///var/cache/pacman/site
+````
+
+To use the packages, do the _first time install_ of your root package(s):
+
+```
+pacman -Sy kousu-device-${HOSTNAME}
+```
+
+But in _regular use_ as you make updates:
+
+```
+./build.sh kousu-device-${HOSTNAME} &&
+sudo cp -r ./pkg/. /usr/cache/pacman/site/ &&
+sudo pacman -Syu
+```
 
 
-Build **all** the packages:
+You can also pre-build **all** the packages:
 
 ```
 ls | grep -v aur | xargs -n1 ./build.sh
 ```
 
-Build a single package _without_ its dependencies and less layers in the way, say, if you are working on it:
+Or you can build a single package _without_ its dependencies, say, if you are working on it in detail:
 
 ```
 cd package_name/

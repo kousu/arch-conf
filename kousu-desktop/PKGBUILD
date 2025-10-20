@@ -119,6 +119,7 @@ depends=(
   vlc-plugin-x264
   vlc-plugin-x265
   shortwave # radio-browser.info client
+  lollypop  # music library
 
   ## Games
   #xboard
@@ -129,7 +130,12 @@ depends=(
 )
 
 optdepends=(
+  # gnome-circle: like suckless.org but for Gnome; people with vision
   'apostrophe: .md focus mode editor; BEWARE: pulls in pandoc which pulls in almost all of haskell'
+  #'bustle: DBUS microservice request debugger'  # kousu-dev ??
+  'graphs: Graphing calculator'
+  'warp: File transfer (magic-wormhole GUI)'
+  'podcasts: GNOME's podcatcher'
 )
 
 package() {

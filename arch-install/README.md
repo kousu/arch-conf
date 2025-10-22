@@ -82,4 +82,7 @@ You can customize it manually from there.
 
 # Related Work
 
+* [Arch's official archinstall](https://github.com/archlinux/archinstall?tab=readme-ov-file)
+  * doesn't support encryption?
+* [archiso](https://wiki.archlinux.org/title/Archiso) for building Arch boot disks
 * @NovaViper's https://gitlab.com/NovaViper/aalis/ (https://bbs.archlinux.org/viewtopic.php?id=273531)

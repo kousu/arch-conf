@@ -135,7 +135,7 @@ optdepends=(
   #'bustle: DBUS microservice request debugger'  # kousu-dev ??
   'graphs: Graphing calculator'
   'warp: File transfer (magic-wormhole GUI)'
-  'podcasts: GNOME's podcatcher'
+  "podcasts: GNOME's podcatcher"
 )
 
 package() {

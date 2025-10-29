@@ -11,7 +11,7 @@ pkgrel=1
 
 depends=(
   linux-firmware-intel
-  kousu-desktop-i3
+  kousu-desktop-niri
   kousu-work
   
   # Programming

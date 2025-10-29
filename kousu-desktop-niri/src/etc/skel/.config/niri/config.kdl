@@ -138,7 +138,7 @@ layout {
     // preset-window-heights { }
 
     // You can change the default width of the new windows.
-    default-column-width { proportion 1.0; }
+    default-column-width { proportion 0.7; }
     // If you leave the brackets empty, the windows themselves will decide their initial width.
     // default-column-width {}
 
@@ -268,13 +268,13 @@ layout {
 // See the binds section below for more spawn examples.
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
-spawn-at-startup "waybar"
 spawn-at-startup "swayidle" "-w" "timeout" "601" "niri msg action power-off-monitors" "timeout" "600" "swaylock -f -i /usr/share/backgrounds/xfce/Crow.jpg " "before-sleep" "swaylock -f -i /usr/share/backgrounds/xfce/Crow.jpg"
-
-
 spawn-sh-at-startup "swaybg -i /usr/share/backgrounds/xfce/alone.jpg"
+spawn-at-startup "waybar"
 spawn-at-startup "gammastep"
 spawn-at-startup "gammastep-indicator"
+spawn-at-startup "mako"  // notifs
+
 spawn-sh-at-startup "GDK_BACKEND=x11 workrave" // https://github.com/rcaelers/workrave/issues/523
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
@@ -306,6 +306,10 @@ screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 animations {
     // Uncomment to turn off all animations.
     // off
+
+    workspace-switch {
+      off
+    }
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
     // slowdown 3.0

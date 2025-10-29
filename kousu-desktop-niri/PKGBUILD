@@ -1,0 +1,57 @@
+pkgname=kousu-desktop-niri
+pkgdesc="Configuration management for a GUI based on https://yalter.github.io/niri/"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  kousu-desktop
+
+  #vim
+  htop   # resource/process monitor
+  ranger # curses file browser
+  bluetui # bluetooth manager (XXX won't work without bluetooth being installed)
+  impala # TUI for iwd network management
+  #lynx, or elinks, links, w3m # terminal browser
+
+  # GUI
+  noto-fonts-emoji # Google's Android emoji fonts, with the colourful faces and whatnot
+  xclip
+
+  niri
+  wofi
+  mako
+  swaybg
+  swaylock
+  waybar
+  otf-font-awesome # needed by waybar
+  xwayland-satellite
+
+  xfce4-artwork # default wallpapers
+  brightnessctl
+
+  
+  gammastep  # this is Redshift, but compatible with Wayland; alts: wlsunset
+  eom # image viewer
+  xarchiver # alts: file-roller
+  xreader # PDFs
+  thunar
+  gvfs  # automounting drives (from GNOME but used by Thunar)
+  thunar-archive-plugin
+  thunar-volman
+  l3afpad
+  #featherpad # l3afpad + tabs, regex search, syntax highlighting
+  #mousepad   # l3afpad with a few more options
+  sakura
+)
+
+package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
+  cp -rp * "${pkgdir}"
+}

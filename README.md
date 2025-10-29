@@ -52,7 +52,7 @@ but I **recommend** that you "Publish" after you build:
 
 ```
 sudo mkdir -p /var/cache/pacman/site
-sudo cp -r ./pkg/. /usr/cache/pacman/site/
+sudo cp -r ./pkg/. /var/cache/pacman/site/
 ```
 
 You can add that repo for using configuring your host system itself:

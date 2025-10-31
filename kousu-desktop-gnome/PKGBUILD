@@ -35,6 +35,7 @@ depends=(
   gnome-backgrounds
   gnome-calculator
   gnome-calendar
+  geary   # email
   gnome-characters
   gnome-clocks
   gnome-color-manager

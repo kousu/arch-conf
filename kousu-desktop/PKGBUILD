@@ -115,6 +115,7 @@ depends=(
   vlc-plugin-vpx
   vlc-plugin-x264
   vlc-plugin-x265
+  #celluloid  # alt to vlc
   shortwave # radio-browser.info client
   lollypop  # music library
 

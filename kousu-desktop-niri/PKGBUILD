@@ -34,7 +34,7 @@ depends=(
 
   xfce4-artwork # default wallpapers
   brightnessctl
-
+  wl-clipboard
   
   gammastep  # this is Redshift, but compatible with Wayland; alts: wlsunset
   eom # image viewer
@@ -50,7 +50,6 @@ depends=(
   sakura
   nwg-look    # for themimg, especially switching to dark mode
 
-  wl-clipboard
   transmission-gtk
 )
 

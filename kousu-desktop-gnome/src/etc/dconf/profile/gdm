@@ -1,0 +1,5 @@
+# Needed for /etc/dconf/db/gdm.d to work (?)
+# https://wiki.archlinux.org/title/GDM#dconf_configuration
+user-db:user
+system-db:gdm
+file-db:/usr/share/gdm/greeter-dconf-defaults

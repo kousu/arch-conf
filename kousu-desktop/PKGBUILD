@@ -67,9 +67,6 @@ depends=(
   ## GUI :: Hardware
   wireshark-qt
 
-  transmission-qt
-  #transmission-gtk # more traditional? But I'm trying out a KDE-based system...
-
   ## GUI :: Desktop Environment
   gvfs
   gvfs-smb

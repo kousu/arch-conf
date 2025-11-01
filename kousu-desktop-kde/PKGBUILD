@@ -41,6 +41,7 @@ depends=(
   # for a more interesting DE:
   # install the 'maui' group
 
+  transmission-qt
 )
 
 package() {

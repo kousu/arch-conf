@@ -51,6 +51,7 @@ depends=(
   nwg-look    # for themimg, especially switching to dark mode
 
   wl-clipboard
+  transmission-gtk
 )
 
 package() {

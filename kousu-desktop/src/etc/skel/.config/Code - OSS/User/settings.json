@@ -11,5 +11,7 @@
     },
     "window.autoDetectColorScheme": true,
     "workbench.preferredLightColorTheme": "Default Light+",
-    "terminal.integrated.sendKeybindingsToShell": true
+    "terminal.integrated.sendKeybindingsToShell": true,
+    "editor.minimap.enabled": false,
+    "julia.NumThreads": "auto"
 }

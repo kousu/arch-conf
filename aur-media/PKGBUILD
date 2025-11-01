@@ -12,4 +12,8 @@ pkgrel=1
 depends=(
   # podcasts
   poddl-git
+
+  # Shockwave Flash (.swf)
+  # it's insane that this works. good job everyone. keeping it alive.
+  flare-player-bin
 )

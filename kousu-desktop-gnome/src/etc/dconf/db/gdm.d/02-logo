@@ -1,0 +1,7 @@
+# sets the logo on the login screen
+# can be png, svg, whatever, though pay attention your choice is not too large
+
+# if you edit this, you must `sudo dconf update`
+
+[org/gnome/login-screen]
+logo='/usr/share/pixmaps/archlinux-logo-text.svg'

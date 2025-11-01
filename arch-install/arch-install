@@ -231,6 +231,9 @@ if ! [ -f "$CHROOT"/boot/efi/boot/bootx64.efi ]; then
 ALL_kver="/boot/vmlinuz-linux"
 PRESETS=('default')
 default_uki="/boot/efi/boot/bootx64.efi"
+
+# To change the boot logo, make sure your new logo is:
+# smaller than your screen resolution and in .bmp format.
 default_options="--splash=/usr/share/systemd/bootctl/splash-arch.bmp"
 EOF
   arch-chroot "$CHROOT" tee /etc/mkinitcpio.conf.d/modules.conf >/dev/null <<EOF

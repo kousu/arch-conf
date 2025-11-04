@@ -1,0 +1,10 @@
+[Unit]
+Description=Autocommit /etc/pacman.d/mirrorlist
+Documentation=https://wiki.archlinux.org/title/Etckeeper#Reflector
+DefaultDependencies=no
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/etckeeper/reflector
+IOSchedulingClass=idle

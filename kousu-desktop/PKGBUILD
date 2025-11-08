@@ -80,7 +80,8 @@ depends=(
   # zettlr    # alternative notebook (obsidian is more popular and has lots of plugins)
 
   ## GUI :: Programming
-  code  # vscode. sigh. it's the only good one
+  #vscode
+  helix
   ttf-fira-code
   # TODO: there's typst, rust, go and javascript plugins that need packages 
 

@@ -1,0 +1,52 @@
+pkgname=kousu-media
+pkgdesc="Configuration management for kousu's media"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  # video
+  vlc # ?? or maybe i should just use whatever comes with KDE?
+  vlc-plugin-flac
+  vlc-plugin-dvd
+  vlc-plugin-dvb
+  vlc-plugin-ffmpeg
+  vlc-plugin-gstreamer
+  vlc-plugin-matroska
+  vlc-plugin-mpeg2
+  vlc-plugin-mpg123
+  vlc-plugin-ogg
+  vlc-plugin-srt   # subtitles
+  vlc-plugin-ass   # also subtitles
+  vlc-plugin-theora
+  vlc-plugin-vorbis
+  vlc-plugin-vpx
+  vlc-plugin-x264
+  vlc-plugin-x265
+
+  #celluloid  # alt to vlc, based on mpv
+  #showtime  # GNOME's video player
+
+  # audio
+  shortwave # radio-browser.info client
+  lollypop  # music library
+
+  eartag # tag editor
+  #easytag # older, more features, less pretty
+
+  # archiving
+  yt-dlp
+)
+
+package() {
+  if [ -d "${startdir}/src" ]; then
+    cd "${startdir}/src/";   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
+    cp -rp . "${pkgdir}"
+  fi
+}

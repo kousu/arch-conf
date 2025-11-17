@@ -22,6 +22,7 @@ depends=(
   plasma-pa  # KDE plugin for audio management
   plasma-systemmonitor # KDE task manager (i.e. GUI version of top)
   kscreen    # KDE plugin for screen management? I think?
+  vokoscreen # screen recorder
 
   # thse are kde-applications-meta, split out so I can be choosier
   #kde-accessibility-meta

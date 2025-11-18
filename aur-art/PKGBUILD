@@ -17,4 +17,7 @@ depends=(
 
   # audio
   ninjas2-git
+
+  # video
+  #davinci-resolve
 )

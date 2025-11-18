@@ -82,7 +82,7 @@ depends=(
   #vscode
   helix
   ttf-fira-code
-  # TODO: there's typst, rust, go and javascript plugins that need packages 
+  # TODO: there's typst, rust, go and javascript plugins that need packages
 
   ## GUI :: Web
   firefox

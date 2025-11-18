@@ -499,6 +499,9 @@ In the rare cases you cannot express configuration as files on the system, use a
 * keeping a careful notebook like [this guy](http://howardism.org/Technical/Emacs/literate-devops.html)
 * crying into a small jar full of tears
 * https://github.com/CyberShadow/aconfmgr - Arch specific
+* [aconfmgr](https://github.com/CyberShadow/aconfmgr)
+* [pacreport pacreport --unowned-files](https://wiki.archlinux.org/title/Pacman/Tips_and_tricks#Tracking_unowned_files_created_by_packages)
+* [lostfiles](https://github.com/graysky2/lostfiles) - find orphan files
 
 ## Future Work
 

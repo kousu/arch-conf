@@ -30,6 +30,8 @@ depends=(
   citations   # Gnome .bib manager
   # RECOMMENDED: also install code and the tinymist package and configure it to build on save, show outputs in system viewer, and format on save using typstyle; TODO: pull that into config management too, I just don't know exactly what that entails atm?
   #texlive-bin
+  gnome-font-viewer
+  hieroglyphic   # drawing -> LaTeX symbol
 
   pdfgrep
 

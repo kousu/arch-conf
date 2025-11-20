@@ -22,6 +22,7 @@ depends=(
   # hardware
   linux  # the kernel. on Arch, this is an *optional* package, so that you can install vanilla Arch inside a container.
   dmidecode # reads low-level BIOS information
+  hwinfo
   intel-ucode
   amd-ucode # TODO: these two packages have an optional but difficult amount of manaul setup:
             # https://wiki.archlinux.org/title/Microcode#Early_loading
@@ -39,6 +40,7 @@ depends=(
   lsof
   iftop
   iotop
+  powertop
   nethogs
   net-tools # netstat, ifconfig
   #inetutils # for hostname(1); also has telnet(1), rsh(1), and other deprecated commands
@@ -47,7 +49,6 @@ depends=(
   # CLI
   bash-completion  # lets apps customize tab completion; it's handy for pass(1) and kubectl(1) and some others, but intereferes and is annoying when apps provide incomplete tab completion because it *disables* the default behaviour of files.
   sudo
-  openssh
 
   # CLI :: Files
   restic
@@ -56,6 +57,9 @@ depends=(
 
   # CLI :: Network
   openbsd-netcat
+  wireguard-tools
+  openssh
+  innernet
   socat
   rsync
   sshfs

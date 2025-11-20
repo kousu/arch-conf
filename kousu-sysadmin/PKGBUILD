@@ -31,6 +31,9 @@ depends=(
               # more like an emulator than a container.
 
   # hardware
+  # These tools are more useful to have on remote systems
+  # but it's handy to have them local at least for the manpages/reminder
+  perf  # kernel performance counters
   fio   # speed testing
 
   # infra

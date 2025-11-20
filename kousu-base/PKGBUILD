@@ -60,6 +60,7 @@ depends=(
   wireguard-tools
   openssh
   innernet
+  traceroute
   socat
   rsync
   sshfs

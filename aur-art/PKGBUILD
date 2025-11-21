@@ -18,6 +18,8 @@ depends=(
   # audio
   ninjas2-git
 
+  lingot  # instrument tuner
+
   # video
   #davinci-resolve
 )

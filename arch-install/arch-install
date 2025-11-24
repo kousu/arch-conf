@@ -45,7 +45,11 @@
 # - [ ] Support "writable" partition (for thumbdrive mode)
 # - [ ] make suspend-to-disk work
 # - [ ] repack the standard installer to include this script
-# - [ ] don't hardcode "cryptlvm" or "lvsys"? because they might collide with devices on the host?
+# - [x] don 't hardcode "cryptlvm" or "lvsys"? because they might collide with dle vices on the host?
+# - [ ] use UUID in root= instead of /dev/lvsys-*
+# - [ ] vgrename lvsys-$LUKS_ID at the end to just lvsys to make it tidier
+#   - but then this might cause headachves with arch-img-container
+#    - there's lvmsystemid(8) which is, I think, supposed to handle this case?
 # - [ ] Clean up the fragile /etc/cmdline.d, /etc/mkinitcpio.conf.d, /etc/mkinitcpio.d
 #
 #    Move /etc/cmdline.d/root.conf into kousu-base/kousu-base.install?
@@ -164,22 +168,24 @@ fi
 KEY=$(mktemp -d -t arch-install-key-XXXXXXXXX)/bootstrap_keyfile.bin
 (set -x; dd if=/dev/urandom of="${KEY}" bs=1 count=64)
 
-trap 'cryptsetup close cryptlvm' EXIT
 
 (set -x; cryptsetup luksFormat --batch-mode --key-file "${KEY}" "$TARGET_LVM")
-(set -x; cryptsetup open --allow-discards --persistent --key-file "${KEY}" "$TARGET_LVM" cryptlvm)
+LUKS_ID=$(cryptsetup luksUUID /dev/nvme0n1p2 | cut -f 1 -d '-')
+
+(set -x; cryptsetup open --allow-discards --persistent --key-file "${KEY}" "$TARGET_LVM" cryptlvm-"$LUKS_ID")
+trap 'cryptsetup close cryptlvm-${LUKS_ID}' EXIT
 
 (
-(set -x; pvcreate /dev/mapper/cryptlvm)
-(set -x; vgcreate lvsys /dev/mapper/cryptlvm)
-trap 'vgchange -a n lvsys' EXIT  # deactivate lvm on exit (otherwise it holds LUKS open)
+(set -x; pvcreate /dev/mapper/cryptlvm-${LUKS_ID})
+(set -x; vgcreate lvsys-${LUKS_ID} /dev/mapper/cryptlvm-${LUKS_ID})
+trap 'vgchange -a n lvsys-${LUKS_ID}' EXIT  # deactivate lvm on exit (otherwise it holds LUKS open)
 
 (set -x
-lvcreate -L 2G -n swap lvsys
-lvcreate -L 100G -n root lvsys
-lvcreate -L 100G -n var lvsys
-lvcreate -l 100%FREE -n home lvsys
-lvreduce -L -512M -n lvsys/home  # leave some room for e2scrub(8) to work
+lvcreate -L 2G -n swap lvsys-${LUKS_ID}
+lvcreate -L 100G -n root lvsys-${LUKS_ID}
+lvcreate -L 100G -n var lvsys-${LUKS_ID}
+lvcreate -l 100%FREE -n home lvsys-${LUKS_ID}
+lvreduce -L -512M -n lvsys-${LUKS_ID}/home  # leave some room for e2scrub(8) to work
 )
 
 
@@ -187,10 +193,10 @@ lvreduce -L -512M -n lvsys/home  # leave some room for e2scrub(8) to work
 
 (set -x;
 mkfs.fat -F32 -n "boot" "$TARGET_DISK"1
-mkswap /dev/lvsys/swap
-mkfs.ext4 -L root /dev/lvsys/root
-mkfs.ext4 -L var /dev/lvsys/var
-mkfs.ext4 -L home /dev/lvsys/home
+mkswap /dev/lvsys-${LUKS_ID}/swap
+mkfs.ext4 -L root /dev/lvsys-${LUKS_ID}/root
+mkfs.ext4 -L var /dev/lvsys-${LUKS_ID}/var
+mkfs.ext4 -L home /dev/lvsys-${LUKS_ID}/home
 )
 
 OUTER_PARTITIONS="$(genfstab -U / | tr -s '\n')" # snapshot host partitions,
@@ -201,8 +207,8 @@ OUTER_PARTITIONS="$(genfstab -U / | tr -s '\n')" # snapshot host partitions,
 
 ## https://wiki.archlinux.org/title/Installation_guide#Mount_the_file_systems
 (
-(set -x; swapon /dev/lvsys/swap)
-trap 'swapoff /dev/lvsys/swap' EXIT
+(set -x; swapon /dev/lvsys-${LUKS_ID}/swap)
+trap 'swapoff /dev/lvsys-${LUKS_ID}/swap' EXIT
 
   # the extra subshells are because we only get one clean-up trap per process
 
@@ -210,9 +216,9 @@ trap 'swapoff /dev/lvsys/swap' EXIT
 CHROOT="$(mktemp -d -t "arch-root-XXXXXXXXX")" # the installation guide says to use /mnt, but since this might be run from a working system, make an isolated mountpoint
 
 (set -x;
-mount /dev/lvsys/root "$CHROOT"
-mount --mkdir /dev/lvsys/var "$CHROOT"/var
-mount --mkdir /dev/lvsys/home "$CHROOT"/home
+mount /dev/lvsys-${LUKS_ID}/root "$CHROOT"
+mount --mkdir /dev/lvsys-${LUKS_ID}/var "$CHROOT"/var
+mount --mkdir /dev/lvsys-${LUKS_ID}/home "$CHROOT"/home
 mount --mkdir "$TARGET_DISK"1 "$CHROOT"/boot
 )
 trap 'umount -v --recursive "$CHROOT"; rmdir -v "$CHROOT"' EXIT
@@ -233,7 +239,7 @@ mv "${KEY}" "$CHROOT"/boot/bootstrap_keyfile.bin
 # declare root disk
 crypt_uuid="$(blkid -s UUID -o value "$TARGET_LVM")"
 mkdir -p "$CHROOT"/etc/cmdline.d
-echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm root=/dev/lvsys/root rw" \
+echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm root=/dev/lvsys-${LUKS_ID}/root rw" \
    > "$CHROOT"/etc/cmdline.d/root.conf
 # declare (temporary) encryption key
 echo "cryptkey=LABEL=boot:vfat:/bootstrap_keyfile.bin" \
@@ -345,8 +351,8 @@ set -x  # display all the cleanup traps
 
 ) # -> trap 'swapoff "$TARGET_DISK"p8' EXIT
 
-) # -> trap 'vgchange -a n lvsys' EXIT
+) # -> trap 'vgchange -a n lvsys-$LUKS_ID' EXIT
 
-) # -> trap 'cryptsetup close cryptlvm' EXIT
+) # -> trap 'cryptsetup close cryptlvm-$LUKS_ID' EXIT
 
 ) # -> trap 'losetup -d ...' EXIT

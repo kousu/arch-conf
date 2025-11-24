@@ -51,13 +51,34 @@ You can customize it manually from there.
 3. Iterate:
 
     ```
-    sudo ./arch-install arch.img
+    sudo ./arch-install arch.img ${PKGS}
     ```
+
+    The installer **does not** install a bootloader, so
+    you will probably want PKGS to container at least kousu-bootloader-efi
+    or kousu-bootloader-bios.
 
 4. Test:
 
+    ## Container
+
     ```
+    ./arch-img-container arch.img /mnt
+    ```
+
+    This unlocks the system and uses `arch-chroot` to get in.
+    It does not test the bootloader or login manager.
+    It can be helpful for verifying what packages got installed
+    and what their install hooks did before testing on a VM.
+
+    ## EFI
+
+    Get qemu:
+    ````
     $ sudo pacman -S --noconfirm qemu edk2-ovmf
+    ````
+
+    ```
     $ sudo qemu-system-x86_64 --enable-kvm -M q35 -m 2G -bios /usr/share/edk2-ovmf/x64/OVMF_CODE.fd -hda arch.img
     ```
 
@@ -77,6 +98,14 @@ You can customize it manually from there.
     `-M q35` is to use a modern system, where -hda implies a *SATA* disk; the default, -M pc, implies an IDE disk, and it seems like Arch doesn't even sh ip drivers for IDE disks anymore??
 
     or give up and use GNOME Boxes / virt-manager which use libvirt which hides all this cruft. Just make sure you configure the system for UEFI and not BIOS booting.
+
+
+    ## BIOS
+
+    ```
+    qemu-system-x86_64 -enable-kvm  -drive file=./arch.img,format=raw,if=virtio  -m 2G
+    ```
+
 
 
 

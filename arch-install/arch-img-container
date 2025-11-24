@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# This is a dev script. See README.md.
+#
+# This is *very much* tuned to work with arch-install
+# and it's pretty fragile at the moment.
+
+set -e
+
+MNT="$2"
+cleanup() {
+  set -x
+  sudo umount -R "$MNT"
+  sleep 1
+  sudo lvchange -a n lvsys2
+  sleep 1
+  sudo cryptsetup close cryptlvm2
+  sleep 1
+  sudo losetup -D
+}
+trap cleanup EXIT
+
+sudo losetup -f "$1"
+sudo partprobe /dev/loop0
+sudo mount /dev/loop0p1 "$2"
+sudo cp "$2"/bootstrap_keyfile.bin .
+sudo umount -R "$2"
+sudo cryptsetup open --key-file ./bootstrap_keyfile.bin /dev/loop0p3 cryptlvm2
+sleep 4 # give lvm a chance to wake up
+sudo mount /dev/lvsys2/root "$MNT"
+sudo arch-chroot "$2" mount -a
+lsblk
+sudo arch-chroot "$2"

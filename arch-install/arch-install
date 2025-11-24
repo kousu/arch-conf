@@ -193,6 +193,11 @@ mkfs.ext4 -L var /dev/lvsys/var
 mkfs.ext4 -L home /dev/lvsys/home
 )
 
+OUTER_PARTITIONS="$(genfstab -U / | tr -s '\n')" # snapshot host partitions,
+                                     # so we can prevent them (especially swap)
+                                     # from leaking into "$CHROOT"/etc/fstab.
+                                     # tr suppresses blank lines here to make
+                                     # sure they survive in the final fstab.
 
 ## https://wiki.archlinux.org/title/Installation_guide#Mount_the_file_systems
 (
@@ -310,14 +315,18 @@ EOF
 
 
 ## https://wiki.archlinux.org/title/Installation_guide#Configure_the_system
-(set -x; genfstab -U "$CHROOT" >> "$CHROOT"/etc/fstab)
+# fstab is the only mandatory step, since the rest of the system config
+# is contained in the other packages in @kousu/arch-conf.
 
-# Bootstrap wifi from the installer's env
-if [ -d "$CHROOT"/var/lib/iwd ] && [ -d /var/lib/iwd ]; then
-  cp -r /var/lib/iwd/. "$CHROOT"/var/lib/iwd   #NB: the /. is important, it means "copy contents into iwd/" instead of making a nested iwd/iwd/
+# Bootstrap fstab.
+# The crazy grep here is doing a set subtraction.
+(set -x; grep -vxF -f <(echo "$OUTER_PARTITIONS") <(genfstab -U "$CHROOT") | tee -a "$CHROOT"/etc/fstab)
+
+# Bootstrap wifi from the installer's env.
+if [ -d /var/lib/iwd ] && ( arch-chroot "$CHROOT" pacman -Qq iwd >/dev/null 2>&1 ); then
+  # if iwd is in use
+  cp -r /var/lib/iwd/. "$CHROOT"/var/lib/iwd   # the /. avoids nested iwd/iwd/
 fi
-
-# (The other configuration steps are covered by my arch-conf packages)
 
 
 ## Credentials / Ownership

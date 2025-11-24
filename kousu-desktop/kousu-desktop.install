@@ -2,6 +2,7 @@
 
 _deploy() {
   systemctl enable bluetooth
+  systemctl enable iwd
 }
 
 

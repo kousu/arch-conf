@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pre_remove() {
+  rm -rvf /boot/limine
+}

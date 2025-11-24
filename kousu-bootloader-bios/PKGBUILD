@@ -1,0 +1,26 @@
+pkgname=kousu-bootloader-bios
+pkgdesc="Configuration management: BIOS-style bootloader"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+groups=(kousu)
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  base
+  limine   # https://limine-bootloader.org
+  linux
+)
+
+install="${pkgname}.install"
+
+package() {
+  # often PKGBUILDs use install(1) here, because it lets them control permissions
+  # but install(1) can't do folders recursively; so instead, just cp -r, and set any permissions directly with chmod
+  # that's safe enough: this is *building* a package for later deployment, not installing on a live system where a temporary gap in permissions is a risk
+  cp -rp "${startdir}/src/." "${pkgdir}"
+}

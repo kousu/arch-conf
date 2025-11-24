@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# adapted from https://wiki.archlinux.org/title/Limine#pacman_hook
+# to be run on updates to limine
+# *assumes* limine is installed to /boot/limine and that its containing partition is bootable /boot
+
+# install second stage bootloader
+/usr/bin/mkdir -p /boot/limine
+/usr/bin/cp /usr/share/limine/limine-bios.sys /boot/limine/
+
+# install first stage bootloader
+BOOT_DISK="/dev/$(/usr/bin/lsblk -no PKNAME "$(/usr/bin/findmnt -no SOURCE -T /boot/limine)")"
+/usr/bin/limine bios-install "$BOOT_DISK"

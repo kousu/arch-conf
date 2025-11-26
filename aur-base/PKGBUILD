@@ -1,5 +1,5 @@
 pkgname=kousu-aur-base
-pkgdesc="Configuration management for kousu's job life (AUR packages)"
+pkgdesc="Configuration management for kousu (AUR packages)"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 #license=("MIT") # there..is no license? not really?

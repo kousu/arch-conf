@@ -1,5 +1,5 @@
 pkgname=kousu-art-video
-pkgdesc="Configuration management for kousu's job life"
+pkgdesc="Configuration management for kousu's creative video editing"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 #license=("MIT") # there..is no license? not really?

@@ -27,7 +27,6 @@
 #    and manually run `makepkg` for each of the thousands of packages?
 # Q: Or could arch bootstrap from source with `makepkg -d`?
 
-
 # load makepkg lib, for below
 MAKEPKG_LIBRARY=${MAKEPKG_LIBRARY:-'/usr/share/makepkg'}
 # Import libmakepkg
@@ -41,7 +40,9 @@ set -eo pipefail # strict-ish mode
 parsedeps() {
 	if [[ -f "$1/PKGBUILD" ]]; then
 		pkgname=() depends=() makedepends=() optdepends=()
-		. "$1/PKGBUILD"
+		cd "$1"
+		. "PKGBUILD" >&2
+		cd - >/dev/null
 		for dep in "${depends[@]}"; do
 			# lose the version comparator, if any
 			depname=${dep%%[<>=]*}

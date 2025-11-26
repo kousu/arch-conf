@@ -1,15 +1,9 @@
 pkgname=kousu-desktop
 pkgdesc="Configuration management common to kousu's workstations"
-arch=('any')
-url="https://github.com/kousu/arch-conf"
 
-_pkgver() {
-  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
-}
-pkgver="$(_pkgver)"
-pkgrel=1
-
-install="${pkgname}.install"
+# load common settings; be aware if you ever split up this repo.
+[ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
+. .lib.PKGBUILD || exit 1
 
 depends=(
   kousu-base
@@ -127,12 +121,7 @@ optdepends=(
 )
 
 package() {
-  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
-
-  # often PKGBUILDs use install(1) here, because it lets them control permissions
-  # but install(1) can't do folders recursively; so instead, just cp -r, and set any permissions directly with chmod
-  # that's safe enough: this is *building* a package for later deployment, not installing on a live system where a temporary gap in permissions is a risk
-  cp -rp * "${pkgdir}"
+  _package
 
   chmod 750 "${pkgdir}"/etc/sudoers.d
   chmod 600 "${pkgdir}"/etc/sudoers.d/*

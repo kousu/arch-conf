@@ -34,6 +34,7 @@ depends=(
   # CLI :: Programming
   android-tools # adb! fastest way to get files in and out of a phone
   android-udev
+  tokei    # lines-of-code metrics
   #jad
   #hollywood  # 'hacking'
 

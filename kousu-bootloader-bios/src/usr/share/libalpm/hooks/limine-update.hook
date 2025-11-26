@@ -3,6 +3,7 @@ Operation = Install
 Operation = Upgrade
 Type = Package
 Target = limine
+Target = kousu-bootloader-bios
 
 [Action]
 Description = Deploying Limine

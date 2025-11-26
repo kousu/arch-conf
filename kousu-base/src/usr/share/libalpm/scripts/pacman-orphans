@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # since this is run during pacman, it can't run pacman again; curious.
 #pacman -Qttdq | pacman -Rns --noconfirm -

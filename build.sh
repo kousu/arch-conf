@@ -204,6 +204,7 @@ printf "%s\n" "$DEPS" | while read -r target; do
       # expose new package in repo
       repo-add "$PKGDEST"/site.db.tar.zst "${pkg}"
     fi
+    rm -f .pkgver .lib.PKGBUILD
   fi
   cd - >/dev/null
 done

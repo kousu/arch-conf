@@ -24,8 +24,6 @@ depends=(
   typst
   tinymist
   citations   # Gnome .bib manager
-  # RECOMMENDED: also install code and the tinymist package and configure it to build on save, show outputs in system viewer, and format on save using typstyle; TODO: pull that into config management too, I just don't know exactly what that entails atm?
-  #texlive-bin
   gnome-font-viewer
   hieroglyphic   # drawing -> LaTeX symbol
 
@@ -37,4 +35,10 @@ depends=(
   ttf-libertinus
   otf-libertinus
   adobe-source-sans-fonts
+)
+
+optdepend=(
+  'vscode: for writing .typ. Tips: install typstyle and configure format-on-save; install the tinymist extension; configure build-on-save; configure displaying outputs in the *system* PDF viewer because the built in one is slow.'
+  'typstyle: for .typ formatting; currently in the AUR.'
+  'zotero-bin: for managing citations; best if you acquiesce to use their cloud service.'
 )

@@ -9,12 +9,12 @@ pkgdesc="Configuration management for MATLAB"
 # This package wraps it in a Debian container.
 # https://bbs.archlinux.org/viewtopic.php?id=305604&p=2
 
-conflicts=(
-  matlab-support
-)
-
 depends=(
   matlab-mpm
   podman
   distrobox
+)
+
+conflicts=(
+  matlab-support
 )

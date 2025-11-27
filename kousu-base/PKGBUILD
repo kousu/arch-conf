@@ -5,6 +5,13 @@ pkgdesc="Configuration management for kousu"
 [ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
 . .lib.PKGBUILD || exit 1
 
+backup=(
+  # user-editable config files
+  etc/.gitignore
+  etc/gitconfig
+  etc/locale.conf
+)
+
 depends=(
   # Base system
   base
@@ -104,13 +111,6 @@ depends=(
   #e3    # has e3vi; 23kiB installed
 
   htop   # resource/process monitor
-)
-
-backup=(
-  # user-editable config files
-  etc/.gitignore
-  etc/gitconfig
-  etc/locale.conf
 )
 
 package() {

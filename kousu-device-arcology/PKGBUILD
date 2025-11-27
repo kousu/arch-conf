@@ -20,4 +20,8 @@ depends=(
   pkgstats  # opt-in to ArchLinux telemetry
 )
 
-conflicts=(kousu-device-bomp kousu-device-nigiri kousu-device-allium)
+conflicts=(
+  kousu-device-allium
+  kousu-device-bomp
+  kousu-device-nigiri
+)

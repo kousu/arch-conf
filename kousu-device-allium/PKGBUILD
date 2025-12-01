@@ -24,6 +24,7 @@ depends=(
   #acpid # TODO: https://wiki.archlinux.org/title/Acpid
   # TODO: https://wiki.archlinux.org/title/CPU_frequency_scaling
 
+  kousu-school
   kousu-work
   kousu-art-graphics
 

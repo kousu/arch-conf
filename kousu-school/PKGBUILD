@@ -10,6 +10,8 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
+  kousu-papers
+
   #gvfs-onedrive  # requires approval by ETS's admin
 
   # needed to sign up for courses
@@ -17,9 +19,13 @@ depends=(
   java-environment=17
 
   hieroglyphic  # _drawing_ to LaTeX dictionary
-  
+
+  pdfgrep
+
   # XXX ^ split these into subpackages, again. I just really don't want to have to
   # maybe I could make a split package?
   #octave
   #matlab-support # XXX AUR
+
+  wine
 )

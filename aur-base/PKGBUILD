@@ -9,7 +9,7 @@ url="https://github.com/kousu/arch-conf"
 pkgver=96
 
 depends=(
-  kousu-device-nigiri  # TODO: kousu-base
+  #kousu-device-nigiri  # TODO: kousu-base
 
   ## CLI :: System
   pikaur  # here's the boostrapping loop:

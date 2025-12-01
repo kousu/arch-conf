@@ -1,17 +1,13 @@
 pkgname=kousu-work
-pkgrel=1
 pkgdesc="Configuration management for kousu's job life"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
-#license=("MIT") # there..is no license? not really?
 
-# This numbers the package versions by how many commits went into it: every published commit is a newer package.
-# This will break if we ever rebase the master branch. Don't do that.
-# Also: if we use this across a monorepo this has the quirk/feature that
-#       every package built out of it has the same version, but that won't be preserved if we split them up.
-#pkgver="$(git log --pretty=oneline | wc -l)"
-pkgver=100
+pkgver=0
 pkgrel=1
+pkgver() {
+  echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)"
+}
 
 depends=(
   kousu-desktop

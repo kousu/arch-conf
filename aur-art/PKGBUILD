@@ -1,10 +1,13 @@
 pkgname=kousu-aur-art
-pkgrel=1
 pkgdesc="Configuration management for kousu's brain goblins (AUR packages)"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 
-pkgver=99
+pkgver=0
+pkgrel=1
+pkgver() {
+  echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)"
+}
 
 depends=(
   kousu-aur-base

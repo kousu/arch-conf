@@ -71,6 +71,18 @@ EOF
     fi
   fi
 
+  # make pam_faillock(8) way less aggressive.
+  # unlike fail2ban, faillock locks you out *from everywhere*
+  # not just locking out the IP address or tty that's being attacked.
+  # which means it's a good way to DoS someone you don't like: just ssh into their system three times.
+  # oh oh it also *doesn't continue to count login attempts* while it has the account locked
+  # which means it's missing data.
+  # Also /etc/security/faillock.conf doesn't use a .d directory which makes it hard to config manage
+  # so I have to fall back on this sketchy `lineinfile:` substitute
+  sed -i -e 's/^\(# \)\?deny =.*$/deny = 21/'  \
+	 -e 's/^\(# \)\?unlock_time =.*$/unlock_time = 300/' \
+	 /etc/security/faillock.conf
+
   # force sshd to use a .d directory
   # Debian comes with this line, but OpenBSD and Arch don't?
   # This is a kind of `lineinfile:` with all the pain that entails.

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pre_install() {
+  mkdir -p "$CHROOT"/boot/efi/boot   # mkinitcpio will fail unless this exists
+}
+
+pre_upgrade() {
+  mkdir -p "$CHROOT"/boot/efi/boot   # mkinitcpio will fail unless this exists
+}

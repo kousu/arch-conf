@@ -1,5 +1,5 @@
-pkgname=kousu-bootloader-bios
-pkgdesc="Configuration management: BIOS-style bootloader"
+pkgname=kousu-bootloader-efi
+pkgdesc="Configuration management: EFI-style bootloader"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 groups=(kousu)
@@ -11,13 +11,16 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 conflicts=(
-  kousu-bootloader-efi
+  kousu-bootloader-bios
 )
 
 depends=(
-  base
-  limine   # https://limine-bootloader.org
   linux
+  mkinitcpio
+)
+
+optdepends=(
+  'systemd: for default ArchLinux boot splash'
 )
 
 backup=(

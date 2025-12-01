@@ -96,14 +96,13 @@ _pkgver() {
 # I'm imaging or updating at the moment.
 
 # packages are output to $PKGDEST; _additionally_ a repo is built there.
-: "${PKGDEST:=/var/cache/pacman/site}"  # default value
-#: "${PKGDEST:=$(pwd)}"  # default value
+#: "${PKGDEST:=/var/cache/pacman/site}"  # default value
+: "${PKGDEST:=$(pwd)/pkg}"  # default value
 
 PKGDEST="$(realpath "$PKGDEST")"
 export PKGDEST
 
-sudo mkdir -p "$PKGDEST"
-sudo chown "$USER" "$PKGDEST"  #XXX is this a dangerous idea? it's a privilege escalation vector.
+mkdir -p "$PKGDEST"
 repo-add "$PKGDEST"/site.db.tar.zst # init repo if needed
 
 

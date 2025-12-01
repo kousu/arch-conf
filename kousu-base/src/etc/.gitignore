@@ -1,0 +1,18 @@
+
+# usermod(8) backup files
+/passwd-
+/shadow-
+/gshadow-
+/group-
+/subuid-
+/subgid-
+
+# this file gets updated by other tools like resolveconf,
+# systemd-networkd, vpnc, NetworkManager, so often that it
+# might as well live in /var. But it doesn't.
+/resolv.conf
+
+# don't track systemd-update-done(8)'s file; it gets bumped
+# on each boot automatically which is kind of counterproductive
+# as far as etckeeper is concerned
+.updated

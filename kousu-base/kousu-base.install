@@ -1,14 +1,9 @@
 #!/bin/bash
 
-post_upgrade() {
-  # https://wiki.archlinux.org/title/Installation_guide#Time_zone
-  timedatectl set-ntp true # XXX should probably...wait until ntp actually syncs before running the next command?
+_deploy() {
 
-  # generate /etc/adjtime
-  # this can't be deployed because for the contents to be truthful,
-  # hwclock needs to also actually *sync* the system (i.e. NTP) and hardware clocks and write down when it did so.
-  hwclock --systohc
-
+  # These are the steps we couldn't shoehorn in as a file
+  # mostly because they're patches to pre-existing files.
 
   # https://wiki.archlinux.org/title/Installation_guide#Localization
   # /etc/locale.gen is owned by glibc, but it needs to be customized
@@ -29,61 +24,6 @@ EOF
   #       if /etc/locale.gen hasn't changed there shouldn't be a need to do this afterall
   #       this seems like the sort of thing a hook should handle https://wiki.archlinux.org/title/Pacman#Hooks
   locale-gen
-
-  systemctl enable --now iwd systemd-networkd systemd-resolved
-
-  # TODO: I should probably...pull my etckeeper setup out to a separate package
-  # debian's etckeeper package initializes fully and correctly at install time
-  # why doesn't arch's? is it a bug in arch's version or is it on purpose?
-  # one immediate problem with having this here: etckeeper assumes it can read /etc/hostname
-  # but this package *creates* /etc/hostname, which means it will get jammed: you can't uninstall kousu-device-nigiri
-  # because removing it removes /etc/hostname, etckeeper will fail, then AVOID_COMMIT_BEFORE_INSTALL wil ltrigger
-  # when you try to reinstall it, but there's no way to `etckeeper commit` becuase /etc/hostname is gone!
-  # splitting things up should make this easier to deal with
-  # a workaround: install inetutils, which brings /usr/bin/hostname; etckeeper will try that first before /etc/hostname
-
-  if [ -f /etc/etckeeper/etckeeper.conf ]; then
-    if [ ! -d /etc/.git ]; then  # make this idempotent
-      if ! grep -E -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
-        # this is like lineinfile: in ansible
-        # because it doesn't look like this thing contains a .d directory for its config I can use
-        (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf
-      fi
-      cat >> /etc/.gitignore <<EOF
-
-# usermod(8) backup files
-/passwd-
-/shadow-
-/gshadow-
-/group-
-/subuid-
-/subgid-
-
-# this file gets updated by other tools like resolveconf,
-# systemd-networkd, vpnc, NetworkManager, so often that it
-# might as well live in /var. But it doesn't.
-/resolv.conf
-
-# don't track systemd-update-done(8)'s file; it gets bumped
-# on each boot automatically which is kind of counterproductive
-# as far as etckeeper is concerned
-.updated
-EOF
-
-    if ! [ -f /etc/sudoers.d/builduser-pacman ]; then
-      # **during a makechrootpkg build** don't track gitconfig.
-      # this is entirely because makechrootpkg also wants
-      # to edit that file
-      cat >> /etc/.gitignore <<EOF
-/gitconfig
-EOF
-    fi
-
-      etckeeper init # assumption: this is idempotent
-      etckeeper vcs config user.name root  # etckeeper gets mad without this.
-
-    fi
-  fi
 
   # make pam_faillock(8) way less aggressive.
   # unlike fail2ban, faillock locks you out *from everywhere*
@@ -114,6 +54,8 @@ EOF
 EOF
   fi
 
+  systemctl enable --now iwd systemd-networkd systemd-resolved
+
   # see discussion in https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
   systemctl enable --now fstrim.timer
 
@@ -122,6 +64,55 @@ EOF
   # TODO: how to set --country Canada --fastest 3 in /etc/xdg/reflector/reflector.conf?
   # the trouble is that file is owned by reflector so I can't deploy a file overtop
 }
+
+
+post_install() {
+  # https://wiki.archlinux.org/title/Installation_guide#Time_zone
+  timedatectl set-ntp true # XXX should probably...wait until ntp actually syncs before running the next command?
+
+  # generate /etc/adjtime
+  # this can't be deployed because for the contents to be truthful,
+  # hwclock needs to also actually *sync* the system (i.e. NTP) and hardware clocks and write down when it did so.
+  hwclock --systohc
+
+  # TODO: I should probably...pull my etckeeper setup out to a separate package
+  # debian's etckeeper package initializes fully and correctly at install time
+  # why doesn't arch's? is it a bug in arch's version or is it on purpose?
+  # one immediate problem with having this here: etckeeper assumes it can read /etc/hostname
+  # but this package *creates* /etc/hostname, which means it will get jammed: you can't uninstall kousu-device-nigiri
+  # because removing it removes /etc/hostname, etckeeper will fail, then AVOID_COMMIT_BEFORE_INSTALL wil ltrigger
+  # when you try to reinstall it, but there's no way to `etckeeper commit` becuase /etc/hostname is gone!
+  # splitting things up should make this easier to deal with
+  # a workaround: install inetutils, which brings /usr/bin/hostname; etckeeper will try that first before /etc/hostname
+
+  if [ -f /etc/etckeeper/etckeeper.conf ]; then
+    if ! grep -E -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
+      # this is like lineinfile: in ansible
+      # because it doesn't look like this thing contains a .d directory for its config I can use
+      (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf
+    fi
+
+    if ! [ -f /etc/sudoers.d/builduser-pacman ]; then
+      # **during a makechrootpkg build** don't track /etc/gitconfig.
+      # makechrootpkg also wants to edit that file and it ties a knot of conflicts.
+      cat >> /etc/.gitignore <<EOF
+/gitconfig
+EOF
+    fi
+
+    etckeeper init
+    etckeeper vcs config user.name root  # etckeeper gets mad without this.
+
+  fi
+
+  _deploy
+}
+
+
+post_upgrade() {
+  _deploy
+}
+
 
 pre_remove() {
   # undo https://wiki.archlinux.org/title/Installation_guide#Localization

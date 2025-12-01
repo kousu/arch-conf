@@ -22,6 +22,7 @@ depends=(
   # XXX replaces dtach due to bullshit: https://github.com/crigler/dtach/issues/22
 
   xkcdpass    # password generator
+  words
   pass-xkcd   # ^ integrates the above with pass(1)
   softu2f-git # credential manager (virtual YubiKey)
 	      # arguably this is part of "Web", since the only apps that can use it at the moment are websites

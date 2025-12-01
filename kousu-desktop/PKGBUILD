@@ -1,8 +1,5 @@
-# TODO:
-# - [ ] split this to kousu-base and kousu-desktop, the desktop being just the GUI parts
-
 pkgname=kousu-desktop
-pkgdesc="Configuration management for kousu"
+pkgdesc="Configuration management for kousu's workstations"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 
@@ -13,39 +10,10 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
-  # Base system
-  base
-  man-db # the 'man' command
-  man-pages # the core linux man pages (kernel, libc, file formats)
-  reflector # for updating /etc/pacman.d/mirrorlist
-  etckeeper # for tracking /etc/'s changes; (this is redundant with this package itself; but it's a useful redundancy, that helps me figure out what to change)
-  pacman-contrib # pactree, pacdiff, etc
+  kousu-base
 
-  # hardware
-  linux  # the kernel. on Arch, this is an *optional* package, so that you can install vanilla Arch inside a container.
-  linux-firmware-intel
-  dmidecode # reads low-level BIOS information
-  intel-ucode
-  amd-ucode # TODO: these two packages have an optional but difficult amount of manaul setup:
-            # https://wiki.archlinux.org/title/Microcode#Early_loading
-            # basically you need to edit your kernel command line to *prepend* initrd=/boot/amd-ucode.img,/boot/intel-ucode.img,
-            # and making that edit by script is tricky. and also in the early boot that path is not always at /boot? ai yi yi
-  e2fsprogs
-  dosfstools
-
-  broadcom-wl # if we were booted on a system with only broadcom wifi we would be stuck without these drivers
   iwd # wifi
   #macchanger # not needed if using iwd's AddressRandomization
-  sysstat   # iostat, some other things..
-  hdparm
-  lshw
-  lsof
-  iftop
-  iotop
-  nethogs
-  net-tools # netstat, ifconfig
-  #inetutils # for hostname(1); also has telnet(1), rsh(1), and other deprecated commands
-  strace
   openconnect  # VPN
 
   alsa-utils
@@ -55,81 +23,12 @@ depends=(
 
   yubikey-manager
 
-
   # CLI
-  bash-completion  # lets apps customize tab completion; it's handy for pass(1) and kubectl(1) and some others, but intereferes and is annoying when apps provide incomplete tab completion because it *disables* the default behaviour of files.
-  sudo
-  openssh
-  openbsd-netcat
-  socat
   pass # password manager
   pass-otp
   pwgen # alternate password generator
-  rsync
-  fdupes
-  sshfs
-
-  # requires some extra setup (included in src/ and below): https://wiki.archlinux.org/title/podman#Rootless_Podman
-  podman-docker
-
-  #fio   # speed testing
-
-  # CLI :: Network
-  bind      # dig
-  whois
-  tcpdump
-  nmap
-  geoip
-  geoip-database-extra
-  #macchanger
 
   # CLI :: Programming
-  base-devel
-
-  # Here's the contents of base-devel (except those already covered by base), listed explicitly; this list extracted
-  # (with the help of https://catonmat.net/set-operations-in-unix-shell) by
-  # $ grep -vxF -f <(pacman -Qi base | grep Depends | cut -d ':' -f 2 | awk -v 'RS= ' '/.+/ {print}') <(pacman -Sgq base-devel)
-  autoconf
-  automake
-  binutils
-  bison
-  fakeroot
-  flex
-  gcc
-  groff
-  libtool
-  m4
-  make
-  patch
-  pkgconf
-  sudo
-  texinfo
-  which
-  words
-
-  git
-  git-filter-repo
-  #git-lfs
-  #git-annex
-
-  zip
-  unrar
-  unzip
-
-  python
-  python-pip
-  python-wheel
-  python-build
-
-  #nodejs
-  #npm
-
-  jq
-  htmlq
-
-  strip-nondeterminism
-  parallel
-
   android-tools # adb! fastest way to get files in and out of a phone
   android-udev
   #jad
@@ -141,9 +40,6 @@ depends=(
   #dotpeek
 
   # TUI
-  vi     # editor
-  #vim
-  htop   # resource/process monitor
   ranger # curses file browser
   #lynx, or elinks, links, w3m # terminal browser
 
@@ -224,7 +120,7 @@ depends=(
 # and to handle a directory tree it expects to be given a .tar to extract into src/
 # Instead, I've committed the contents of this package *directly* to src/.
 
-install="arch-conf.install"
+install="${pkgname}.install"
 
 backup=(
   # user-editable config files

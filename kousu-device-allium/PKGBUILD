@@ -12,6 +12,7 @@ pkgrel=1
 
 depends=(
   kousu-desktop
+  linux-firmware-intel
 )
 
 conflicts=(kousu-device-bomp kousu-device-nigiri)

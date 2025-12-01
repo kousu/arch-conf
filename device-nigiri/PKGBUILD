@@ -240,7 +240,7 @@ depends=(
   firefox-extension-passff
   firefox-ublock-origin
   #chromium
-  #gnome-recipes # online cookbook
+  gnome-recipes  # online cookbook
 
   ## GUI :: Comms
   dino

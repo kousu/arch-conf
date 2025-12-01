@@ -1,4 +1,4 @@
-pkgname=kousu-matlab
+pkgname=kousu-aur-matlab
 pkgdesc="Configuration management for MATLAB"
 
 # load common settings; be aware if you ever split up this repo.

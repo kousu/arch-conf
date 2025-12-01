@@ -287,6 +287,7 @@ The trick is to express configuration as config files instead of as commands tha
 * terraform? I guess?
 * keeping a careful notebook like [this guy](http://howardism.org/Technical/Emacs/literate-devops.html)
 * crying into a small jar full of tears
+* https://github.com/CyberShadow/aconfmgr - Arch specific
 
 ## Future Work
 

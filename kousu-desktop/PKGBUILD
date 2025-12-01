@@ -99,26 +99,7 @@ depends=(
   signal-desktop
 
   ## GUI :: Media
-  vlc # ?? or maybe i should just use whatever comes with KDE?
-  vlc-plugin-flac
-  vlc-plugin-dvd
-  vlc-plugin-dvb
-  vlc-plugin-ffmpeg
-  vlc-plugin-gstreamer
-  vlc-plugin-matroska
-  vlc-plugin-mpeg2
-  vlc-plugin-mpg123
-  vlc-plugin-ogg
-  vlc-plugin-srt   # subtitles
-  vlc-plugin-ass   # also subtitles
-  vlc-plugin-theora
-  vlc-plugin-vorbis
-  vlc-plugin-vpx
-  vlc-plugin-x264
-  vlc-plugin-x265
-  #celluloid  # alt to vlc
-  shortwave # radio-browser.info client
-  lollypop  # music library
+  kousu-media
 
   ## Games
   #xboard

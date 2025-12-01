@@ -46,7 +46,7 @@ depends=(
   gnome-control-center
   gnome-disk-utility
   gnome-keyring
-  seahorse   # GUI for gnome-keyring`
+  #seahorse   # GUI for gnome-keyring`
   gnome-logs
   gnome-maps
   gnome-menus

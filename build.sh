@@ -88,10 +88,13 @@ finddeps() {
 # only and build up, and ideally only rebuild the packages necessary for the device
 # I'm imaging or updating at the moment.
 
-export PKGDEST=/var/cache/pacman/site # -> output packages from container to here
-#export PKGDEST=.
+# packages are output to $PKGDEST; _additionally_ a repo is built there.
+: "${PKGDEST:=/var/cache/pacman/site}"  # default value
+#: "${PKGDEST:=$(pwd)}"  # default value
 
-export PKGDEST="$(realpath "$PKGDEST")"
+PKGDEST="$(realpath "$PKGDEST")"
+export PKGDEST
+
 sudo mkdir -p "$PKGDEST"
 sudo chown "$USER" "$PKGDEST"  #XXX is this a dangerous idea? it's a privilege escalation vector.
 repo-add "$PKGDEST"/site.db.tar.zst # init repo if needed
@@ -103,17 +106,26 @@ sudo mkdir -p "$CHROOT"
 if [ ! -d "$CHROOT"/root ]; then
   # construct a new build container
   mkarchroot "$CHROOT"/root base-devel  # NB: this calls `sudo`
-  sudo arch-chroot "$CHROOT"/root tee -a /etc/pacman.conf <<EOF
+fi
+## insert the output path so downstream local packages can depend on local packages.
+# arch-nspawn parses pacman.conf and automagically bind-mounts any paths mentioned into the container.
+#
+#   _Alternate rejected solution_: adding just `Include = /etc/pacman.d/site.conf`.
+#   and putting the repo details in there. arch-nspawn parses pacman.conf from
+#   _outside_ the container, where /etc/pacman.d/site.conf doesn't exist. Too bad,
+#   it would be cleaner...
+#
+sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
+sudo arch-chroot "$CHROOT"/root tee -a /etc/pacman.conf <<EOF
+# --- BEGIN makechrootpkg ---
 [site]
 # the arch devtools magically recognize directories in the containerized
 # pacman.conf and _bind mount_ them to the same paths inside as out.
 Server = file://$PKGDEST
 # Disable signature checking on local packages -- because we don't have signing configured
 SigLevel = Optional TrustAll
+# --- END makechrootpkg ---
 EOF
-fi
-# update the repo path in case PKGDEST has changed; XXX fragile
-arch-nspawn $CHROOT/root sed -i "s|^Server = file://.*$|Server = file://$PKGDEST|" /etc/pacman.conf
 
 
 # build packages in *topological sort order* (i.e. deepest dependency first) thanks to `tsort`,

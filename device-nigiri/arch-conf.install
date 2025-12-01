@@ -48,6 +48,7 @@ EOF
       etckeeper init # assumption: this is idempotent
       etckeeper vcs config user.name root  # etckeeper gets mad without this.
       echo '.updated' >> /etc/.gitignore   # don't track systemd-update-done(8)'s file; it gets bumped on each boot automatically which is kind of counterproductive as far as etckeeper is concerned
+      echo '/resolv.conf' >> /etc/.gitignore # this file gets updated by other tools like resolveconf, systemd-networkd, vpnc, NetworkManager, so often that it might as well live in /var. But it doesn't.
     fi
   fi
 

@@ -1,6 +1,12 @@
 [Trigger]
 Operation = Install
 Operation = Upgrade
+Type = Package
+Target = kousu-bootloader-bios
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
 Type = Path
 Target = /etc/cmdline.d/*
 

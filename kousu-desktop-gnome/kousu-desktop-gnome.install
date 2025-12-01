@@ -5,11 +5,11 @@ post_install() {
 }
 
 post_upgrade() {
-  systemctl enable --now NetworkManager # NB: we actually use iwd; but this is here to glue GNOME into it
-  systemctl enable --now gdm
+  systemctl enable NetworkManager # NB: we actually use iwd; but this is here to glue GNOME into it
+  systemctl enable gdm
 }
 
 pre_remove() {
-  systemctl disable --now gdm
-  systemctl disable --now NetworkManager # NB: we actually use iwd; but this is here to glue GNOME into it
+  systemctl disable gdm
+  systemctl disable NetworkManager # NB: we actually use iwd; but this is here to glue GNOME into it
 }

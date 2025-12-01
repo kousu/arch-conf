@@ -10,6 +10,8 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
+  gvfs-onedrive
+
   # needed to sign up for courses
   icedtea-web
   java-environment=17

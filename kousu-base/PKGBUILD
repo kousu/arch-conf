@@ -97,8 +97,11 @@ depends=(
   parallel
 
   # TUI
-  vi     # editor
+  vis    # editor
+  lua-lpeg # syntax highlighting in vis
   #vim
+  #e3    # has e3vi; 23kiB installed
+
   htop   # resource/process monitor
 )
 

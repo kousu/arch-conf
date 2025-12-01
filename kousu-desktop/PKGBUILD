@@ -26,6 +26,8 @@ depends=(
   pwgen # alternate password generator
 
   # CLI :: Programming
+  helix
+  # tree-sitter  # TODO: install and configure this
   android-tools # adb! fastest way to get files in and out of a phone
   android-udev
   tokei    # lines-of-code metrics
@@ -51,8 +53,11 @@ depends=(
   xorg-fonts-100dpi
   xorg-fonts-75dpi
   noto-fonts-emoji # Google's Android emoji fonts, with the colourful faces and whatnot
-  terminus-font
   otf-fira-sans
+  ttf-fira-code
+  otf-codenewroman-nerd
+  ttf-inconsolata-go-nerd
+  terminus-font
 
   # lightdm ?
   xclip
@@ -77,11 +82,6 @@ depends=(
 
   ## GUI :: Programming
   #vscode
-  helix
-  #tree-sitter  # TODO: install and configure this
-  otf-codenewroman-nerd
-  ttf-fira-code
-  ttf-inconsolata-go-nerd
   # TODO: there's typst, rust, go and javascript plugins that need packages
 
   ## GUI :: Math

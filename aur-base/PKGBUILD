@@ -27,7 +27,6 @@ depends=(
   #hollywood   # shennaigans
 
   ## GUI :: Desktop Environment
-  plasma5-applets-weather-widget-2
 
   ## GUI :: Editors
   #apostrophe  # markdown editor; like ghostwriter

@@ -36,7 +36,7 @@ depends=(
   dmenu
   i3status
   dex # default i3 config file uses this to run ~/.config/autostart
-  feh # load wallpaper
+  xwallpaper # load wallpaper
   xfce4-artwork # default wallpapers
   brightnessctl
   xss-lock

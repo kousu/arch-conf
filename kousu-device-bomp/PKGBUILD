@@ -19,4 +19,8 @@ optdepends=(
   kousu-art-audio
 )
 
-conflicts=(kousu-device-allium kousu-device-nigiri kousu-device-arcology)
+conflicts=(
+  kousu-device-allium
+  kousu-device-arcology
+  kousu-device-nigiri
+)

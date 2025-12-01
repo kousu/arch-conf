@@ -14,6 +14,7 @@ depends=(
   swaks  # smtp tester. aka lifesaver.
   socat
   openbsd-netcat
+  stunnel
 
   # virtualization
   gnome-boxes

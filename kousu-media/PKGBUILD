@@ -1,5 +1,5 @@
 pkgname=kousu-media
-pkgdesc="Configuration management for kousu's media"
+pkgdesc="Configuration management for watching stuff !"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 

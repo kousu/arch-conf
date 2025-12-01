@@ -1,5 +1,5 @@
 pkgname=kousu-desktop
-pkgdesc="Configuration management for kousu's workstations"
+pkgdesc="Configuration management common to kousu's workstations"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 

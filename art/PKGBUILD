@@ -68,10 +68,8 @@ depends=(
   #ft2-clone # tracker
 )
 
-prepare() {
-  cp -r "${startdir}/source/." "${srcdir}"
-}
-
 package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
   cp -rp * "${pkgdir}"
 }

@@ -186,6 +186,18 @@ This system is a fairly plain KDE-based deal.
 Log in at the getty(1) prompt (the terminal prompt) with your user, then either use the terminal,
 or run [sx(1)](https://packages.archlinux.org/package/sx) to get into the GUI.
 
+## Contents
+
+Because the goal here isn't to package pre-existing software for use on Arch,
+but rather to customize a complete Arch system, most of the work is done kept in files,
+directly in `src/`, instead of using PKGBUILD's `sources=()` array, and what doesn't
+fit in as a file is done as a `.install` script hook.
+
+> [!warning]
+>
+> `package()` is run in `$srcdir`, however `$srcdir != 'src/'`, at least not necessarily.
+> Instead, because we're not using `sources`, every `package()` function here starts by enforcing
+> `cd ${startdir}/src`
 
 ## Cleaning
 

@@ -63,6 +63,11 @@ depends=(
   snapshot # camera
   sushi    # part of nautilus
 
+
+  gnome-shell-extension-appindicator
+  gnome-shell-extension-caffeine
+  gnome-shell-extension-vitals
+  gnome-shell-extensions
 )
 
 package() {

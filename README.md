@@ -81,7 +81,7 @@ sudo pacman -Syu
 You can also pre-build **all** the packages:
 
 ```
-ls | grep -v aur | xargs -n1 ./build.sh
+ls | grep -v aur | xargs ./build.sh
 ```
 
 Or you can build a single package _without_ its dependencies, say, if you are working on it in detail:

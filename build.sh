@@ -66,7 +66,7 @@ finddeps() {
         echo "$target" "$target" # add a loop back on each dep for the
         parsedeps "$target" | while read -r dep kind; do
 
-          if [ "$kind" = "(makedepends)" -o "$kind" = "(depends)" ]; then
+          if [ "$kind" = "(makedepends)" ] || [ "$kind" = "(depends)" ]; then
             echo "$dep" "$target"
           fi
 
@@ -130,7 +130,7 @@ EOF
 
 # build packages in *topological sort order* (i.e. deepest dependency first) thanks to `tsort`,
 # and build into the local site repo so that later local packages can depend on earlier local packages.
-finddeps "$@" | tsort | while read target; do
+finddeps "$@" | tsort | while read -r target; do
   ( # subshell to undo 'cd' at end
   cd "$target"
   if [ -f PKGBUILD ]; then
@@ -140,7 +140,7 @@ finddeps "$@" | tsort | while read target; do
     . PKGBUILD
     fullver=$(get_full_version)
     pkgarch=$(get_pkg_arch)
-    pkg=$PKGDEST/${pkgname}-${fullver}-${pkgarch}${PKGEXT}
+    pkg="$PKGDEST/${pkgname}-${fullver}-${pkgarch}${PKGEXT}"
 
     if [[ -f "${pkg}" ]]; then
       echo "${pkgname} has already been built. Skipping."

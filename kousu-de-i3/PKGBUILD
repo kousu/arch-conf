@@ -1,0 +1,55 @@
+pkgname=kousu-de-i3
+pkgdesc="Configuration management for a GUI based on https://i3wm.org/"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+#license=("MIT") # there..is no license? not really?
+
+#  # This numbers the package versions by how many commits went into it: every published commit is a newer package.
+#  # This will break if we ever rebase the master branch. Don't do that.
+#  # It also breaks when run under pikaur, so it's not really an option
+#pkgver="$(git log --pretty=oneline | wc -l)"
+pkgver=98
+pkgrel=1
+
+depends=(
+  #vim
+  htop   # resource/process monitor
+  ranger # curses file browser
+  #lynx, or elinks, links, w3m # terminal browser
+
+  # GUI
+  #xorg-xhost
+  xorg-xmodmap
+  xorg-xkill
+  xorg-xev
+  xorg-fonts-100dpi
+  xorg-fonts-75dpi
+  noto-fonts-emoji # Google's Android emoji fonts, with the colourful faces and whatnot
+  # lightdm ?
+  xclip
+  peek  # screen recorder
+
+  # for a tinier DE:
+  i3-wm
+  dmenu
+  i3status
+  dex # default i3 config file uses this to run ~/.config/autostart
+  i3lock
+  arandr
+  pavucontrol # volume control
+  
+  xorg-xbacklight
+  redshift  # KDE has a setting for this built in
+  passmenu
+  geeqie # image viewer; alts: eog, eom, feh, gwenview
+  xarchiver # alts: file-roller
+  thunar
+  thunar-archive-plugin
+  thunar-volman
+  l3afpad
+  xfce4-terminal # alts: xterm, rxvt, gnome-terminal, termite?
+)
+
+package() {
+  cp -rp * "${pkgdir}"
+}

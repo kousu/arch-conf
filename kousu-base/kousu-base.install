@@ -114,6 +114,9 @@ EOF
 EOF
   fi
 
+  # see discussion in https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
+  systemctl enable --now fstrim.timer
+
   systemctl enable reflector.timer
   systemctl enable reflector.service
   # TODO: how to set --country Canada --fastest 3 in /etc/xdg/reflector/reflector.conf?

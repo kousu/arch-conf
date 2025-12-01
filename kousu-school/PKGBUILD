@@ -10,7 +10,7 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
-  gvfs-onedrive
+  #gvfs-onedrive  # requires approval by ETS's admin
 
   # needed to sign up for courses
   icedtea-web

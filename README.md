@@ -4,12 +4,11 @@ This is my first attempt at trying to do configuration management via packages.
 
 `ansible`, `terraform`, `kubernetes`, all that junk is effective but overly complicated. Why add the complexity when OSes already come with a system for controlling what files and software are on your disk: its package manager?
 
+I've built this on Arch, using their [PKGBUILD format](https://wiki.archlinux.org/wiki/PKGBUILD).
 
-Here I'm doing this with [Arch's PKGBUILD format](https://wiki.archlinux.org/wiki/PKGBUILD). So, that means you have to be using Arch to use this particular set up.  The main novelty here is that
+This automates as many parts of https://wiki.archlinux.org/Installation_guide that it can, including the all important config to make a bootable system and selections of different apps. The higher level packages include my personal UI customization preferences, copiously commented so that you can learn the pointers I've collected in my little internet flower pot.
 
-This automates as many parts of https://wiki.archlinux.org/Installation_guide that it can, including the all important "suggestions"
-to actually install suites of useful software. In that sense this is something like [Manjaro](TODO), but without (yet) its own installer.
-It also includes my personal UI customization preferences. And it's copiously commented so that you can learn the pointers I've collected in my little dustpan over years on the internet.
+The `kousu-device-*` packages are the top level. You can copy those packages and customize them, or install the lower level packages directly. Modifications are done by editing `PKGBUILD`s or changing files in `src/`'s, [rebuilding](#building), and then `pacman -Syu`. There is no configuration language to learn beyond PKGBUILD is standard and very concise shell.
 
 
 ## Prereqs

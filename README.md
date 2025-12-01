@@ -113,7 +113,7 @@ Before you build you may want to edit `/etc/makepkg.conf` to set `PACKAGER` and/
 
 Arch's core package build command is `makepkg`, but it has variants and wrappers
 which provide different levels of speed.
-In `build.sh` we use `makechrootpkg` but you can play with swapping
+In `build.sh` we use `makechrootpkg` but you can edit `build.sh` to play with swapping
 
 | Core build command | Isolation level | Reliability | Speed[^timing] |
 | ------------------ | --------------- | ----------- | -------------- |

@@ -10,8 +10,15 @@ if [ -z "$CMDLINE" ]; then
 fi
 
 mkdir -p /boot/limine
+
+# copy in the bootsplash to /boot so Limine is capable of reading it
+if [ -f /etc/bootsplash.bmp ]; then
+    cp -L /etc/bootsplash.bmp /boot/limine/bootsplash.bmp
+fi
+
 cat > /boot/limine/limine.conf <<EOF
 timeout: 5
+wallpaper: boot():/limine/bootsplash.bmp
 
 /Arch Linux
     protocol: linux

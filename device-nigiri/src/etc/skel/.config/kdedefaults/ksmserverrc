@@ -1,0 +1,6 @@
+
+# KDE restores all your apps *by default*
+# I find this kind of obnoxious!
+[General]
+loginMode=emptySession
+

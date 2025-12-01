@@ -90,7 +90,7 @@ _pkgver() {
 }
 
 # Based on https://wiki.archlinux.org/title/DeveloperWiki:Building_in_a_clean_chroot#Classic_way
-# 
+#
 # There's `pkgctl build`, `archbuild` which are supposed to be more convenient
 # but they are only really designed for working against the Arch repos, and only
 # one package at a time. This needs to work with multiple local packages with multiple
@@ -183,3 +183,7 @@ finddeps "$@" | tsort | while read -r target; do
   fi
   )
 done
+
+# "upload"
+sudo mkdir -p /var/cache/pacman/site
+sudo cp -rp "${PKGDEST}/." /var/cache/pacman/site/

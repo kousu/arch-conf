@@ -19,6 +19,7 @@ depends=(
 
   # GUI
   #xorg-xhost
+  xorg-xinit
   xorg-xmodmap
   xorg-xkill
   xorg-xev

@@ -206,12 +206,6 @@ You should do:
 
 The groups here are important! `wheel` means `sudo` rights; `lp` means Bluetooth rights (weirdly?).
 
-## Usage
-
-This system is a fairly plain KDE-based deal.
-
-Log in at the getty(1) prompt (the terminal prompt) with your user, then either use the terminal,
-or run [sx(1)](https://packages.archlinux.org/package/sx) to get into the GUI.
 
 ## Cleaning
 

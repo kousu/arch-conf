@@ -23,6 +23,8 @@ depends=(
   softu2f-git # credential manager (virtual YubiKey)
 	      # arguably this is part of "Web", since the only apps that can use it at the moment are websites
 
+  #hollywood   # shennaigans
+
   ## GUI :: Desktop Environment
   plasma5-applets-weather-widget-2
 

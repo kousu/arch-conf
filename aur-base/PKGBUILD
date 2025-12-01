@@ -5,7 +5,8 @@ arch=('any')
 url="https://github.com/kousu/arch-conf"
 #license=("MIT") # there..is no license? not really?
 
-pkgver="$(git log --pretty=oneline | wc -l)"
+#pkgver="$(git log --pretty=oneline | wc -l)" # number based on git commits; but this doesn't work with pikaur, which does a shallow clone
+pkgver=94
 
 depends=(
   kousu-device-nigiri  # TODO: kousu-base

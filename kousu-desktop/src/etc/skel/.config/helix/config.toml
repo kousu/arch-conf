@@ -1,0 +1,20 @@
+theme = "autumn_night"
+
+#runners up:
+# starlight
+# sunset
+# papercolor-dark
+# uox
+# uintage
+# yo_berry
+# ao
+# ataraxia
+# autumn_night
+# ayu_evolve
+# beans
+# carbonfox
+
+[editor]
+trim-final-newlines = true
+trim-trailing-whitespace = true
+rulers = [80, 120]

@@ -13,7 +13,10 @@ pkgrel=1
 
 depends=(
   kousu-desktop
+  kousu-work
 )
+
+conflicts=(kousu-device-allium kousu-device-nigiri)
 
 backup=(
   # user-changeable config files

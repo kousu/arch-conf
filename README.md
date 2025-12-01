@@ -39,21 +39,66 @@ git clone https://github.com/kousu/arch-conf && cd arch-conf/device-nigiri
 
 ## Building
 
-1. `makepkg -fsri`
+For a single package:
 
-```{note}
-You can use `-d` instead of `-sr`: `-sr` means: 'temporarily install missing dependencies';
-`-d` means 'ignore missing dependencies'. Both effectively do the same thing, but the former
-is a little bit of a stronger test; but sometimes too strong, because it demands installing
-run-time dependencies too, which aren't necessarily needed (and may be quite large) by
-just building the package.
 ```
+cd package_folder/
+makepkg -sr
+```
+
+Note that dependencies enforce an order to the build.
+`-s` installs missing dependencies from the Arch repos,
+but it doesn't know about the local files here,
+so you have to build and install the dependent packages
+first. `makepkg` will tell you what you need. For these depdent
+packages, install them:
+
+```
+cd package_folder
+makepkg -si
+```
+
+If you are *just* trying to build packages, say, to ship
+to another device, you can use
+
+```
+makepkg -d
+```
+
+which will skip dependency verification. It will be up
+to the deployment location to verify dependencies.
 
 ## Installation
 
-2. `makepkg -fsri && sudo pacman -U kousu-device-nigiri-*.pkg.tar.zst`
+This builds and installs the requested packages in the right order:
 
-I'm going to look into what running my own repo looks like; maybe I can do it on Github Pages? That would be nice and easy.
+```
+./install.sh package_folder_name [package_folder_name ...]
+```
+
+**but** you need [pikaur](https://aur.archlinux.org/packages/pikaur) for it.
+
+```
+# install pikaur:
+curl -JLO https://aur.archlinux.org/cgit/aur.git/snapshot/pikaur.tar.gz
+tar -xvf pikaur.tar.gz
+cd pikaur
+makepkg -si
+```
+
+You can of course install packages one by one as above with
+
+```
+makepkg -si
+```
+
+so long as you do it in the correct order.
+
+
+## Deployment
+
+> [!tip]
+> I'm going to look into what running my own repo looks like; maybe I can do it on Github Pages? That would be nice and easy.
 
 If you are [installing Arch](https://wiki.archlinux.org/title/Installation_guide) fresh,
 copy the package to the installation system somehow (`curl`, use an extra thumbdrive, etc),

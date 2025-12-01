@@ -1,0 +1,35 @@
+--- C.dconf	2025-10-14 06:32:10.273069232 -0400
++++ D.dconf	2025-10-14 06:34:01.794072418 -0400
+@@ -5,6 +5,8 @@
+ playback-volume=0.45624999999999999
+ recording-mode='decide'
+ recording-track-directory='/home/kousu/Music'
++window-height=675
++window-width=975
+ 
+ [org/gnome/Console]
+ font-scale=1.0
+@@ -14,6 +16,12 @@
+ [org/gnome/TextEditor]
+ last-save-directory='file:///home/kousu'
+ 
++[org/gnome/Weather]
++locations=[<(uint32 2, <('Montreal', 'CYUL', true, [(0.79354303905785273, -1.2871803233458181)], [(0.79354303905785273, -1.2871803233458181)])>)>]
++window-height=506
++window-maximized=false
++window-width=439
++
+ [org/gnome/control-center]
+ last-panel='keyboard'
+ window-state=(980, 640, false)
+@@ -111,6 +119,10 @@
+ [org/gnome/shell]
+ welcome-dialog-last-shown-version='49.0'
+ 
++[org/gnome/shell/weather]
++automatic-location=true
++locations=[<(uint32 2, <('Montreal', 'CYUL', true, [(0.79354303905785273, -1.2871803233458181)], [(0.79354303905785273, -1.2871803233458181)])>)>]
++
+ [org/gnome/shell/world-clocks]
+ locations=@av []
+ 

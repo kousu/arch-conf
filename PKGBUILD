@@ -212,3 +212,4 @@ package() {
 # - src/etc/systemd/system/user@.service: this symlink is the same as `systemctl mask user@.service`.
 #   It disables `systemd --user`, an incomplete and buggy feature in systemd that causes more problems
 #   than it solves: https://github.com/systemd/systemd/issues/7261
+#   XXX this is re-enabled for now: KDE doesn't get along without it, there's some error about dbus-launch :(

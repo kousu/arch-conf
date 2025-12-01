@@ -1,7 +1,7 @@
 # Maintainer: kousu <nick@kousu.ca>
 
 pkgname=kousu-arch-install
-pkgver=0.2.0
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="A script to install Arch unattended, with EFI booting and full disk encryption."
 arch=('any')
@@ -16,7 +16,7 @@ depends=(
   parted  # for partprobe(8)
   )
 source=("arch-install")
-sha256sums=('3d15af3da0df18796a82b628dd691d3ffb3865bb0279e5e2f8abf9f664942be1')
+sha256sums=('972a7babd24f920a9afa9cda7ac6ce4369ea3721ee48f7d78f9379c140285c90')
 
 package() {
   install -Dm 755 arch-install -t "${pkgdir}"/usr/bin

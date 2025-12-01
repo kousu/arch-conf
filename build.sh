@@ -126,6 +126,8 @@ Server = file://$PKGDEST
 SigLevel = Optional TrustAll
 # --- END makechrootpkg ---
 EOF
+# clean up after ourselves
+trap 'sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf' EXIT
 
 # Extend makechrootpkg's sudo privileges until
 # done, meaning the build can be left unattended.

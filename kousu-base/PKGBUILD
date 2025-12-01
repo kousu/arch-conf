@@ -49,9 +49,12 @@ depends=(
   openbsd-netcat
   socat
   rsync
-  magic-wormhole
-  fdupes
   sshfs
+
+  # CLI :: Files
+  restic
+  fdupes
+  magic-wormhole
 
   # CLI :: Network
   bind      # dig

@@ -9,7 +9,7 @@ url="https://github.com/kousu/arch-conf"
 pkgver=0
 pkgrel=1
 pkgver() {
-  echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)"
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
 }
 
 depends=(

@@ -46,4 +46,17 @@ depends=(
   # webex-bin
   # fsleyes # specialized image viewer for .nii voxel files
 
+  ## Academic typesetting :: GUI
+  # TODO: evaluate which of these I want to settle on; I think I've used texstudio before and it's the most solid but also clunkiest
+  #gnome-latex
+  #gummi
+  #hevea
+  #kile
+  #rubber
+  #texstudio
+  #texmaker
+
+  ## Academic typesetting
+  #texlive-bin
+
 )

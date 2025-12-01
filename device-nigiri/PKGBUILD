@@ -38,7 +38,6 @@ depends=(
   e2fsprogs
   dosfstools
 
-  light
   broadcom-wl # if we were booted on a system with only broadcom wifi we would be stuck without these drivers
   iwd # wifi
   sysstat   # iostat, some other things..

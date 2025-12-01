@@ -127,10 +127,16 @@ SigLevel = Optional TrustAll
 # --- END makechrootpkg ---
 EOF
 
+# Extend makechrootpkg's sudo privileges until
+# done, meaning the build can be left unattended.
+( while true; do sudo -v; sleep 60; done ) &
+SUDO_PID=$!
+trap 'kill $SUDO_PID' EXIT
 
 # build packages in *topological sort order* (i.e. deepest dependency first) thanks to `tsort`,
 # and build into the local site repo so that later local packages can depend on earlier local packages.
 finddeps "$@" | tsort | while read -r target; do
+
   ( # subshell to undo 'cd' at end
   cd "$target"
   if [ -f PKGBUILD ]; then

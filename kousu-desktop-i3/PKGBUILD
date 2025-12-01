@@ -21,6 +21,7 @@ depends=(
 
   # GUI
   #xorg-xhost
+  xorg-server  # XXX tricky: this makes more sense in kousu-desktop, but with the Wayland transition that's unclear; GNOME doesn't even have a X version anymore
   xorg-xinit
   xorg-xmodmap
   xorg-xkill
@@ -50,7 +51,7 @@ depends=(
 
   gvfs  # automounting drives (from GNOME but used by Thunar)
   
-  redshift  # KDE has a setting for this built in
+  redshift  # KDE and GNOME have this built in
   passmenu
   eom # image viewer; alts: geeqie, eog, feh, gwenview
   xarchiver # alts: file-roller

@@ -17,8 +17,23 @@ url="https://github.com/kousu/arch-conf"
 license=("MIT")
 
 _pkgver() {
+
   # construct a version number from how many commits are in the project
-  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+  # cache it to .pkgver, so that containerized builds which don't have
+  # access to git; this works because the containerized builds (pikaur, makechrootpkg) all load PKGBUILD once outside the container first to orient themselves.
+  if (command -v git >/dev/null) && \
+     REVS=$(git rev-list --count HEAD 2>/dev/null ) && \
+     COMMIT=$(git describe --always --dirty 2>/dev/null ) ; then
+       COMMIT=$(echo "$COMMIT" | sed s/-/+/g)
+       echo "r${REVS}.commit=$COMMIT" > .pkgver
+  fi
+
+  # error handling:
+  # if this somehow runs in a container without git and without
+  # first creating this file, cat will error to stderr and then
+  # makepkg will stop because it refuses empty version strings.
+  # That's why there's no explicit error handling here.
+  cat .pkgver
 }
 pkgver="$(_pkgver)"
 pkgrel=1

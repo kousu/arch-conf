@@ -86,9 +86,6 @@ finddeps() {
     done
 }
 
-_pkgver() {
-  echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)"
-}
 
 # Based on https://wiki.archlinux.org/title/DeveloperWiki:Building_in_a_clean_chroot#Classic_way
 #
@@ -154,7 +151,7 @@ trap 'kill $SUDO_PID' EXIT
 DEPS=$(finddeps "$@" | tsort)  # split so errors exit before trying to build
 printf "%s\n" "$DEPS" | while read -r target; do
 
-  ( # subshell to undo 'cd' and clean up .pkgver
+  ( # subshell to undo 'cd'
   cd "$target"
   if [ -f PKGBUILD ]; then
     # determine if output already exists by reproducing makepkg's internal code
@@ -169,18 +166,10 @@ printf "%s\n" "$DEPS" | while read -r target; do
       echo "${pkgname} has already been built. Skipping."
     else
       # build
-
-      # we use git-based versioning. This is fine under makepkg, but makechrootpkg
-      # loses the .git folder.  For *99.999%* of packages that's fine, because when
-      # they use git-based versioning they mean they're reading a .git in `sources=`,
-      # which gets dutifully downloaded by makechrootpkg, but here we want to read
-      # the version from the .git containing the PKGBUILD itself.
-      # This glues the two together.
-      echo "$(_pkgver)" > .pkgver
-      trap 'rm .pkgver' EXIT
-
       makechrootpkg -r "$CHROOT" -u
-      repo-add "$PKGDEST"/site.db.tar.zst "${pkg}" # expose new package in repo
+
+      # expose new package in repo
+      repo-add "$PKGDEST"/site.db.tar.zst "${pkg}"
     fi
   fi
   )

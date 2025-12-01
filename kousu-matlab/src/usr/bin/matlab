@@ -1,0 +1,52 @@
+#!/bin/sh
+
+VER=R2025a
+
+# TODO:
+#
+# - [ ] MathWorksServiceHost doesnt actually spawn properly so this doesn't actually work.
+#   it almost works, but you have to `distrobox enter matlab ` **interactively** and run both the service and matlab manually
+# - [ ] embed VER from PKGBUILD in here
+# - [ ] embed VER in the actual package version number
+# - [ ] set the locale from the host's locale;
+#    the noninteractive install defaults to en_US and US keyboard layout in the container
+#    but we could be more internationally friendly
+# - [ ] cut down task-desktop to only the libraries _actually_ needed (big task!)
+# - [ ] DON'T relaunch MathWorksServiceHost every time.
+#  - maybe make is a systemd service (requires distrobox create --init)
+
+_install() {
+  # systemwide, ish
+  # DOESN'T WORK YET
+  # I think maybe the license authorizor wants to write-back to the matlab root, but I wrote "ro" there
+  #distrobox create --volume /usr/local/MATLAB:/usr/local/MATLAB:ro --unshare-all --name matlab --image docker.io/debian:13
+  #distrobox enter matlab -- sudo DEBIAN_FRONTEND=noninteractive apt-get install -y task-desktop
+
+  # per-user
+  mpm install --release=${VER} --matlabroot=~/.local/MATLAB/${VER} MATLAB #Simscape_Electrical Simscape_Battery 
+  #mpm install --release=${VER} --matlabroot=~/.local/MATLAB/${VER} Simscape_Electrical Simscape_Battery   # addons; see also matlab-mpm-input-git in the AUR
+  distrobox create --name matlab --image docker.io/debian:13
+  distrobox enter matlab -- sudo DEBIAN_FRONTEND=noninteractive apt-get install -y task-desktop
+  distrobox enter matlab -- ~/.local/MATLAB/${VER}/bin/glnxa64/MathWorksProductAuthorizer
+
+  mkdir -p ~/.matlab && touch ~/.matlab/container-built
+}
+
+if [ ! -e ~/.matlab/container-built ]; then
+  _install
+fi
+
+cat > launch-matlab.sh <<EOF
+#!/bin/sh
+
+# system-wide
+# DOESN'T WORK
+#/usr/local/MATLAB/${VER}/bin/matlab "$@"
+
+# per-user
+~/.MathWorks/ServiceHost/-mw_shared_installs/v*/bin/glnxa64/MathWorksServiceHost service --realm-id companion@prod@production &
+~/.local/MATLAB/${VER}/bin/matlab "$@"
+EOF
+chmod +x launch-matlab.sh
+
+distrobox enter matlab -- ./launch-matlab.sh "$@"

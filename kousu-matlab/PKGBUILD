@@ -1,0 +1,32 @@
+pkgname=kousu-matlab
+pkgdesc="Configuration management for MATLAB"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+# MATLAB doesn't support ArchLinux officially and it leads to breakage, often
+# This package wraps it in a Debian container.
+# https://bbs.archlinux.org/viewtopic.php?id=305604&p=2
+
+install="${pkgname}.install"
+
+conflicts=(
+  matlab-support
+)
+
+depends=(
+  matlab-mpm
+  podman
+  distrobox
+)
+
+package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
+  cp -rp * "${pkgdir}"
+}

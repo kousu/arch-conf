@@ -41,7 +41,7 @@ depends=(
   xorg-xbacklight
   redshift  # KDE has a setting for this built in
   passmenu
-  geeqie # image viewer; alts: eog, eom, feh, gwenview
+  eom # image viewer; alts: geeqie, eog, feh, gwenview
   xarchiver # alts: file-roller
   thunar
   thunar-archive-plugin

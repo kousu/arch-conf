@@ -3,17 +3,17 @@
 pkgname=kousu-arch-install
 pkgver=0.2.0
 pkgrel=1
-pkgdesc="A script to install Arch unattended, with dual MBR/EFI booting and full disk encryption."
+pkgdesc="A script to install Arch unattended, with EFI booting and full disk encryption."
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 license=('MIT')
 depends=(
   arch-install-scripts
-  reflector
+  cryptsetup
   lvm2
   )
 source=("arch-install")
-sha256sums=('2a7391e86be4c170de5fcc644f8f270a4b64eb218b1ef59da6e301da95789b4d')
+sha256sums=('2f40c1d29fa38df98ba3a7a4e5d6fd1060be62509a4ebe1f6eb9a081e06e5316')
 
 package() {
   install -Dm 755 arch-install -t "${pkgdir}"/usr/bin

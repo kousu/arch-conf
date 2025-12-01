@@ -13,7 +13,7 @@ depends=(
   lvm2
   )
 source=("arch-install")
-sha256sums=('2f40c1d29fa38df98ba3a7a4e5d6fd1060be62509a4ebe1f6eb9a081e06e5316')
+sha256sums=('e778246158add50ba14af03bca76f0946e1a95a37725d51cbd4a349006753f6c')
 
 package() {
   install -Dm 755 arch-install -t "${pkgdir}"/usr/bin

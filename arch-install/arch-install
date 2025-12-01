@@ -41,10 +41,16 @@
 # - [ ] make suspend-to-disk work
 # - [ ] repack the standard installer to include this script
 # - [ ] don't hardcode "cryptlvm" or "lvsys"? because they might collide with devices on the host?
-# - [ ] Move /etc/cmdline.d/root.conf into kousu-base/kousu-base.install?
+# - [ ] Clean up the fragile /etc/cmdline.d, /etc/mkinitcpio.conf.d, /etc/mkinitcpio.d
 #
+#    Move /etc/cmdline.d/root.conf into kousu-base/kousu-base.install?
 #    It would be some tricky awk, but in theory possible to deduce the root device
-#    and if it's nested inside a cryptdev
+#    and if it's nested inside a cryptdev and write out the correct ararngement.
+#
+#    Or: pull the UKI stuff into kousu-bootloader-uki and **hardcode** it into the pacstrap line.
+#    Then it makes sense for the installer to assume /etc/cmdline.d and exists, and
+#    we don't need to script writing to /etc/mkinitcpio.conf.d anyore.
+#
 # - [x] make encryption unattended
 #
 #   Similar to how i do trust-on-first-login for taking ownership of the accounts,
@@ -59,6 +65,8 @@
 #    - add it with `cryptsetup luksAddKey`
 #    - use `cryptsetup luksRemoveKey /boot/crypto_keyfile.bin` to destroy access.
 #    (a helper script could be good here?)
+# - [ ] make a separate small *linux* partition for the bootstrap key; then no need for MODULES=(vfat) and we can set perms on it to reduce attack surface (it's risky to just have a world-readable key sitting around forever during runtime, even if anyone who could read that key could already)
+# - [ ] explore keeping bootstrap key in /etc/cryptsetup-keys.d/  -- maybe there's a pre-existing initramfs hook that embeds keys from that folder into the initramfs
 
 
 set -e -o pipefail
@@ -202,7 +210,8 @@ mv "${KEY}" "$CHROOT"/boot/bootstrap_keyfile.bin
 # we have to tell it the root device to boot from
 mkdir -p "$CHROOT"/etc/cmdline.d
 crypt_uuid="$(blkid -s UUID -o value "$TARGET_DISK"2)"
-echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm cryptkey=LABEL=boot:vfat:/bootstrap_keyfile.bin root=/dev/lvsys/root rw" > "$CHROOT"/etc/cmdline.d/root.conf
+echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm root=/dev/lvsys/root rw" > "$CHROOT"/etc/cmdline.d/root.conf
+echo "cryptkey=LABEL=boot:vfat:/bootstrap_keyfile.bin" > "$CHROOT"/etc/cmdline.d/bootstrap_keyfile.conf
 mkdir -p "$CHROOT"/boot/efi/boot   # also mkinitcpio will fail unless this exists? TODO: double check if this is necessary
 
 ## Install the system
@@ -242,6 +251,7 @@ if [ -f /boot/bootstrap_keyfile.bin ]; then
   echo "     sudo cryptsetup luksAddKey --force-password --key-file /boot/bootstrap_keyfile.bin UUID=${crypt_uuid}"
   echo "     sudo cryptsetup luksRemoveKey --key-file /boot/bootstrap_keyfile.bin UUID=${crypt_uuid}"
   echo "     sudo rm /boot/bootstrap_keyfile.bin"
+  echo "     sudo rm /etc/cmdline.d/bootstrap_keyfile.conf"
   echo
   echo "   This prevents anyone from turning on your machine or even"
   echo "   accessing the files forensically without your consent."

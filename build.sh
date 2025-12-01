@@ -3,8 +3,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # This code is based on code from the archlinux devtools project.
 
-set -euo pipefail # strict-ish mode
+# load makepkg lib, for below
+MAKEPKG_LIBRARY=${MAKEPKG_LIBRARY:-'/usr/share/makepkg'}
+# Import libmakepkg
+for lib in "$MAKEPKG_LIBRARY"/*.sh; do
+	source "$lib"
+done
+source /etc/makepkg.conf
 
+set -eo pipefail # strict-ish mode
 
 parsedeps() {
 	if [[ -f "$1/PKGBUILD" ]]; then
@@ -57,41 +64,57 @@ finddeps() {
 
 # Based on https://wiki.archlinux.org/title/DeveloperWiki:Building_in_a_clean_chroot#Classic_way
 # 
-# There's `pkgctl build` and `archbuild` which are supposed to be more convenient
+# There's `pkgctl build`, `archbuild` which are supposed to be more convenient
 # but they are only really designed for working against the Arch repos, and only
 # one package at a time. This needs to work with multiple local packages with multiple
 # local dependencies.
-# which is necessary because local packages depend on other local packages.
-# (when working against the arch repos, arch-rebuild-order finds the downstream
-# packages that need to be rebuilt given an update to a given package.
+# And there's `arch-rebuild-order` to find related, but it finds *downstream*
+# packages and needs an existing pacman DB, whereas I want to start from source
+# only and build up, and ideally only rebuild the packages necessary for the device
+# I'm imaging or updating at the moment.
 
 export PKGDEST=/var/cache/pacman/site # -> output packages from container to here
 sudo mkdir -p "$PKGDEST"
 sudo chown "$USER" "$PKGDEST"  #XXX is this a dangerous idea? it's a privilege escalation vector.
-repo-add "$PKGDEST"/site.db.tar.zst # init empty repo, or update existing one
+repo-add "$PKGDEST"/site.db.tar.zst # init repo if needed
 
 CHROOT=/var/lib/archbuild/site
 sudo mkdir -p "$CHROOT"
 if [ ! -d "$CHROOT"/root ]; then
-  mkarchroot "$CHROOT"/root base-devel  # NB: this calls `sudo` if needed
+  # construct a new build container
+  mkarchroot "$CHROOT"/root base-devel  # NB: this calls `sudo`
   sudo arch-chroot "$CHROOT"/root tee -a /etc/pacman.conf <<EOF
 [site]
 # the arch devtools magically recognize directories in the containerized
 # pacman.conf and _bind mount_ them to the same paths inside as out.
-SigLevel = Optional TrustAll
 Server = file://$PKGDEST
+# Disable signature checking on local packages -- because we don't have signing configured
+SigLevel = Optional TrustAll
 EOF
+else
+  # make sure container is updated
+  arch-nspawn $CHROOT/root pacman -Syu
 fi
-
-# make sure container is updated
-arch-nspawn $CHROOT/root pacman -Syu
 
 # build packages in *topological sort order* (i.e. deepest dependency first) thanks to `tsort`,
 # and build into the local site repo so that later local packages can depend on earlier local packages.
 finddeps "$@" | tsort | while read target; do
   (cd "$target"
-    makechrootpkg -c -r "$CHROOT"
-    repo-add "$PKGDEST"/site.db.tar.zst "$PKGDEST"/*.pkg.tar.*
-    arch-nspawn $CHROOT/root pacman -Sy
+
+    # compute output file by leaning on makepkg's internal code
+    # (or: use makepkg --packagelist; but it gets Complicated when there's split and debug sub-packages involved)
+    . PKGBUILD
+    fullver=$(get_full_version)
+    pkgarch=$(get_pkg_arch)
+    pkg=$PKGDEST/${pkgname}-${fullver}-${pkgarch}${PKGEXT}
+
+    if [[ -f "${pkg}" ]]; then
+	echo "${pkgname} has already been built. Skipping."
+    else
+        makechrootpkg -c -r "$CHROOT"
+        repo-add "$PKGDEST"/site.db.tar.zst "${pkg}" # expose new package in repo
+        arch-nspawn $CHROOT/root pacman -Sy  # resync build container to pick up the new package
+    fi
+
   )
 done

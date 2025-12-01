@@ -85,6 +85,8 @@ depends=(
   qt5-wayland
   qt6-wayland    # necessary to make Qt/KDE apps not complain
   wl-clipboard
+
+  transmission-gtk
 )
 
 package() {

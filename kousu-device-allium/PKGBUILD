@@ -13,6 +13,8 @@ pkgrel=1
 depends=(
   linux-firmware-intel
   kousu-desktop-gnome
+
+  pkgstats  # opt-in to ArchLinux telemetry
   
   kousu-work
 

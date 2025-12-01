@@ -10,6 +10,9 @@ depends=(
   dos2unix
   curl
 
+  # protocols
+  swaks  # smtp tester. aka lifesaver.
+
   # virtualization
   # TODO: test this; especially, test you can run windows 11
   gnome-boxes

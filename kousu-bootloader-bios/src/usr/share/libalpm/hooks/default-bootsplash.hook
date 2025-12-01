@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = kousu-bootloader-bios
+
+[Action]
+Description = Configuring default bootsplash...
+When = PostTransaction
+Exec = /bin/sh -c 'if ! [ -e /etc/bootsplash.bmp ]; then ln -sn /usr/share/systemd/bootctl/splash-arch.bmp /etc/bootsplash.bmp; fi'

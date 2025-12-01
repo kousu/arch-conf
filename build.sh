@@ -101,12 +101,12 @@ repo-add "$PKGDEST"/site.db.tar.zst # init repo if needed
 
 
 # Configure makechrootpkg's container
-CHROOT=/var/lib/archbuild/site
-sudo mkdir -p "$CHROOT"
-if [ ! -d "$CHROOT"/root ]; then
-  # construct a new build container
-  mkarchroot "$CHROOT"/root base-devel  # NB: this calls `sudo`
-fi
+#CHROOT=/var/lib/archbuild/site
+#sudo mkdir -p "$CHROOT"
+#if [ ! -d "$CHROOT"/root ]; then
+#  # construct a new build container
+#  mkarchroot "$CHROOT"/root base-devel  # NB: this calls `sudo`
+#fi
 ## insert the output path so downstream local packages can depend on local packages.
 # arch-nspawn parses pacman.conf and automagically bind-mounts any paths mentioned into the container.
 #
@@ -115,8 +115,9 @@ fi
 #   _outside_ the container, where /etc/pacman.d/site.conf doesn't exist. Too bad,
 #   it would be cleaner...
 #
-sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
-sudo arch-chroot "$CHROOT"/root tee -a /etc/pacman.conf <<EOF
+#sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
+sudo sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
+sudo tee -a /etc/pacman.conf <<EOF
 # --- BEGIN makechrootpkg ---
 [site]
 # the arch devtools magically recognize directories in the containerized
@@ -127,10 +128,11 @@ SigLevel = Optional TrustAll
 # --- END makechrootpkg ---
 EOF
 # clean up after ourselves
-trap 'sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf' EXIT
+trap "sudo sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf" EXIT
 
-# Extend makechrootpkg's sudo privileges until
-# done, meaning the build can be left unattended.
+sudo sh -c 'echo Thank you for authenticating'
+## Extend makechrootpkg's sudo privileges until
+## done, meaning the build can be left unattended.
 ( while true; do sudo -v; sleep 60; done ) &
 SUDO_PID=$!
 trap 'kill $SUDO_PID' EXIT
@@ -153,7 +155,10 @@ finddeps "$@" | tsort | while read -r target; do
     if [[ -f "${pkg}" ]]; then
       echo "${pkgname} has already been built. Skipping."
     else
-      makechrootpkg -c -r "$CHROOT" -u
+      #makechrootpkg -r "$CHROOT" -u
+      command -v etckeeper && (sudo etckeeper commit "makepkg local repo" || true)
+      sudo pacman -Syu --noconfirm --needed
+      makepkg -sr
       # does not using -c speed up the build?
       # does using makepkg -sr work here?
       repo-add "$PKGDEST"/site.db.tar.zst "${pkg}" # expose new package in repo

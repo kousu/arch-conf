@@ -1,0 +1,31 @@
+pkgname=kousu-device-arcology
+pkgdesc="Configuration management for kousu's NAS"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  kousu-base
+  kousu-bootloader-bios
+  kousu-didnt-your-mother-always-tell-you
+
+  jellyfin-server
+  jellyfin-web
+
+  # nostalgia:
+  #mpd
+  #ncmpcpp
+
+  pkgstats  # opt-in to ArchLinux telemetry
+)
+
+conflicts=(kousu-device-bomp kousu-device-nigiri kousu-device-allium)
+
+package() {
+  cp -rp "${startdir}/src/." "${pkgdir}"
+}

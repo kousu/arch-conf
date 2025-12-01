@@ -22,7 +22,7 @@ optdepends=(
   kousu-art-audio
 )
 
-conflicts=(kousu-device-allium kousu-device-nigiri)
+conflicts=(kousu-device-allium kousu-device-nigiri kousu-device-arcology)
 
 backup=(
   # user-changeable config files

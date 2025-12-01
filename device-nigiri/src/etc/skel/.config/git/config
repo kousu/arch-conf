@@ -19,3 +19,7 @@
 	# which is usually what I want, anyway: I want my local copy to always be >= to the
 	# master copy that's published for sharing.
 	rebase = true
+
+[diff "gpg"]
+	# make pass git log -p decrypt and show diffs of the protected content
+	textconv = gpg -d --no-tty

@@ -75,15 +75,15 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{capacity}% {icon}",
-        "format-full": "{capacity}% {icon}",
-        "format-charging": "{capacity}% {icon}",
-        "format-plugged": "{capacity}% {icon}",
-        "format-alt": "{time} {icon}",
+        "format": "{capacity}%",
+        "format-full": "{capacity}% ️🔋️",
+        "format-charging": "{capacity}% ⚡️",
+        "format-plugged": "{capacity}% 🔌️",
+        "format-alt": "{time} 🪫️",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
         //"format-icons": ["<U+F244>", "<U+F243>", "<U+F242>", "<U+F241>", "<U+F240>"]
-        "format-icons": ["A", "B", "C", "D", "E"]
+        //"format-icons": ["⚡️", "D", "E"]
     },
   }
    ]

@@ -1,4 +1,4 @@
-pkgname=kousu-de-i3
+pkgname=kousu-desktop-i3
 pkgdesc="Configuration management for a GUI based on https://i3wm.org/"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
@@ -10,6 +10,8 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
+  kousu-desktop
+
   #vim
   htop   # resource/process monitor
   ranger # curses file browser
@@ -61,3 +63,9 @@ depends=(
   #mousepad   # l3afpad with a few more options
   xfce4-terminal # alts: xterm, rxvt, gnome-terminal, termite?
 )
+
+package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
+  cp -rp * "${pkgdir}"
+}

@@ -12,7 +12,7 @@ pkgrel=1
 
 depends=(
   linux-firmware-intel
-  kousu-desktop
+  kousu-desktop-gnome
   
   kousu-work
 

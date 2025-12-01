@@ -11,7 +11,7 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
-  kousu-desktop
+  kousu-desktop-kde
 
   linux-firmware-intel
   broadcom-wl # if the thumbdrive were booted on a system with only broadcom wifi we would be stuck without these drivers

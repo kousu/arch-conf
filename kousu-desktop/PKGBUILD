@@ -69,10 +69,6 @@ depends=(
   #transmission-gtk # more traditional? But I'm trying out a KDE-based system...
 
   ## GUI :: Desktop Environment
-  #kousu-de-i3
-  #kousu-de-kde
-  kousu-de-gnome
-
   gvfs
   gvfs-smb
   gvfs-mtp

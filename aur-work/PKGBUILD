@@ -17,6 +17,4 @@ depends=(
 
   # MRI
   fsleyes # specialized image viewer for .nii voxel files
-
-  act # runs GitHub actions scripts *locally* https://github.com/nektos/act
 )

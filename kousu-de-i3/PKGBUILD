@@ -61,9 +61,3 @@ depends=(
   #featherpad # l3afpad + tabs, regex search, syntax highlighting
   xfce4-terminal # alts: xterm, rxvt, gnome-terminal, termite?
 )
-
-package() {
-  #cp -rp * "${pkgdir}"
-  # commented out because there's nothing to copy at the moment
-  echo -n
-}

@@ -34,5 +34,9 @@ depends=(
   pdfgrep
 
   code  # vscode. sigh. it's the only good editor for typst
+
   ttf-fira-code
+  ttf-libertinus
+  otf-libertinus
+  adobe-source-sans-fonts
 )

@@ -58,5 +58,6 @@ depends=(
   thunar-volman
   l3afpad
   #featherpad # l3afpad + tabs, regex search, syntax highlighting
+  #mousepad   # l3afpad with a few more options
   xfce4-terminal # alts: xterm, rxvt, gnome-terminal, termite?
 )

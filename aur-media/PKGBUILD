@@ -1,5 +1,5 @@
-pkgname=kousu-aur-art
-pkgdesc="Configuration management for kousu's brain goblins (AUR packages)"
+pkgname=kousu-aur-media
+pkgdesc="Configuration management for kousu's snethy sniblieds"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 
@@ -10,11 +10,6 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
-  kousu-aur-base
-
-  # graphics
-  pinta-git   # the BEST modern paint program
-
-  # audio
-  ninjas2-git
+  # podcasts
+  poddl-git
 )

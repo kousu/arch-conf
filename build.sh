@@ -14,6 +14,10 @@
 # TODO:
 # - [ ] Provide -c (clean container between builds) as a flag
 # - [ ] Bug: setting PKGDEST anywhere under /tmp breaks in odd ways?
+# - [ ] try to be smarter about rebuilds:
+#  - there's no need to rebuild dependencies if they haven't changed
+#    but the current logic generates a version number the same for EVERYONE
+#    Only build a. things requested on the command line b. their *missing* dependencies
 
 
 # Questions writing this raises for me:

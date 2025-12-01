@@ -84,7 +84,9 @@ depends=(
   #vscode
   helix
   #tree-sitter  # TODO: install and configure this
+  otf-codenewroman-nerd
   ttf-fira-code
+  ttf-inconsolata-go-nerd
   # TODO: there's typst, rust, go and javascript plugins that need packages
 
   ## GUI :: Math

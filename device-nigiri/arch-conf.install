@@ -87,7 +87,7 @@ EOF
 
   # force sshd to use a .d directory
   # Debian comes with this line, but OpenBSD and Arch don't?
-  # This is a kind of `lineinfile:` with all the pain that entails.
+  # This is like ansible's `lineinfile:` with all the pain that entails.
   sed -i '/sshd_config.d/d' /etc/ssh/sshd_config # get rid of any pre-existing lines
   echo 'Include /etc/ssh/sshd_config.d/*.conf' >> /etc/ssh/sshd_config
 

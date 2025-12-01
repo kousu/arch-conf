@@ -4,6 +4,9 @@
 # 3. makepkg --nodeps # because you won't have the dependencies yet and makepkg assumes you need them to build (even if they're only runtime dependencies; which, in this case, they are)
 # 4. pacman -U kousu-nigiri*.pkg*
 
+# TODO:
+# - [ ] split this to kousu-base and kousu-desktop, the desktop being just the GUI parts
+
 pkgname=kousu-desktop
 pkgdesc="Configuration management for kousu"
 arch=('any')

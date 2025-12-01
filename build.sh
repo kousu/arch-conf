@@ -72,10 +72,11 @@ finddeps() {
     local target dep kind
     for target in "$@"; do
       if [ -f "$target/PKGBUILD" ]; then
-        echo "$target" "$target" # add a loop back on each dep for the
+        echo "_" "$target" # ensure $target is always visible to tsort, by adding a dummy dependency
         parsedeps "$target" | while read -r dep kind; do
 
           if [ "$kind" = "(makedepends)" ] || [ "$kind" = "(depends)" ]; then
+            # declare $target depends on $dep
             echo "$dep" "$target"
           fi
 
@@ -84,6 +85,21 @@ finddeps() {
         done
       fi
     done
+}
+
+findtops() {
+  # find the TOP LEVEL nodes in a tsort(1) input
+  awk '
+  $1 != "_" {       # ignore dummy dep
+      nodes[$2]=1;  # right = parents
+      deps[$1]=1;   # left = dependencies
+  }
+  END {
+      # compute nodes - deps
+      for (n in nodes)
+          if (!deps[n]) print n;
+  }
+  '
 }
 
 
@@ -146,12 +162,28 @@ done
 SUDO_PID=$!
 trap 'kill $SUDO_PID' EXIT
 
-# build packages in *topological sort order* (i.e. deepest dependency first) thanks to `tsort`,
-# and build into the local site repo so that later local packages can depend on earlier local packages.
-DEPS=$(finddeps "$@" | tsort)  # split so errors exit before trying to build
+# Build packages in *topological sort order* (i.e. dependencies first) thanks
+# to `tsort`. Products are built in order into $PKGDEST so that later builds can
+# use them.
+#
+# To avoid fails due to conflicting dependencies, the chroot is cleaned between
+# each "forest" -- each set of deps from each high level package (meaning, a
+# package with no dependents in "$@", not necessarily no dependents at all).
+# Compared to fully cleaning between each build, only cleaning between each
+# forst saves a great deal of time.
+DAG="$(finddeps "$@")"
+TOPS=$(printf "%s\n" "$DAG" | findtops) # split so errors exit before trying to build
+printf "%s\n" "$TOPS" | while read -r Target; do
+build_flags="-c"  # clean the build but ONLY on the first time around
+echo "==> Building forest below $Target"
+
+# filter the DAG to only include $Target, then find the build order surrounding it
+# TODO: is there a way to compute the, wazzit, transitive closure of $Target
+# from $DAG
+# it would be good to avoid re-parsing the PKGBUILDs, since they're live scripts
+DEPS=$(finddeps "$Target" | tsort | grep -vx _)
 printf "%s\n" "$DEPS" | while read -r target; do
 
-  ( # subshell to undo 'cd'
   cd "$target"
   if [ -f PKGBUILD ]; then
     # determine if output already exists by reproducing makepkg's internal code
@@ -166,13 +198,15 @@ printf "%s\n" "$DEPS" | while read -r target; do
       echo "${pkgname} has already been built. Skipping."
     else
       # build
-      makechrootpkg -r "$CHROOT" -u
+      makechrootpkg $build_flags -r "$CHROOT" -u
+      build_flags=""
 
       # expose new package in repo
       repo-add "$PKGDEST"/site.db.tar.zst "${pkg}"
     fi
   fi
-  )
+  cd - >/dev/null
+done
 done
 
 # "upload"

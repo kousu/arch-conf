@@ -223,6 +223,10 @@ backup=(
   # but they can't *stay* empty, so they must be in this list or they'll get overwritten by updates
   /etc/subuid
   /etc/subgid
+
+  # TODO:
+  # /etc/locale.conf ?
+  # /etc/hostname ?
 )
 
 package() {

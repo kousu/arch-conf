@@ -44,7 +44,32 @@ Build a top-level package and all its dependencies:
 ./build.sh kousu-device-nigiri
 ```
 
-Output goes to `${PKGDEST}`, which can be set in /etc/makepkg.conf, but is `.` if not specified
+Output goes to `${PKGDEST}`, which can be set in /etc/makepkg.conf, but is `.` if not specified.
+
+> [!warning]
+>
+> This folder will be a arch repo. You can add it to your host system's pacman.conf with
+>
+> ```
+> [site]
+> SigLevel = Optional TrustAll
+> Server = file:////home/kousu/src/arch-conf/pkg
+> ````
+>
+> however **beware**: this is an opening for a privilege escalation
+> if your build machine is also your daily usage machine.
+> Any malware that gets into your account could edit these files
+> to give themselves full control over your system the next time you `pacman -Syu`.
+>
+> The conventional and safe usage is to distribute this folder to mirrors
+> where it will be downloaded by pacman to `/var/cache/pacman/pkg` as `root:root`
+> and no stray malware will be able to edit the contents.
+>
+> I haven't figured out how to mitigate this here yet.
+> <!-- `makepkg` can build packages without root, unless `makepkg -s` in which case it needs root to install deps.
+>       `makechrootpkg` needs root immediately to jump into the systemd-nspawn container it uses.
+>       both make their output owned by their calling (unprivileged) user, though.
+>       -->
 
 
 Build **all** the packages:
@@ -73,6 +98,10 @@ which, for these packages, is probably honestly fine.
 `-d` is risky with complex packages that have subtle build-time
 dependencies but there aren't any of those here.
 
+
+### Signing off
+
+Before you build you may want to edit `/etc/makepkg.conf` to set `PACKAGER` and/or `GPGKEY`.
 
 ### Build Methods
 

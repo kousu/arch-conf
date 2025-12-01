@@ -50,7 +50,7 @@ Output goes to `${PKGDEST}`, which can be set in /etc/makepkg.conf, but is `.` i
 Build **all** the packages:
 
 ```
-ls | grep -v aur | xargs ./build.sh
+ls | grep -v aur | xargs -n1 ./build.sh
 ```
 
 Build a single package _without_ its dependencies and less layers in the way, say, if you are working on it:

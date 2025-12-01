@@ -20,4 +20,13 @@ depends=(
   yt-dlp
   pitivi     # video editor (Gnome)
   #kdenlive  # video editor (KDE)
+  #flowblade
+  #lightworks # AUR
+  #davinci-resolve # AUR
+
+  #lives # VJ tool # AUR
+  #shotcut
+
+  video-trimmer
+  #vidcutter
 )

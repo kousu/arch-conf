@@ -164,24 +164,6 @@ then instead of `pacstrap /mnt base`, use
 pacstrap -U kousu-device-nigiri-*.pkg.tar.zst
 ```
 
-## Updates
-
-
-If you make changes, bump the version number by editing one of these lines in `PKGBUILD`:
-
-```
-pkgver=v0.1.2
-```
-
-```
-pkgrel=2
-```
-
-and re-run
-
-```
-makepkg -fsri
-```
 
 ## Users
 
@@ -353,6 +335,52 @@ But, doing it this way means dotfiles needs special handling during an update. T
 ```
 (cd /etc/skel/; find -type f -exec echo cp --parents {} ~/ \;)
 ```
+
+## Development
+
+### `pkgver`
+
+The version is automatically generated from git. There are soe quirks to it.
+
+This is the snippet that you should use in every PKGBUILD:
+
+```
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+```
+
+1. `.pkgver` is used by `build.sh`; the containerized build forgets the git repo, so when building containerized that makes sure the version number survives
+2. This assigns to `pkgver` _eagerly_.
+
+    `makepkg`/`makechrootpkg` have a feature that `pkgver` can be a function `pkgver()`
+    in which case it is run _after_ `prepare()` to generate a version dynamically from
+    the source code, and then once that's done it will _write back_ a hardcoded `pkgver=` line.
+
+    But this causes a thorny infinite loop:
+
+    1. Edits and commits happen
+    2. A build happens
+    3. The build writes back to PKGBUILD, **dirtying** the repo
+    4. To clean the repo, either you need to make another commit which will cause a loop, commit --amend which will still cause the commit hash to change and still cause the next build to dirty the repo, or undo the updated version string.
+
+    The reason for this is that the `pkgver()` structure wasn't meant
+    to be used the way I'm using it here. It was meant for git repos
+    downloaded as a source. The outer repo, the one with the PKGBUILD in it,
+    is not the source of the version number.
+
+    All that is to say: don't use `pkgver()` here, it will be a bad time.
+    But we can get the same effect by assigning to `pkgver` eagerly; that works
+    for us because we don't need to download anything.
+3. If we ever start making release tags, we could version with
+
+   ```
+   $(git describe --tags).r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)
+   ```
+
+    but if we did that we should also set `epoch=1`
 
 
 

@@ -1,4 +1,4 @@
-post_install() {
+post_upgrade() {
   # https://wiki.archlinux.org/title/Installation_guide#Time_zone
   timedatectl set-ntp true # XXX should probably...wait until ntp actually syncs before running the next command?
 

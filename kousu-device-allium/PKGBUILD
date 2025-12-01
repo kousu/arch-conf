@@ -15,7 +15,15 @@ depends=(
   kousu-desktop-gnome
 
   pkgstats  # opt-in to ArchLinux telemetry
-  
+
+  # power management:
+  # (using power-profiles-daemon via GNOME for now; but I should explore these)
+  #tlp
+  #tlpui
+  #laptop-mode-tools # TODO: AUR; https://wiki.archlinux.org/title/Laptop_Mode_Tools
+  #acpid # TODO: https://wiki.archlinux.org/title/Acpid
+  # TODO: https://wiki.archlinux.org/title/CPU_frequency_scaling
+
   kousu-work
 
   # Programming

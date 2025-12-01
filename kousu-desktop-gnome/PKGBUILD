@@ -22,12 +22,16 @@ depends=(
 
   networkmanager # we actually use iwd but GNOME only speaks this; luckily NetworkManager can talk to iwd for us.
 
+  #gdm-settings
+  #dconf-editor
+
   # unsure about:
   #decibel
   #gnome-music
-  gnome-software
+  #gnome-software # -> only good for Flathub unless replaced with gnome-software-packagekit-plugin-appstream-git from AUR
   #gnome-font-viewer
   lollypop   # music library
+  #gnome-podcasts
   video-trimmer
 
   # `pacman -Qg gnome` minus the apps I don't want
@@ -44,7 +48,9 @@ depends=(
   gnome-console
   gnome-contacts
   gnome-control-center
+  decoder   # QR codes
   gnome-disk-utility
+  #gnome-font-viewer
   gnome-keyring
   #seahorse   # GUI for gnome-keyring`
   gnome-logs
@@ -56,6 +62,7 @@ depends=(
   #gnome-software
   gnome-system-monitor
   gnome-text-editor
+  #gnome-tweaks
   gnome-tour
   gnome-user-docs
   gnome-user-share
@@ -76,6 +83,7 @@ depends=(
   sushi    # part of nautilus
   file-roller # archiver
 
+  power-profiles-daemon # beware: conflicts with tlp and tuned, if you choose to use those
 
   gnome-shell-extension-appindicator
   gnome-shell-extension-caffeine

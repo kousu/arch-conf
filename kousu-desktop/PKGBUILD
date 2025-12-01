@@ -63,6 +63,8 @@ depends=(
   xclip
   #peek  # screen recorder (unmaintained. but it is sooo user friendly)
 
+  decoder # QR codes
+
   ## GUI :: Hardware
   wireshark-qt
 
@@ -81,8 +83,12 @@ depends=(
   ## GUI :: Programming
   #vscode
   helix
+  #tree-sitter  # TODO: install and configure this
   ttf-fira-code
   # TODO: there's typst, rust, go and javascript plugins that need packages
+
+  ## GUI :: Math
+  #graphs  # like MacOS's Grapher.app
 
   ## GUI :: Web
   firefox

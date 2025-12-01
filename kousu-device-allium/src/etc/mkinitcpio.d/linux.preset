@@ -2,7 +2,7 @@
 # which is an EFI-bootable file that bundles the contents of /etc/kernel/cmdline, a splash image,
 # and the kernel and initrd into one single file, without a second-stage bootloader like GRUB or syslinux.
 
-ALL_config="/etc/mkinitcpio.conf"
+#ALL_config="/etc/mkinitcpio.conf"
 ALL_kver="/boot/vmlinuz-linux"
 
 PRESETS=('default' 'fallback')

@@ -1,6 +1,6 @@
 [init]
-	# or use 'main', 'trunk', etc
-	defaultBranch = master
+	# or use 'main', 'master', etc
+	defaultBranch = trunk
 
 [branch]
 	autoSetupMerge = always

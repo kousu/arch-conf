@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+if ! etckeeper vcs diff --quiet pacman.d/mirrorlist; then
+  # cons:
+  # - assumes git
+  # - doesn't benefit from etckeeper's user.name/user.email logic
+  export GIT_AUTHOR_NAME="$USER"
+  export GIT_AUTHOR_EMAIL="$USER@$HOSTNAME"
+  export GIT_COMMITTER_EMAIL="$USER@$HOSTNAME"
+  etckeeper vcs commit -m "reflector" -- pacman.d/mirrorlist >/dev/null
+
+  # cons: might commit too much
+  # etckeeper commit "reflector" >/dev/null
+fi

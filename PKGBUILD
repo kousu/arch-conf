@@ -26,6 +26,7 @@ depends=(
   man-db # the 'man' command
   man-pages # the core linux man pages (kernel, libc, file formats)
   reflector # for updating /etc/pacman.d/mirrorlist
+  pacman-contrib # pactree, pacdiff, etc
 
   # hardware
   linux  # the kernel. on Arch, this is an *optional* package, so that you can install vanilla Arch inside a container.
@@ -52,6 +53,7 @@ depends=(
   pass # password manager
   pass-otp
   youtube-dl
+  rsync
 
   #fio   # speed testing
 

@@ -37,6 +37,9 @@
 # - [ ] take the hostname on the command line?
 # - [ ] take an admin user to create on the command line?
 # - [ ] BUG: host system swaps get included in fstab; they need to be filtered out from genfstab
+# - [ ] Handle hostname
+#     I've put /etc/hostname in kousu-base, but maybe I should just write it manually here the way the install guide says
+#     One thing pushing that way is that you actually have to write it twice: /etc/hostname and /etc/hosts
 # - [ ] Support syslinux and not just UKI?
 # - [ ] Support MBR?
 # - [ ] Support "writable" partition (for thumbdrive mode)

@@ -124,7 +124,7 @@ fi
 #   it would be cleaner...
 #
 sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
-sudo arch-chroot "$CHROOT"/root tee -a /etc/pacman.conf <<EOF
+sudo arch-chroot "$CHROOT"/root tee -a /etc/pacman.conf >/dev/null <<EOF
 # --- BEGIN makechrootpkg ---
 [site]
 # the arch devtools magically recognize directories in the containerized

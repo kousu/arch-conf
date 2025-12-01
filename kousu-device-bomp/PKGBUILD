@@ -10,9 +10,16 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
-  kousu-desktop
   linux-firmware-intel
+  kousu-desktop
   kousu-work
+  
+  # Programming
+  julia
+)
+
+optdepends=(
+  kousu-art-audio
 )
 
 conflicts=(kousu-device-allium kousu-device-nigiri)

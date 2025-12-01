@@ -87,7 +87,9 @@ depends=(
   # zettlr    # alternative notebook (obsidian is more popular and has lots of plugins)
 
   ## GUI :: Programming
-  #rz-cutter
+  code  # vscode. sigh. it's the only good one
+  ttf-fira-code
+  # TODO: there's typst, rust, go and javascript plugins that need packages 
 
   ## GUI :: Web
   firefox
@@ -115,18 +117,6 @@ depends=(
   #kgeography
 )
 
-# `source` has some basic support for handling local files
-# but it expects them to all be in the top-level folder. It's not really meant for bundling an entire directory tree,
-# and to handle a directory tree it expects to be given a .tar to extract into src/
-# Instead, I've committed the contents of this package *directly* to src/.
-
-install="${pkgname}.install"
-
-backup=(
-  # user-editable config files
-  etc/locale.conf
-)
-
 package() {
   cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
 
@@ -134,9 +124,6 @@ package() {
   # but install(1) can't do folders recursively; so instead, just cp -r, and set any permissions directly with chmod
   # that's safe enough: this is *building* a package for later deployment, not installing on a live system where a temporary gap in permissions is a risk
   cp -rp * "${pkgdir}"
-
-  chmod 750 "${pkgdir}"/etc/sudoers.d
-  chmod 600 "${pkgdir}"/etc/sudoers.d/*
 }
 
 # To control GTK/GNOME settings:
@@ -153,11 +140,3 @@ package() {
 #   3. diff -ru A/ B/
 # This should identify the change.
 # Some apps don't use ~/.config, but they're getting rarer.
-
-
-## Some tricky things that should be documented somewhere:
-#
-# - src/etc/systemd/system/user@.service: this symlink is the same as `systemctl mask user@.service`.
-#   It disables `systemd --user`, an incomplete and buggy feature in systemd that causes more problems
-#   than it solves: https://github.com/systemd/systemd/issues/7261
-#   XXX this is re-enabled for now: KDE doesn't get along without it, there's some error about dbus-launch :(

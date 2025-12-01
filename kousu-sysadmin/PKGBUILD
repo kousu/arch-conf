@@ -1,0 +1,43 @@
+pkgname=kousu-sysadmin
+pkgdesc="Configuration management for sysadmining"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  # data
+  dos2unix
+  curl
+
+  # web
+  chromium  # sometimes you just need to test something in the monopoly browser
+
+  # screen sharing
+  asciinema
+
+  # requires some extra setup (included in src/) # TODO: possibly pull this to a small separate package?
+  podman-docker
+
+  # hardware
+  fio   # speed testing
+
+  # infra
+
+  # remote desktop
+  virt-manager  # remote VMs via SPICE or VNC; needs libvirt on the other end.
+  #virt-viewer   # ditto, but this is more stripped down
+  remmina
+  freerdp       # Windows screen sharing
+  libvncserver  # VNC screen sharing (macOS, some Unixes)
+)
+
+package() {
+  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
+
+  cp -rp * "${pkgdir}"
+}

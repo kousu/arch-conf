@@ -11,8 +11,13 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
-  kousu-desktop
   linux-firmware-intel
+  kousu-desktop
+  
+  kousu-work
+
+  # Programming
+  julia
 )
 
 conflicts=(kousu-device-bomp kousu-device-nigiri)

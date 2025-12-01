@@ -64,6 +64,9 @@ depends=(
   orca     # screen reader
   papers   # document viewer
   showtime # video player
+  gst-libav # extra codecs for showtime
+  gst-plugins-bad
+  gst-plugins-ugly # extra extra codecs mostly for non-libre formats
   snapshot # camera
   sushi    # part of nautilus
 

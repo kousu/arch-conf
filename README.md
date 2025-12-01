@@ -14,12 +14,11 @@ It also includes my personal UI customization preferences. And it's copiously co
 
 ## Prereqs
 
-You should be running ArchLinux.
-
-You will need to have `pacman` and `base-devel` installed, so:
+You should be [running ArchLinux](https://wiki.archlinux.org/title/Installation_guide)
+with `sudo` and `base-devel` installed:
 
 ```
-pacman -S --needed --noconfirm base base-devel
+pacman -S --needed --noconfirm sudo base-devel
 ```
 
 Also, you're gonna have to have `git` so add that:
@@ -39,60 +38,98 @@ git clone https://github.com/kousu/arch-conf && cd arch-conf/device-nigiri
 
 ## Building
 
-For a single package:
+Build a top-level package and all its dependencies:
 
 ```
-cd package_folder/
+./build.sh kousu-device-nigiri
+```
+
+Output goes to `${PKGDEST}`, which can be set in /etc/makepkg.conf, but is `.` if not specified
+
+
+Build **all** the packages:
+
+```
+find i -mindepth 1 -maxdepth 1 -type d | xargs ./build.sh
+```
+
+Build a single package _without_ its dependencies and less layers in the way, say, if you are working on it:
+
+```
+cd package_name/
 makepkg -sr
 ```
 
-Note that dependencies enforce an order to the build.
-`-s` installs missing dependencies from the Arch repos,
-but it doesn't know about the local files here,
-so you have to build and install the dependent packages
-first. `makepkg` will tell you what you need. For these depdent
-packages, install them:
-
-```
-cd package_folder
-makepkg -si
-```
-
-If you are *just* trying to build packages, say, to ship
-to another device, you can use
+`-s` installs missing dependencies from the official Arch repos,
+but it doesn't know about these _local_ packages,
+so for any _local_ dependencies you will need to figure out the
+order yourself by trial and error, **or** you could cheat and use:
 
 ```
 makepkg -d
 ```
 
-which will skip dependency verification. It will be up
-to the deployment location to verify dependencies.
+which, for these packages, is probably honestly fine.
+`-d` is risky with complex packages that have subtle build-time
+dependencies but there aren't any of those here.
+
 
 ## Installation
 
-This builds and installs the requested packages in the right order:
+Install packages manually, without automatic dependency resolution:
 
 ```
-./install.sh package_folder_name [package_folder_name ...]
+cd ${package_name}
+sudo pacman -U ${package_name}-*.pkg.tar.zst [${package_name_2}-*.pkg.tar.zst ...]
 ```
 
-**but** you need [pikaur](https://aur.archlinux.org/packages/pikaur) for it.
+Or, if you used `build.sh`:
 
 ```
-# install pikaur:
+sudo pacman -U /var/cache/pacman/site/${package_name}-*.pkg.tar.zst
+```
+
+
+*If* you want automatic dependency resolution, you will need to add
+the output folder as a custom local pacman repo. See [pacman.conf(5)](https://man.archlinux.org/man/pacman.conf.5#USING_YOUR_OWN_REPOSITORY) for the details but the gist is add this to `/etc/pacman.conf`
+
+```
+[site]
+Server = file:///home/you/path/to/this_folder
+```
+
+and then sync up and install a package -- ideally one of the top level ones:
+
+```
+sudo pacman -Sy kousu-device-nigiri
+```
+
+### pikaur
+
+You can also use [`pikaur`](https://aur.archlinux.org/packages/pikaur) to build and install everything.
+In some ways maybe this is the easier choice as it
+
+1. Can handle the `aur-*` packages
+
+however it is:
+
+1. annoying to install, which can make it annoying to bootstrap a fresh system from
+2. unable to chase down local dependencies, so updates are tedious
+
+```
 curl -JLO https://aur.archlinux.org/cgit/aur.git/snapshot/pikaur.tar.gz
 tar -xvf pikaur.tar.gz
 cd pikaur
 makepkg -si
 ```
 
-You can of course install packages one by one as above with
+Then to install everything:
 
 ```
-makepkg -si
+pikaur -Pi */PKGBUILD
 ```
 
-so long as you do it in the correct order.
+to install only a subset of packages, just replace the glob with manually picking the packages you want.
 
 
 ## Deployment

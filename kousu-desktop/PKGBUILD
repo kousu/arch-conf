@@ -9,6 +9,8 @@ _pkgver() {
 pkgver="$(_pkgver)"
 pkgrel=1
 
+install="${pkgname}.install"
+
 depends=(
   kousu-base
 

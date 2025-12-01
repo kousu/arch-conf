@@ -73,8 +73,11 @@ depends=(
   #git-lfs
   #git-annex
 
-  zip
+  # archivers
+  7zip
+  cdrtools
   unrar
+  zip
   unzip
 
   python

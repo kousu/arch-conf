@@ -71,6 +71,7 @@ depends=(
   gst-plugins-ugly # extra extra codecs mostly for non-libre formats
   snapshot # camera
   sushi    # part of nautilus
+  file-roller # archiver
 
 
   gnome-shell-extension-appindicator

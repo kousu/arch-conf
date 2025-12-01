@@ -16,8 +16,6 @@ depends=(
 	  # the point of having this PKGBUILD is so pikaur can run it
 	  # but once it's installed this is okay
 
-  orbiton # an experimental, modeless editor, stripped down but still with some fancy features from more complicated IDEs
-
   #dtach-ng   # it's better than tmux
   # XXX disabled until https://github.com/xPMo/dtach/pull/3
   # XXX replaces dtach due to bullshit: https://github.com/crigler/dtach/issues/22

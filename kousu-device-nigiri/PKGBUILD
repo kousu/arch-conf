@@ -219,7 +219,7 @@ install="arch-conf.install"
 backup=(
   # TODO:
   etc/locale.conf
-  # /etc/hostname ?
+  etc/hostname
   etc/mkinitcpio.d/linux.preset
 )
 

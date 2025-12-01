@@ -17,3 +17,8 @@
       - arch's rec is https://wiki.archlinux.org/title/GNOME/Tips_and_tricks#New_terminals_adopt_current_directory to do exactly what I did. that seems shitty.
 	I guess the issue is that it used to be standard for VTE terminals to themselves be login shells.
 
+- [ ] Auto-encryption
+  - [ ] Provide the 'take ownership' commands from the motd message as a script
+  - [ ] Make that script scan and warn if there is more than one keyslot defined
+  - [ ] Explain better that there's a risk of someone installing a backdoor key
+   without the user noticing

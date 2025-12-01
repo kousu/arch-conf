@@ -38,6 +38,7 @@ depends=(
   wl-clipboard
   
   gammastep  # this is Redshift, but compatible with Wayland; alts: wlsunset
+  geoclue    # needed by gammastep
   eom # image viewer
   xarchiver # alts: file-roller
   xreader # PDFs

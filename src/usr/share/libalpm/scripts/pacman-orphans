@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# since this is run during pacman, it can't run pacman again; curious.
+#pacman -Qttdq | pacman -Rns --noconfirm -
+#pacman -Qttdq | sed 's/^/  /'
+if pacman -Qttdq >/dev/null; then
+  echo
+  echo '      There are orphans on your system; consider running'
+  echo
+  echo '        pacman -Qttdq | sudo xargs pacman -Rns -'
+  echo
+fi

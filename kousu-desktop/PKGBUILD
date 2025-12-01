@@ -69,14 +69,13 @@ depends=(
   #transmission-gtk # more traditional? But I'm trying out a KDE-based system...
 
   ## GUI :: Desktop Environment
+  #kousu-de-i3
   #kousu-de-kde
-  #kousu-de-maui  # for a more interesting DE
-  kousu-de-i3
+  kousu-de-gnome
 
-  #gvfs
-  #gvfs-smb
-  #gvfs-mtp
-  #udisks2
+  gvfs
+  gvfs-smb
+  gvfs-mtp
 
   ## GUI :: Editors
   #libreoffice-fresh # documents/spreadsheets/presentations/etc
@@ -98,7 +97,6 @@ depends=(
   firefox-ublock-origin
   # XXX there's now also extra/ublock-origin?
   #chromium # very, very large
-  gnome-recipes  # online cookbook
 
   ## GUI :: Comms
   dino

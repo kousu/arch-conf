@@ -1,0 +1,5 @@
+[General]
+# override the default 'keep 20 clipboard items' feature
+# I'm not used to it so, for me, it risks leaking data
+MaxClipItems=1
+

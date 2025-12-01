@@ -46,10 +46,6 @@ depends=(
   bash-completion  # lets apps customize tab completion; it's handy for pass(1) and kubectl(1) and some others, but intereferes and is annoying when apps provide incomplete tab completion because it *disables* the default behaviour of files.
   sudo
   openssh
-  openbsd-netcat
-  socat
-  rsync
-  sshfs
 
   # CLI :: Files
   restic
@@ -57,13 +53,16 @@ depends=(
   magic-wormhole
 
   # CLI :: Network
-  bind      # dig
+  openbsd-netcat
+  socat
+  rsync
+  sshfs
+  bind      # for dig
   whois
   tcpdump
   nmap
   geoip
   geoip-database-extra
-  #macchanger
 
   # CLI :: Programming
   base-devel

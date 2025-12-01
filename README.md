@@ -277,7 +277,7 @@ pacman -Qqe | grep -vFf <(pacman -Qqm) | pacman -D --asdeps -
 The goal is to have every package on the system implied by this one top-level package,
 and to minimize configuration drift -- the difference between the files on the existing system and the system you would have if you reinstalled from scratch.
 
-(Configuration drift covers: all of `/etc`, some parts of `/var`; it doesn't cover user data in `/home`; it should perhaps cover user-specific configuration, AKA dotfiles, like `/home/*/.config/`, `/home/*/.bashrc`, `~/.vimrc`, but I'm covering those by `/etc/skel/` since this is meant as a personal system). 
+(Configuration drift covers: all of `/etc`, some parts of `/var`; it doesn't cover user data in `/home`; it should perhaps cover user-specific configuration, AKA dotfiles, like `/home/*/.config/`, `/home/*/.bashrc`, `~/.vimrc`, but I'm covering those by `/etc/skel/` since this is meant as a personal system).
 
 Drift in packages:
 

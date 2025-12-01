@@ -1,5 +1,5 @@
-pkgname=kousu-device-nigiri
-pkgdesc="Configuration management for kousu's \"nigiri\" thumbdrive system"
+pkgname=kousu-device-bomp
+pkgdesc="Configuration management for kousu's \"bomp\" laptop"
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 #license=("MIT") # there..is no license? not really?

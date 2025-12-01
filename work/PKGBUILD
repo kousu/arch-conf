@@ -14,9 +14,7 @@ pkgver=100
 pkgrel=1
 
 depends=(
-  kousu-device-nigiri
-  # TODO: dependencies should flow like
-  #       kousu-device-{nigiri,etc,etc,} -> kousu-work -> kousu-base
+  kousu-desktop
 
   libfido2 #XXX is this still needed? yubikeys kind of Just Work now
 

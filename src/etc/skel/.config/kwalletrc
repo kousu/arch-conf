@@ -1,0 +1,4 @@
+# Disable KDE keychain
+# (I'm using pass(1) instead; the KDE keychain is just a mess)
+[Wallet]
+Enabled=false

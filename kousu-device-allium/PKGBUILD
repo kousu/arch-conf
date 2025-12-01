@@ -33,4 +33,7 @@ depends=(
   python-pyclip   # Waydroid clipboard sharing
 )
 
-conflicts=(kousu-device-bomp kousu-device-nigiri)
+conflicts=(
+  kousu-device-bomp
+  kousu-device-nigiri
+)

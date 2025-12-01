@@ -5,8 +5,8 @@ pkgdesc="Configuration management: EFI-style bootloader"
 [ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
 . .lib.PKGBUILD || exit 1
 
-conflicts=(
-  kousu-bootloader-bios
+backup=(
+  etc/mkinitcpio.d/linux.preset
 )
 
 depends=(
@@ -18,6 +18,6 @@ optdepends=(
   'systemd: for default ArchLinux boot splash'
 )
 
-backup=(
-  etc/mkinitcpio.d/linux.preset
+conflicts=(
+  kousu-bootloader-bios
 )

@@ -5,8 +5,8 @@ pkgdesc="Configuration management: BIOS-style bootloader"
 [ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
 . .lib.PKGBUILD || exit 1
 
-conflicts=(
-  kousu-bootloader-efi
+backup=(
+  etc/mkinitcpio.d/linux.preset
 )
 
 depends=(
@@ -15,6 +15,6 @@ depends=(
   linux
 )
 
-backup=(
-  etc/mkinitcpio.d/linux.preset
+conflicts=(
+  kousu-bootloader-efi
 )

@@ -83,6 +83,7 @@ depends=(
   ## GUI :: Programming
   #vscode
   # TODO: there's typst, rust, go and javascript plugins that need packages
+  gource   # https://gource.io, git commit visualization! Kind of unnecessary, but it's small and cool :)
 
   ## GUI :: Math
   #graphs  # like MacOS's Grapher.app

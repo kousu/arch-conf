@@ -74,6 +74,24 @@ which, for these packages, is probably honestly fine.
 dependencies but there aren't any of those here.
 
 
+### Build Methods
+
+Arch's core package build command is `makepkg`, but it has variants and wrappers
+which provide different levels of speed.
+In `build.sh` we use `makechrootpkg` but you can play with swapping
+
+| Core build command | Isolation level | Reliability | Speed[^timing] |
+| ------------------ | --------------- | ----------- | -------------- |
+| `makechrootpkg -c` | Each build fully containerized | Very high | ~30 minutes |
+| `makechrootpkg` | Containerized, but builds reuse the container | High | ~10 minutes |
+| `makepkg -sr`[^containercancel] | Builds happen on the host. Dependencies are removed when done with the build, so it should come out clean, but it **will** `pacman -Syu` your live system and **will** temporarily edit your /etc/pacman.conf. :skull: | Low. Build behaviour might accidentally depend or fail on the set of packages on the host, run into weird bugs due to host customizations, or produce broken packages if their dependencies have been renamed/split/retired while still installed on the host | ~1minute [^measure_timing] | `makepkg -d` [^pacmanconfdont] | Builds happen on the host. No dependencies are installed, however  **will** temporarily edit your /etc/pacman.conf | Low. Does not examine the host system so it shouldn't be able to be affected by customizations on the host system, neither does it examine the state of Arch's repos, so it's likely to produce broken packages as dependencies get renamed/split/retired. | ~30s |
+
+[^containercancel]: If you switch to this, you also have to switch the lines that edit /etc/pacman.conf to edit the host system, and you can comment out the lines that create the container.
+[^pacmanconfdont]: If you switch to this, you can comment out the lines that edit /etc/pacman.conf.
+[^timing]: These are for running a full build, as described above.
+[^measure_timing]: This was measured on a machine that also had versions of most of these packages installed already. On a dedicated build machine it should be closer to `makechrootpkg`, except for the time lost building the initial container.
+
+
 ## Installation
 
 Install packages manually, without automatic dependency resolution:

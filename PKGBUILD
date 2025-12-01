@@ -45,6 +45,9 @@ depends=(
 
   iwd # wifi
 
+  bluez-utils  # also pulls in the rest of bluetooth # XXX do I need to add `systemctl enable --now bluetooth` somewhere?
+  pulseaudio-bluetooth # pairing some (most?) headphones is impossible without this: https://bbs.archlinux.org/viewtopic.php?id=270465&p=2
+
   # CLI
   bash-completion  # lets apps customize tab completion; it's handy for pass(1) and kubectl(1) and some others, but intereferes and is annoying when apps provide incomplete tab completion because it *disables* the default behaviour of files.
   sudo
@@ -109,6 +112,7 @@ depends=(
   ## GUI :: Desktop Environment
   plasma-desktop
   powerdevil # KDE plugin for power management
+  bluedevil  # KDE plugin for Bluetooth
   plasma-pa  # KDE plugin for audio management
   plasma-systemmonitor # KDE task manager (i.e. GUI version of top)
   kscreen    # KDE plugin for screen management? I think?

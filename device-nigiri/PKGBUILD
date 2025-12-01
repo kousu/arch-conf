@@ -201,6 +201,10 @@ package() {
 
   chmod 750 "${pkgdir}"/etc/sudoers.d
   chmod 600 "${pkgdir}"/etc/sudoers.d/*
+
+  # KDE config files are all 0600, and dirs are 0755
+  # this doesn't set that; this sets 0600 for files and 0700 for dirs. But that's probably good enough.
+  chmod -R u=rwX,go= "${pkgdir}"/etc/skel/.config/{k*,baloo*}
 }
 
 # and then i want to also figure out how/where to set KDE system defaults

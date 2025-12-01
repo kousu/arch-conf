@@ -18,6 +18,9 @@ depends=(
 	  # the point of having this PKGBUILD is so pikaur can run it
 	  # but once it's installed this is okay
 
+  ttf-ms-fonts        # microsoft fonts; needed at least by ms-Word PDFs in Firefox
+  #ttf-ms-win11-auto  # more modern Microsoft fonts, but more expensive to install?
+
   dtach-ng   # it's better than tmux
   # XXX replaces dtach due to bullshit: https://github.com/crigler/dtach/issues/22
 

@@ -2,6 +2,10 @@
 	# or use 'main', 'trunk', etc
 	defaultBranch = master
 
+[branch]
+	autoSetupMerge = always
+	autoSetupRebase = always
+
 [merge]
 	# *force* linear history when merging
 	ff = only

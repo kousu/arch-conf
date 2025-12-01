@@ -18,14 +18,14 @@ license=("MIT")
 
 _pkgver() {
 
-  # construct a version number from how many commits are in the project
+  # construct a version number from how many commits are in the _folder_ (./);
   # cache it to .pkgver, so that containerized builds which don't have
   # access to git; this works because the containerized builds (pikaur, makechrootpkg) all load PKGBUILD once outside the container first to orient themselves.
   if (command -v git >/dev/null) && \
-     REVS=$(git rev-list --count HEAD 2>/dev/null ) && \
+     REVS=$(git rev-list --count HEAD ./ 2>/dev/null ) && \
      COMMIT=$(git describe --always --dirty 2>/dev/null ) ; then
        COMMIT=$(echo "$COMMIT" | sed s/-/+/g)
-       echo "r${REVS}.commit=$COMMIT" > .pkgver
+       echo "${REVS}$(if git status --porcelain ./ | grep -q .; then echo "+dirty"; fi)" > .pkgver
   fi
 
   # error handling:

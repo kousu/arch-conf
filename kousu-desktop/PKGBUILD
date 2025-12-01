@@ -62,7 +62,6 @@ depends=(
   # lightdm ?
   xclip
   #peek  # screen recorder (unmaintained. but it is sooo user friendly)
-  vokoscreen # screen recorder
 
   ## GUI :: Hardware
   wireshark-qt

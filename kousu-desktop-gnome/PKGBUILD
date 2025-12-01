@@ -68,6 +68,8 @@ depends=(
   gnome-shell-extension-caffeine
   gnome-shell-extension-vitals
   gnome-shell-extensions
+
+  wl-clipboard   # this is actually for Wayland / maybe belongs in kousu-desktop more properly
 )
 
 package() {

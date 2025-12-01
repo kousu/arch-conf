@@ -1,13 +1,9 @@
 pkgname=kousu-desktop-niri
 pkgdesc="Configuration management for a GUI based on https://yalter.github.io/niri/"
-arch=('any')
-url="https://github.com/kousu/arch-conf"
 
-_pkgver() {
-  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
-}
-pkgver="$(_pkgver)"
-pkgrel=1
+# load common settings; be aware if you ever split up this repo.
+[ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
+. .lib.PKGBUILD || exit 1
 
 depends=(
   kousu-desktop
@@ -36,7 +32,7 @@ depends=(
   xfce4-artwork # default wallpapers
   brightnessctl
   wl-clipboard
-  
+
   gammastep  # this is Redshift, but compatible with Wayland; alts: wlsunset
   geoclue    # needed by gammastep
   eom # image viewer
@@ -54,9 +50,3 @@ depends=(
 
   transmission-gtk
 )
-
-package() {
-  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
-
-  cp -rp * "${pkgdir}"
-}

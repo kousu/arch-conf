@@ -1,14 +1,9 @@
 pkgname=kousu-desktop-kde
 pkgdesc="Configuration management for KDE"
-arch=('any')
-url="https://github.com/kousu/arch-conf"
-#license=("MIT") # there..is no license? not really?
 
-_pkgver() {
-  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
-}
-pkgver="$(_pkgver)"
-pkgrel=1
+# load common settings; be aware if you ever split up this repo.
+[ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
+. .lib.PKGBUILD || exit 1
 
 depends=(
   kousu-desktop
@@ -46,12 +41,7 @@ depends=(
 )
 
 package() {
-  cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }
-
-  # often PKGBUILDs use install(1) here, because it lets them control permissions
-  # but install(1) can't do folders recursively; so instead, just cp -r, and set any permissions directly with chmod
-  # that's safe enough: this is *building* a package for later deployment, not installing on a live system where a temporary gap in permissions is a risk
-  cp -rp * "${pkgdir}"
+  _package
 
   # KDE config files are all 0600, and dirs are 0755
   # this doesn't set that; this sets 0600 for files and 0700 for dirs. But that's probably good enough.

@@ -101,6 +101,7 @@ depends=(
 
   ## GUI :: Comms
   dino
+  gajim  # duplicates dino, but is both more annoying and more featureful so I keep it around
   signal-desktop
 
   ## GUI :: Media

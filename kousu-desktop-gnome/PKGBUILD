@@ -76,7 +76,11 @@ depends=(
   gnome-shell-extension-vitals
   gnome-shell-extensions
 
-  wl-clipboard   # this is actually for Wayland / maybe belongs in kousu-desktop more properly
+  # GNOME implies Wayland on Arch now
+  # These are wayland-specific packages that we need for that (maybe they belong in kousu-desktop-wayland?)
+  qt5-wayland
+  qt6-wayland    # necessary to make Qt/KDE apps not complain
+  wl-clipboard
 )
 
 package() {

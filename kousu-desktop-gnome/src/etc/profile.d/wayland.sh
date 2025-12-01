@@ -1,4 +1,4 @@
 
 
 # needed to get most KDE/QT apps to play nice under Wayland
-export QT_WAYLAND_SHELL_INTEGRATION=1
+export QT_QPA_PLATFORM=xcb

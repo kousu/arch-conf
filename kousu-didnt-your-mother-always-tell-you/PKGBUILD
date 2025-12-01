@@ -1,0 +1,33 @@
+pkgname=kousu-didnt-your-mother-always-tell-you
+pkgdesc="- that sharing is caring."
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+_pkgver() {
+  [ -r "$startdir"/.pkgver ] && cat "$startdir"/.pkgver || (echo "r$(git rev-list --count HEAD).commit=$(git describe --always --dirty | sed s/-/+/g)")
+}
+pkgver="$(_pkgver)"
+pkgrel=1
+
+depends=(
+  transmission-gtk
+  transmission-cli
+
+  nicotine+
+
+  magic-wormhole
+
+  kubo # ipfs
+
+  #aur/airdcpp-webclient # AUR
+  #ncdc # AUR
+  #eiskaltdcpp-cli-git # AUR
+  #eiskaltdcpp-daemon-git
+  #eiskaltdcpp-gtk-git
+
+  # TODO: decide between navidrome and jellyfin
+  navidrome
+
+  jellyfin-server
+  jellyfin-web
+)

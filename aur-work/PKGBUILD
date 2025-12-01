@@ -1,0 +1,20 @@
+pkgname=kousu-aur-work
+pkgrel=1
+pkgdesc="Configuration management for kousu's job life (AUR packages)"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+#license=("MIT") # there..is no license? not really?
+
+pkgver="$(git log --pretty=oneline | wc -l)"
+
+depends=(
+  kousu-work
+  kousu-aur-base
+
+  # comms
+  zoom
+  webex-bin
+
+  # MRI
+  fsleyes # specialized image viewer for .nii voxel files
+)

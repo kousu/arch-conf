@@ -168,9 +168,9 @@ depends=(
   #transmission-gtk # more traditional? But I'm trying out a KDE-based system...
 
   ## GUI :: Desktop Environment
-  kousu-de-kde
+  #kousu-de-kde
   #kousu-de-maui  # for a more interesting DE
-  #kousu-de-i3
+  kousu-de-i3
 
   #gvfs
   #gvfs-smb

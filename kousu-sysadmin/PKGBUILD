@@ -12,6 +12,8 @@ depends=(
 
   # protocols
   swaks  # smtp tester. aka lifesaver.
+  socat
+  openbsd-netcat
 
   # virtualization
   # TODO: test this; especially, test you can run windows 11

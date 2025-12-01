@@ -183,7 +183,7 @@ To verify that this is so, [use one of the tips from archwiki](https://wiki.arch
 or maybe more accurately:
 
 ```
-ls / | egrep -v 'home|var|run|proc|sys' | (cd /; xargs find) | LC_ALL=C pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5-
+ls / | grep -E -v 'home|var|run|proc|sys' | (cd /; xargs find) | LC_ALL=C pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5-
 ```
 
 or `pacreport --unowned-files`

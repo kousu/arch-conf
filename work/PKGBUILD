@@ -17,6 +17,8 @@ depends=(
   # TODO: dependencies should flow like
   #       kousu-device-{nigiri,etc,etc,} -> kousu-work -> kousu-base
 
+  libfido2
+
   workrave  # work timer / RSI alarm
 
   chromium  # sometimes you just need to test something in the monopoly browser

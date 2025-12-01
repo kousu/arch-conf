@@ -13,8 +13,7 @@ pkgrel=1
 depends=(
   kousu-desktop
 
-  # graphics
   inkscape # svg editor
-  #krita   # paint
-  gimp     # raster editor
+  krita    # paint
+  #gimp    # raster editor
 )

@@ -12,6 +12,10 @@ pkgrel=1
 
 install="${pkgname}.install"
 
+backup=(
+  var/lib/AccountsService/users/root
+)
+
 depends=(
   kousu-desktop
 

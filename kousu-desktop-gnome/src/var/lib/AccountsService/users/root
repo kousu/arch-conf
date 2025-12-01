@@ -1,0 +1,4 @@
+# hide root from GDM at all times
+[User]
+SystemAccount=true
+

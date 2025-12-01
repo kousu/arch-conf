@@ -126,6 +126,10 @@ depends=(
   #redshift  # KDE has a setting for this built in
   # passmenu
 
+  ## GUI :: Media
+  audacity
+  ardour
+
   ## GUI :: Productivity
   workrave
 

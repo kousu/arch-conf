@@ -27,6 +27,7 @@ depends=(
   wofi
   mako
   swaybg
+  swayidle
   swaylock
   waybar
   otf-font-awesome # needed by waybar

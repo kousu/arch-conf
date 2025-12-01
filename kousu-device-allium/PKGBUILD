@@ -30,6 +30,10 @@ depends=(
   # Programming
   julia
   octave
+
+  waydroid
+  #waydroid-image-gapps # AUR
+  python-pyclip   # Waydroid clipboard sharing
 )
 
 conflicts=(kousu-device-bomp kousu-device-nigiri)

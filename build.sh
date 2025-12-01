@@ -155,7 +155,6 @@ finddeps "$@" | tsort | while read -r target; do
     # (could use makepkg --packagelist; but it sometimes outputs multiple lines)
     # because makepkg checks, but makechrootpkg doesn't: https://bugs.archlinux.org/task/63092.html
     . PKGBUILD
-    pkgver=$(_pkgver)
     fullver=$(get_full_version)
     pkgarch=$(get_pkg_arch)
     pkg="$PKGDEST/${pkgname}-${fullver}-${pkgarch}${PKGEXT}"
@@ -171,7 +170,7 @@ finddeps "$@" | tsort | while read -r target; do
       # which gets dutifully downloaded by makechrootpkg, but here we want to read
       # the version from the .git containing the PKGBUILD itself.
       # This glues the two together.
-      echo "${pkgver}" > .pkgver
+      echo "$(_pkgver)" > .pkgver
       trap 'rm .pkgver' EXIT
 
       makechrootpkg -r "$CHROOT" -u

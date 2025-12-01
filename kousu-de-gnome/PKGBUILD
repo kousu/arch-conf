@@ -15,6 +15,12 @@ install="${pkgname}.install"
 depends=(
   networkmanager # we actually use iwd but GNOME only speaks this; luckily NetworkManager can talk to iwd for us.
 
+  # unsure about:
+  #decibel
+  #gnome-music
+  gnome-software
+  #gnome-font-viewer
+
   # `pacman -Qg gnome` minus the apps I don't want
   epiphany  # web browser
   gdm

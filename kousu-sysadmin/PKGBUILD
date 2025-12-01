@@ -16,9 +16,8 @@ depends=(
   openbsd-netcat
 
   # virtualization
-  # TODO: test this; especially, test you can run windows 11
   gnome-boxes
-  swtpm
+  swtpm   # virtual TPM. Mandatory for Windows 11.
 
   # web
   chromium  # sometimes you just need to test something in the monopoly browser
@@ -30,6 +29,9 @@ depends=(
   podman-docker
   distrobox   # built on podman, containers w/ seamless access to your system but isolated from changes to libraries in /usr
               # more like an emulator than a container.
+
+  # storage
+  ncdu
 
   # hardware
   # These tools are more useful to have on remote systems

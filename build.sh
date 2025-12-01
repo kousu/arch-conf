@@ -150,7 +150,8 @@ trap 'kill $SUDO_PID' EXIT
 
 # build packages in *topological sort order* (i.e. deepest dependency first) thanks to `tsort`,
 # and build into the local site repo so that later local packages can depend on earlier local packages.
-finddeps "$@" | tsort | while read -r target; do
+DEPS=$(finddeps "$@" | tsort)  # split so errors exit before trying to build
+printf "%s\n" "$DEPS" | while read -r target; do
 
   ( # subshell to undo 'cd' and clean up .pkgver
   cd "$target"

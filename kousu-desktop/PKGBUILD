@@ -19,7 +19,8 @@ depends=(
   alsa-utils
 
   bluez-utils  # also pulls in the rest of bluetooth # XXX do I need to add `systemctl enable --now bluetooth` somewhere?
-  pulseaudio-bluetooth # pairing some (most?) headphones is impossible without this: https://bbs.archlinux.org/viewtopic.php?id=270465&p=2
+  pipewire-pulse
+  pipewire-alsa
 
   yubikey-manager
 

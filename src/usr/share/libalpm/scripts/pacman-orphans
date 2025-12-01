@@ -7,6 +7,6 @@ if pacman -Qttdq >/dev/null; then
   echo
   echo '      There are orphans on your system; consider running'
   echo
-  echo '        pacman -Qttdq | sudo xargs pacman -Rns -'
+  echo '        pacman -Qttdq | sudo pacman -Rns -'
   echo
 fi

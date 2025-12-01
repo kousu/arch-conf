@@ -26,6 +26,8 @@ depends=(
   #gnome-music
   gnome-software
   #gnome-font-viewer
+  lollypop   # music library
+  video-trimmer
 
   # `pacman -Qg gnome` minus the apps I don't want
   epiphany  # web browser

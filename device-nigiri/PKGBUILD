@@ -44,40 +44,45 @@ depends=(
             # basically you need to edit your kernel command line to *prepend* initrd=/boot/amd-ucode.img,/boot/intel-ucode.img,
             # and making that edit by script is tricky. and also in the early boot that path is not always at /boot? ai yi yi
 
-  net-tools # netstat, ifconfig
-  bind      # dig
-  whois
-  tcpdump
-  geoip
-  geoip-database-extra
   iwd # wifi
+  net-tools # netstat, ifconfig
+  openconnect  # VPN
+
+  alsa-utils
 
   bluez-utils  # also pulls in the rest of bluetooth # XXX do I need to add `systemctl enable --now bluetooth` somewhere?
   pulseaudio-bluetooth # pairing some (most?) headphones is impossible without this: https://bbs.archlinux.org/viewtopic.php?id=270465&p=2
 
-  openconnect  # VPN
 
   # CLI
   bash-completion  # lets apps customize tab completion; it's handy for pass(1) and kubectl(1) and some others, but intereferes and is annoying when apps provide incomplete tab completion because it *disables* the default behaviour of files.
   sudo
   openssh
-  alsa-utils
+  openbsd-netcat
   pass # password manager
   pass-otp
-  youtube-dl
   rsync
   sshfs
+  youtube-dl
 
   #fio   # speed testing
+
+  # CLI :: Network monitoring
+  bind      # dig
+  whois
+  tcpdump
+  nmap
+  geoip
+  geoip-database-extra
 
   # CLI :: Programming
   #'base-devel' ### XXX not a package. this is a package group.
   # indeed if I try then I get 'warning: cannot resolve "base-devel", a dependency of "kousu-nigiri"'
   # but you need this to use the AUR
 
-  # Here's the contents of base-devel, listed explicitly; this list extracted
+  # Here's the contents of base-devel (except those already covered by base), listed explicitly; this list extracted
   # (with the help of https://catonmat.net/set-operations-in-unix-shell) by
-  # $ grep -vxF -f <(pacman -Qi base | grep Depends | cut -d ':' -f 2 | awk -v 'RS= ' '/.+/ {print}') <(pacman -Sqs base-devel)
+  # $ grep -vxF -f <(pacman -Qi base | grep Depends | cut -d ':' -f 2 | awk -v 'RS= ' '/.+/ {print}') <(pacman -Sgq base-devel)
   autoconf
   automake
   binutils

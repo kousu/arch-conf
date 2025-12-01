@@ -40,8 +40,8 @@
 # - [ ] Handle hostname
 #     I've put /etc/hostname in kousu-base, but maybe I should just write it manually here the way the install guide says
 #     One thing pushing that way is that you actually have to write it twice: /etc/hostname and /etc/hosts
-# - [ ] Support syslinux and not just UKI?
-# - [ ] Support MBR?
+# - [x] Support limine and not just UKI?
+# - [x] Support MBR?
 # - [ ] Support "writable" partition (for thumbdrive mode)
 # - [ ] make suspend-to-disk work
 # - [ ] repack the standard installer to include this script
@@ -143,11 +143,14 @@ sfdisk "$TARGET_DISK" <<EOF
 label: gpt
 
 size=1G, type=uefi, name="/boot"
+size=1M, type=21686148-6449-6E6F-744E-656564454649, name="BIOS bootloader"
 type=linux, name="lvm"
 EOF
 
 partprobe "$TARGET_DISK" # possibly redundant? sfdisk should do this for us.
 )
+
+TARGET_LVM=$(sfdisk -d "$TARGET_DISK" | grep 'name="lvm"' | cut -f 1 -d ' ')
 
 if [ -b "$TARGET_DISK"p1 ]; then
   # disk is a type (loop, nvme, ...) that names partitions like loop2p1, loop2p2 ...
@@ -161,9 +164,10 @@ fi
 KEY=$(mktemp -d -t arch-install-key-XXXXXXXXX)/bootstrap_keyfile.bin
 (set -x; dd if=/dev/urandom of="${KEY}" bs=1 count=64)
 
-(set -x; cryptsetup luksFormat --batch-mode --key-file "${KEY}" "$TARGET_DISK"2)
-(set -x; cryptsetup open --allow-discards --persistent --key-file "${KEY}" "$TARGET_DISK"2 cryptlvm)
 trap 'cryptsetup close cryptlvm' EXIT
+
+(set -x; cryptsetup luksFormat --batch-mode --key-file "${KEY}" "$TARGET_LVM")
+(set -x; cryptsetup open --allow-discards --persistent --key-file "${KEY}" "$TARGET_LVM" cryptlvm)
 
 (
 (set -x; pvcreate /dev/mapper/cryptlvm)
@@ -211,40 +215,77 @@ trap 'umount -v --recursive "$CHROOT"; rmdir -v "$CHROOT"' EXIT
 mv "${KEY}" "$CHROOT"/boot/bootstrap_keyfile.bin
 
 
-# configure UKI bootloader
-# we have to tell it the root device to boot from
+# Configure boot parameters.
+#
+# If you use kousu-bootloader-efi (based on UKI) or kousu-bootloader-bios
+# (based on Limine) then /etc/cmdline.d gets read automatically, but if you
+# want to use a different bootloader like GRUB or Clover (not UKI)
+# you will need to manually port the contents of /etc/cmdline.d/ into to your
+# bootloader's config AFTER running arch-install.
+# See
+# https://wiki.archlinux.org/title/Arch_boot_process#Feature_comparison
+
+# declare root disk
+crypt_uuid="$(blkid -s UUID -o value "$TARGET_LVM")"
 mkdir -p "$CHROOT"/etc/cmdline.d
-crypt_uuid="$(blkid -s UUID -o value "$TARGET_DISK"2)"
-echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm root=/dev/lvsys/root rw" > "$CHROOT"/etc/cmdline.d/root.conf
-echo "cryptkey=LABEL=boot:vfat:/bootstrap_keyfile.bin" > "$CHROOT"/etc/cmdline.d/bootstrap_keyfile.conf
-mkdir -p "$CHROOT"/boot/efi/boot   # also mkinitcpio will fail unless this exists? TODO: double check if this is necessary
+echo "cryptdevice=UUID=${crypt_uuid}:cryptlvm root=/dev/lvsys/root rw" \
+   > "$CHROOT"/etc/cmdline.d/root.conf
+# declare (temporary) encryption key
+echo "cryptkey=LABEL=boot:vfat:/bootstrap_keyfile.bin" \
+   > "$CHROOT"/etc/cmdline.d/bootstrap_keyfile.conf
 
-## Install the system
-(set -x; pacstrap -c "$CHROOT" "${PKGS[@]}")
+# declare scripts needed within the initramfs
+mkdir -p "$CHROOT"/etc/mkinitcpio.conf.d
+tee "$CHROOT"/etc/mkinitcpio.conf.d/00-hooks.conf >/dev/null <<EOF
+# From https://wiki.archlinux.org/title/Dm-crypt/Encrypting_an_entire_system#LVM_on_LUKS
 
-## UKI fallback:
-# if ${PKGS[@]} didn't create a bootable kernel,
-# reconfigure and do it again. this is really really fragile.
-if ! [ -f "$CHROOT"/boot/efi/boot/bootx64.efi ]; then
-  arch-chroot "$CHROOT" mkdir -p /etc/mkinitcpio.d /etc/mkinitcpio.conf.d
-  arch-chroot "$CHROOT" tee /etc/mkinitcpio.d/linux.preset >/dev/null  <<EOF
+# Beware: this is a precise list that *controls the booting* of the system.
+# If associated packages (e.v. amd-ucode or lvm2) are missing I don't know what might break.
+# Also drop-in files aren't supported and even if they were the order is touchy (e.g. fsck must follow filesystems which must follow encrypt and lvm).
+#
+# ALSO a footgun: if /etc/mkinitcpio.d/linux.preset defines ALL_config,
+# this file is simply ignored and your boot will NOT work.
+# See: https://wiki.archlinux.org/title/Mkinitcpio#Configuration.
+
+HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block lvm2 encrypt filesystems fsck)
+EOF
+
+# declare libraries needed within the initramfs
+tee "$CHROOT"/etc/mkinitcpio.conf.d/00-modules.conf >/dev/null <<EOF
+# for reading from /boot during boot
+MODULES=(vfat)
+EOF
+
+# declare mkinitcpio build target
+mkdir -p "$CHROOT"/etc/mkinitcpio.d
+tee "$CHROOT"/etc/mkinitcpio.d/linux.preset >/dev/null  <<EOF
 ALL_kver="/boot/vmlinuz-linux"
 PRESETS=('default')
+# BIOS
+default_image="/boot/initramfs-linux.img"
+# EFI
 default_uki="/boot/efi/boot/bootx64.efi"
 
 # To change the boot logo, make sure your new logo is:
 # smaller than your screen resolution and in .bmp format.
+# (this is only respected with with the EFI image)
 default_options="--splash=/usr/share/systemd/bootctl/splash-arch.bmp"
 EOF
-  arch-chroot "$CHROOT" tee /etc/mkinitcpio.conf.d/modules.conf >/dev/null <<EOF
-MODULES=(vfat)
-EOF
-  arch-chroot "$CHROOT" tee /etc/mkinitcpio.conf.d/hooks.conf >/dev/null <<EOF
-HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block lvm2 encrypt filesystems fsck)
-EOF
-  (set -x; pacstrap -c "$CHROOT" linux lvm2)
-fi
 
+mkdir -p "$CHROOT"/boot/efi/boot   # mkinitcpio will fail unless this exists
+
+## Install the system
+(set -x; pacstrap -c "$CHROOT" linux lvm2 cryptsetup "${PKGS[@]}")
+#  To get a bootable system we need lvm and cryptsetup, and linux to trigger mkinitcpio
+#  but if the user didn't explicitly mention them they should sit as dependencies
+#  (if they're not in the tree of things the user installed, well, hm, that risks accidentally leaving the system unbootable
+#  Maybe we should warn them if their packages didn't install linux/lvm2/cryptsetup and do it for them?
+(set -x; arch-chroot "$CHROOT" pacman -D --asdeps linux lvm2 cryptsetup)
+(set -x; arch-chroot "$CHROOT" pacman -D --asexplicit "${PKGS[@]}")
+
+
+##
+# Warn user about the declawed encryption.
 arch-chroot "$CHROOT" tee /etc/profile.d/bootstrap_keyfile.sh >/dev/null <<EOF
 if [ -f /boot/bootstrap_keyfile.bin ]; then
   echo

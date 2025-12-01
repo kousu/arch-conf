@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -eu
+
+CMDLINE="$(ls /etc/cmdline.d/*.conf | sort | xargs cat | sed 's/#.*$//; /^[[:space:]]*$/d' | (tr '\n' ' '; echo))"
+
+if [ -z "$CMDLINE" ]; then
+  echo "error: empty kernel command line. What's in /etc/cmdline.d?" >&2
+  exit 1
+fi
+
+mkdir -p /boot/limine
+cat > /boot/limine/limine.conf <<EOF
+timeout: 5
+
+/Arch Linux
+    protocol: linux
+    path: boot():/vmlinuz-linux
+
+    cmdline: ${CMDLINE}
+    module_path: boot():/initramfs-linux.img
+EOF

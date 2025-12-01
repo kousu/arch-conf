@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Path
+Target = /etc/cmdline.d/*
+
+[Action]
+Description = Syncing /etc/cmdline.d/ to /boot/limine/limine.conf
+When = PostTransaction
+Exec = /usr/bin/limine-mkconf

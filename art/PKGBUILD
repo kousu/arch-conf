@@ -19,8 +19,8 @@ depends=(
   # alsa-card-profiles # is this needed? it's for making fancy professional soundcards work, I think
 
   # graphics
-  pinta # -> XXX only in aur so this only builds with pikaur, not makepkg
   inkscape # svg editor
+  #krita   # paint
   gimp     # raster editor
 
   # video/music
@@ -51,7 +51,6 @@ depends=(
   geonkick
   amsynth
   surge-xt
-  ninjas2   # slicer
   bchoppr  # also a slicer?
   polyphone # .sf2 editor
   stochas   # randomized rhythm generator

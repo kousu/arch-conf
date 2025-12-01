@@ -35,7 +35,7 @@ depends=(
   #kdevelop-meta
 
   discover       # GUI for pacman (cool!)
-  packagekit-qt5 #  -> plugin that actually makes it work on Arch
+  packagekit-qt6 #  -> plugin that actually makes it work on Arch
 
   # for a more interesting DE:
   # install the 'maui' group

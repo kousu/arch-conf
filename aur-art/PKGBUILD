@@ -1,0 +1,17 @@
+pkgname=kousu-aur-art
+pkgrel=1
+pkgdesc="Configuration management for kousu's brain goblins (AUR packages)"
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+
+pkgver=99
+
+depends=(
+  kousu-aur-base
+
+  # graphics
+  pinta   # the BEST modern paint program
+
+  # audio
+  ninjas2-git
+)

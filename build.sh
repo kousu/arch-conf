@@ -11,6 +11,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # This incorporates code from the archlinux devtools project.
 
+# TODO:
+# - [ ] Provide -c (clean container between builds) as a flag
+
 
 # Questions writing this raises for me:
 # Q: how did Arch bootstrap its repos?
@@ -101,41 +104,38 @@ repo-add "$PKGDEST"/site.db.tar.zst # init repo if needed
 
 
 # Configure makechrootpkg's container
-#CHROOT=/var/lib/archbuild/site
-#sudo mkdir -p "$CHROOT"
-#if [ ! -d "$CHROOT"/root ]; then
-#  # construct a new build container
-#  mkarchroot "$CHROOT"/root base-devel  # NB: this calls `sudo`
-#fi
-## insert the output path so downstream local packages can depend on local packages.
-# arch-nspawn parses pacman.conf and automagically bind-mounts any paths mentioned into the container.
+CHROOT=/var/lib/archbuild/site
+sudo mkdir -p "$CHROOT"
+if [ ! -d "$CHROOT"/root ]; then
+  # construct a new build container
+  mkarchroot "$CHROOT"/root base-devel  # NB: this calls `sudo`
+fi
+# insert the output path so downstream local packages can depend on local packages.
+# arch-nspawn parses pacman.conf and automagically bind-mounts any paths mentioned
+# into the container at the *same path*.
 #
 #   _Alternate rejected solution_: adding just `Include = /etc/pacman.d/site.conf`.
 #   and putting the repo details in there. arch-nspawn parses pacman.conf from
 #   _outside_ the container, where /etc/pacman.d/site.conf doesn't exist. Too bad,
 #   it would be cleaner...
 #
-#sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
-#sudo sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
-#sudo tee -a /etc/pacman.conf <<EOF
-## --- BEGIN makechrootpkg ---
-#[site]
-## the arch devtools magically recognize directories in the containerized
-## pacman.conf and _bind mount_ them to the same paths inside as out.
-#Server = file://$PKGDEST
-## Disable signature checking on local packages -- because we don't have signing configured
-#SigLevel = Optional TrustAll
-## --- END makechrootpkg ---
-#EOF
-## clean up after ourselves
-#trap "sudo sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf" EXIT
+sudo arch-chroot "$CHROOT"/root sed -i '/# --- BEGIN makechrootpkg ---/,/# --- END makechrootpkg ---/{d}' /etc/pacman.conf
+sudo arch-chroot "$CHROOT"/root tee -a /etc/pacman.conf <<EOF
+# --- BEGIN makechrootpkg ---
+[site]
+# the arch devtools magically recognize directories in the containerized
+# pacman.conf and _bind mount_ them to the same paths inside as out.
+Server = file://$PKGDEST
+# Disable signature checking on local packages -- because we don't have signing configured
+SigLevel = Optional TrustAll
+# --- END makechrootpkg ---
+EOF
 
-#sudo sh -c 'echo Thank you for authenticating'
 ## Extend makechrootpkg's sudo privileges until
 ## done, meaning the build can be left unattended.
-#( while true; do sudo -v; sleep 60; done ) &
-#SUDO_PID=$!
-#trap 'kill $SUDO_PID' EXIT
+( while true; do sudo -v; sleep 60; done ) &
+SUDO_PID=$!
+trap 'kill $SUDO_PID' EXIT
 
 # build packages in *topological sort order* (i.e. deepest dependency first) thanks to `tsort`,
 # and build into the local site repo so that later local packages can depend on earlier local packages.
@@ -155,10 +155,7 @@ finddeps "$@" | tsort | while read -r target; do
     if [[ -f "${pkg}" ]]; then
       echo "${pkgname} has already been built. Skipping."
     else
-      #makechrootpkg -r "$CHROOT" -u
-      makepkg -d
-      # does not using -c speed up the build?
-      # does using makepkg -sr work here?
+      makechrootpkg -r "$CHROOT" -u
       repo-add "$PKGDEST"/site.db.tar.zst "${pkg}" # expose new package in repo
     fi
   fi

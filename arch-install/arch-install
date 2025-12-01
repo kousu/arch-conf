@@ -267,23 +267,6 @@ tee "$CHROOT"/etc/mkinitcpio.conf.d/00-modules.conf >/dev/null <<EOF
 MODULES=(vfat)
 EOF
 
-# declare mkinitcpio build target
-mkdir -p "$CHROOT"/etc/mkinitcpio.d
-tee "$CHROOT"/etc/mkinitcpio.d/linux.preset >/dev/null  <<EOF
-ALL_kver="/boot/vmlinuz-linux"
-PRESETS=('default')
-# BIOS
-default_image="/boot/initramfs-linux.img"
-# EFI
-default_uki="/boot/efi/boot/bootx64.efi"
-
-# To change the boot logo, make sure your new logo is:
-# smaller than your screen resolution and in .bmp format.
-# (this is only respected with with the EFI image)
-default_options="--splash=/usr/share/systemd/bootctl/splash-arch.bmp"
-EOF
-
-mkdir -p "$CHROOT"/boot/efi/boot   # mkinitcpio will fail unless this exists
 
 ## Install the system
 (set -x; pacstrap -c "$CHROOT" linux lvm2 cryptsetup "${PKGS[@]}")

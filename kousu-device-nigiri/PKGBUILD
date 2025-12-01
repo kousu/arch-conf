@@ -11,6 +11,7 @@ pkgver="$(_pkgver)"
 pkgrel=1
 
 depends=(
+  kousu-bootloader-efi
   kousu-desktop-kde
 
   linux-firmware-intel
@@ -18,11 +19,6 @@ depends=(
 )
 
 conflicts=(kousu-device-bomp kousu-device-allium)
-
-backup=(
-  # user-changeable config files
-  etc/mkinitcpio.d/linux.preset
-)
 
 package() {
   cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }

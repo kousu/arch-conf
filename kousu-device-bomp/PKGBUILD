@@ -11,9 +11,10 @@ pkgrel=1
 
 depends=(
   linux-firmware-intel
+  kousu-bootloader-efi
   kousu-desktop-niri
   kousu-work
-  
+
   # Programming
   julia
 )
@@ -23,11 +24,6 @@ optdepends=(
 )
 
 conflicts=(kousu-device-allium kousu-device-nigiri)
-
-backup=(
-  # user-changeable config files
-  etc/mkinitcpio.d/linux.preset
-)
 
 package() {
   cd "${startdir}/src/"   # instead of prepare() { cp "${startdir}/src/." "${srcdir}" }

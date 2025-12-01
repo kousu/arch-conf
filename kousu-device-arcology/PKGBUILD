@@ -1,0 +1,28 @@
+pkgname=kousu-device-arcology
+pkgdesc="Configuration management for kousu's NAS"
+
+# load common settings; be aware if you ever split up this repo.
+[ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
+. .lib.PKGBUILD || exit 1
+
+depends=(
+  kousu-server
+  kousu-bootloader-bios
+  kousu-didnt-your-mother-always-tell-you
+
+  jellyfin-server
+  jellyfin-web
+
+  # nostalgia:
+  #mpd
+  #ncmpcpp
+
+  pkgstats  # opt-in to ArchLinux telemetry
+)
+
+optdepends=(
+  'tmsu: [AUR] tag-based filesystem'
+)
+
+provides=(kousu-device)
+conflicts=(kousu-device)

@@ -13,6 +13,7 @@ pkgrel=1
 install="${pkgname}.install"
 
 backup=(
+  src/etc/dconf/db/gdm.d/02-logo
   var/lib/AccountsService/users/root
 )
 

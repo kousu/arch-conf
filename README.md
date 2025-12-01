@@ -325,6 +325,16 @@ But, doing it this way means dotfiles needs special handling during an update. T
 
 ## Development
 
+### Container builds
+
+Sometimes shit fucks up. Do this:
+
+```
+sudo rm -r /var/lib/archbuild/site/
+```
+
+and/or add in `c` to `makechrootpkg -c` in `build.sh`. But even then sometimes you just gotta nuke it.
+
 ### `pkgver`
 
 The version is automatically generated from git. There are soe quirks to it.

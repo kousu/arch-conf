@@ -110,7 +110,9 @@ depends=(
   #transmission-gtk # more traditional? But I'm trying out a KDE-based system...
 
   ## GUI :: Desktop Environment
+  #breeze-gtk # themes GTK apps to match the KDE ones..but I don't know how to use it yet.
   plasma-desktop
+  plasma-workspace-wallpapers # extra KDE wallpapers
   powerdevil # KDE plugin for power management
   bluedevil  # KDE plugin for Bluetooth
   plasma-pa  # KDE plugin for audio management

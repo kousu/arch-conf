@@ -20,6 +20,10 @@ depends=(
   pkgstats  # opt-in to ArchLinux telemetry
 )
 
+optdepends=(
+  'tmsu: [AUR] tag-based filesystem'
+)
+
 conflicts=(
   kousu-device-allium
   kousu-device-bomp

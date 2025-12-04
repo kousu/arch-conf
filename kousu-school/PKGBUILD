@@ -16,12 +16,16 @@ depends=(
 
   hieroglyphic  # _drawing_ to LaTeX dictionary
 
-  pdfgrep
+  pdfgrep # for scanning course notes and papers quickly
 
-  # XXX ^ split these into subpackages, again. I just really don't want to have to
-  # maybe I could make a split package?
-  #octave
-  #matlab-support # XXX AUR
+  octave  # scientific programming language; matlab clone
 
-  wine
+  wine    # for annoying windows-only engineering apps
+)
+
+optdepends=(
+  # comms
+  # This one isn't /really/ optional, but it's listed here because it's proprietary and hence AUR-only.
+  'zoom: [aur] video calling'
+  'matlab: [currently broken]'
 )

@@ -25,3 +25,7 @@ depends=(
   video-trimmer
   #vidcutter
 )
+
+optdepends=(
+  'davinci-resolve: [aur] professional video editor. Freemium?'
+)

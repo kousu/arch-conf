@@ -50,3 +50,8 @@ depends=(
   #hydrogen # basic but effective drum sequencer
   #ft2-clone # tracker
 )
+
+optdepends=(
+  'ninjas2-git: [aur] slicer; chops a sample into a playable midi instrument'
+  'lingot: [aur] instrument tuner'
+)

@@ -38,3 +38,11 @@ depends=(
   # archiving
   yt-dlp
 )
+
+optdepends=(
+  # podcasts
+  'poddl-git: [aur] podcast archiver'
+
+  'flare-player-bin: [aur] Shockwave Flash (.swf) player.'
+  # it's insane that this works. good job everyone. keeping it alive.
+)

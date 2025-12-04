@@ -21,4 +21,5 @@ depends=(
 
 optdepends=(
   kousu-school
+  'zoom: [aur] video calling'
 )

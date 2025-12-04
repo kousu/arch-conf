@@ -23,6 +23,8 @@ depends=(
   # CLI
   pass # password manager
   pass-otp
+  xkcdpass    # password generator
+  words       # needed for xkcdpass
   pwgen # alternate password generator
 
   # CLI :: Programming
@@ -32,7 +34,6 @@ depends=(
   android-udev
   tokei    # lines-of-code metrics
   #jad
-  #hollywood  # 'hacking'
 
   # decompiler
   #rizin
@@ -119,6 +120,14 @@ optdepends=(
   'graphs: Graphing calculator'
   'warp: File transfer (magic-wormhole GUI)'
   "podcasts: GNOME's podcatcher"
+
+  # AUR:
+  "firefox-extension-privacybadger: [aur] EFF's anti-tracker tool; complements (perhaps redundant to?) uBlock Origin"
+  'firefox-clearurls: [aur] remove tracker tokens from links'
+  'hollywood: [aur] "hacking"'
+  'ttf-ms-fonts: [aur] microsoft fonts; needed to render Word-generated PDFs in Firefox'
+  #'ttf-ms-win11-auto: [aur] modern Microsoft fonts' # but more expensive to install; there's some complicated extra step needed?
+  'softu2f-git: [aur] virtual YubiKey'
 )
 
 package() {

@@ -39,6 +39,6 @@ depends=(
 
 optdepend=(
   'vscode: for writing .typ. Tips: install typstyle and configure format-on-save; install the tinymist extension; configure build-on-save; configure displaying outputs in the *system* PDF viewer because the built in one is slow.'
-  'typstyle: for .typ formatting; currently in the AUR.'
-  'zotero-bin: for managing citations; best if you acquiesce to use their cloud service.'
+  'typstyle: [aur] for .typ formatting'
+  'zotero-bin: [aur] for managing citations; best if you acquiesce to use their cloud service.'
 )

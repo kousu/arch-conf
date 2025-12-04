@@ -54,4 +54,6 @@ depends=(
 optdepends=(
   'ninjas2-git: [aur] slicer; chops a sample into a playable midi instrument'
   'lingot: [aur] instrument tuner'
+  'yabridge: Windows VST host' # somehow. I don't know how to use this. Does it need wine?
+  'yabridgectl'
 )

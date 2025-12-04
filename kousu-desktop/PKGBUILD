@@ -21,6 +21,8 @@ depends=(
   yubikey-manager
 
   # CLI
+  lolcat
+
   pass # password manager
   pass-otp
   xkcdpass    # password generator

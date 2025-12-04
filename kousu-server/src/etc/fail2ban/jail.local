@@ -1,0 +1,5 @@
+[DEFAULT]
+# these are fairly aggressive settings
+bantime = 1h
+findtime  = 5h
+maxretry = 5

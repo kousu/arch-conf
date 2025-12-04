@@ -1,9 +1,9 @@
 # Bugs
 
+- [ ] Add package signing
 - [ ] Configure idle spindown on spinning disks
-  -  https://wiki.archlinux.org/title/Hdparm
-  - hdparm -S
-  tricky to do automatically because it's so dependent on the firmware of each specific disk what's available
+  - https://wiki.archlinux.org/title/Hdparm
+  - hdparm -S tricky to do automatically because it's so dependent on the firmware of each specific disk what's available
     - this should work for SATA but NOT for SATA-over-USB
   - hd-idle[aur] seems to be the only reliable option for SATA-over-USB
 - [ ] For some reason, kousu-base/kousu-base.install and kousu-desktop/kousu-desktop.install aren't getting run anymore

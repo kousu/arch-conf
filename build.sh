@@ -78,10 +78,10 @@ finddeps() {
           if [ "$kind" = "(makedepends)" ] || [ "$kind" = "(depends)" ]; then
             # declare $target depends on $dep
             echo "$dep" "$target"
-          fi
 
-          # recurse:
-          finddeps "$dep"
+            # recurse:
+            finddeps "$dep"
+          fi
         done
       fi
     done

@@ -1,0 +1,27 @@
+pkgname=kousu-server
+pkgdesc="Configuration management common to kousu's servers"
+
+# load common settings; be aware if you ever split up this repo.
+[ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
+. .lib.PKGBUILD || exit 1
+
+depends=(
+  kousu-base
+
+  # network daemons
+  openssh
+  fail2ban  # or sshguard? sshguard is the only one packaged for OpenBSD so it might be nice to standardize on it
+  opensmtpd
+
+  acme-redirect
+  acme-user
+  #acme-tiny # ?
+  #acme.sh
+
+  # backup
+  restic
+)
+
+optdepends=(
+  'dtach-ng: [aur] its better than tmux!'
+)

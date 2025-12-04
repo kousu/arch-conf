@@ -1,0 +1,17 @@
+post_install() {
+	systemctl enable sshd
+	systemctl enable fail2ban
+	systemctl enable smtpd
+}
+
+post_upgrade() {
+	systemctl enable sshd
+	systemctl enable fail2ban
+	systemctl enable smtpd
+}
+
+post_remove() {
+	systemctl disable smtpd
+	systemctl disable fail2ban
+	systemctl disable sshd   # risky? might lock us out?
+}

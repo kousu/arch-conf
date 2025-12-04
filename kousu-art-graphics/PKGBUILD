@@ -12,3 +12,7 @@ depends=(
   krita    # paint
   #gimp    # raster editor
 )
+
+optdepends=(
+  'pinta: [aur] the BEST modern paint program'
+)

@@ -81,7 +81,7 @@ sudo pacman -Syu
 You can also pre-build **all** the packages:
 
 ```
-ls | grep -v aur | xargs ./build.sh
+ls | grep -v matlab | xargs ./build.sh
 ```
 
 Or you can build a single package _without_ its dependencies, say, if you are working on it in detail:
@@ -363,10 +363,7 @@ pikaur -P
 
 Then we could depend on AUR packages too. But it's inelegant.
 
-For now, I think what I'm going to do is plan to put the AUR packages into a separate
-PKGBUILD, along with these bootstrapping instructions.
-Maybe I could even pull them into `post_install`? Check if `pikaur` is installed and if not, do this?
-
+For now, AUR packages are marked optional and tagged with `[aur]`. They can be manually installed by the user once reminded by the note.
 
 ## Dotfiles
 

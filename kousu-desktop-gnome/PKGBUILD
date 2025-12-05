@@ -93,6 +93,10 @@ depends=(
   transmission-gtk
 )
 
+optdepends=(
+  'gnome-tweaks: UI to access hidden settings. Recommend you install this, poke around, then uninstall it once satisfied.'
+)
+
 package() {
   _package
 

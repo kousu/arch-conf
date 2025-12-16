@@ -1,0 +1,13 @@
+#!/bin/bash
+
+post_install() {
+  post_upgrade
+}
+
+post_upgrade() {
+  systemctl enable power-profiles-daemon power-saver power-saver-idle
+}
+
+pre_remove() {
+  systemctl disable power-profiles-daemon power-saver power-saver-idle
+}

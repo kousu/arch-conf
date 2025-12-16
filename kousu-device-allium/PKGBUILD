@@ -9,6 +9,7 @@ depends=(
   linux-firmware-intel
   kousu-bootloader-efi
   kousu-desktop-gnome
+  kousu-laptop-mode
 
   pkgstats  # opt-in to ArchLinux telemetry
 

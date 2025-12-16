@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# the powerprofilesctl launch command can temporarily bump to another mode
+# and it's called a "hold" but nothing actually enforces that it's held
+if [ $1 = set ]; then
+  if powerprofilesctl list-holds | grep -q Hold:; then
+    exit 1
+  fi
+fi
+/usr/bin/powerprofilesctl "$@"

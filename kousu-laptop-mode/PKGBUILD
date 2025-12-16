@@ -1,0 +1,12 @@
+pkgname=kousu-laptop-mode
+pkgdesc="Configuration management for laptop tuning"
+
+# load common settings; be aware if you ever split up this repo.
+[ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
+. .lib.PKGBUILD || exit 1
+
+depends=(
+  udev
+  systemd
+  power-profiles-daemon  # alternate options: tlp and tuned
+)

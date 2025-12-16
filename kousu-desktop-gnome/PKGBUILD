@@ -77,8 +77,6 @@ depends=(
   sushi    # part of nautilus
   file-roller # archiver
 
-  power-profiles-daemon # beware: conflicts with tlp and tuned, if you choose to use those
-
   gnome-shell-extension-appindicator
   gnome-shell-extension-caffeine
   gnome-shell-extension-vitals

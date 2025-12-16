@@ -1,0 +1,10 @@
+[Unit]
+After=power-profiles-daemon.service
+
+[Service]
+ExecStart=/usr/libexec/kousu-laptop-mode/power-saver-idle.sh
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

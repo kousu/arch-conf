@@ -8,6 +8,7 @@ pkgdesc="Configuration management for kousu's \"nigiri\" thumbdrive system"
 depends=(
   kousu-bootloader-efi
   kousu-desktop-kde
+  kousu-laptop-mode
 
   linux-firmware-intel
   broadcom-wl # if the thumbdrive were booted on a system with only broadcom wifi we would be stuck without these drivers

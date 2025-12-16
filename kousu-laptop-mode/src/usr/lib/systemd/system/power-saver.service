@@ -1,0 +1,12 @@
+# /etc/systemd/system/power-saver.service
+[Unit]
+Description=Set laptop to low power mode (on boot)
+After=power-profiles-daemon.service
+PartOf=power-profiles-daemon.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/powerprofilesctl-respect-holds set power-saver
+
+[Install]
+WantedBy=power-profiles-daemon.service

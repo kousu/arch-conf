@@ -6,12 +6,10 @@ post_install() {
 
 post_upgrade() {
   systemctl enable NetworkManager # NB: we actually use iwd; but this is here to glue GNOME into it
-  systemctl enable power-profiles-daemon
   systemctl enable gdm
 }
 
 pre_remove() {
   systemctl disable gdm
-  systemctl disable power-profiles-daemon
   systemctl disable NetworkManager # NB: we actually use iwd; but this is here to glue GNOME into it
 }

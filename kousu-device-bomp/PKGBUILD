@@ -9,6 +9,7 @@ depends=(
   linux-firmware-intel
   kousu-bootloader-efi
   kousu-desktop-niri
+  kousu-laptop-mode
   kousu-work
 
   # Programming

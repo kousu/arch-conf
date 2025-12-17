@@ -49,9 +49,6 @@ EOF
   systemctl enable fstrim.timer
 
   systemctl enable reflector.timer
-  systemctl enable reflector.service
-  # TODO: how to set --country Canada --fastest 3 in /etc/xdg/reflector/reflector.conf?
-  # the trouble is that file is owned by reflector so I can't deploy a file overtop
 }
 
 

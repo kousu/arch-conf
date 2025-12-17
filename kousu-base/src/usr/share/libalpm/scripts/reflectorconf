@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# detect our current country
+# use mirrors from there
+IP=$(timeout 30 curl -s ipinfo.io | jq -r .ip | head -n1)
+COUNTRY=$(timeout 30 whois -H --no-recursion "$IP" | grep Country | head -n 1 | cut -f 2 -d : | tr -d '[:space:]')
+if [ -z "$COUNTRY" ]; then
+  # default if failed
+  COUNTRY="CA"
+fi
+export COUNTRY
+$SHELL "$1" > "$2"

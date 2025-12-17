@@ -1,0 +1,11 @@
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Target = etc/xdg/reflector/reflector.conf
+Target = usr/share/reflector/reflector.conf.in
+
+[Action]
+Description = Updating reflector.conf
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/reflectorconf /usr/share/reflector/reflector.conf.in /etc/xdg/reflector/reflector.conf

@@ -1,0 +1,9 @@
+[Trigger]
+Type = Path
+Operation = Remove
+Target = usr/share/reflector/reflector.conf.in
+
+[Action]
+Description = Removing reflector.conf
+When = PostTransaction
+Exec = /usr/bin/rm /etc/xdg/reflector/reflector.conf

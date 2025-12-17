@@ -1,0 +1,13 @@
+# template for /etc/xdg/reflector/reflector.conf
+# we use a template because
+# 1. we want to configure COUNTRY dynamically
+# 2. /etc/xdg/reflector/reflector.conf exists; it's owned by reflector
+#    so we're already having to dynamically overwrite it anyway
+# Mo' money mo' problems
+
+cat <<EOF
+--save /etc/pacman.d/mirrorlist
+--protocol https
+--fastest 3
+--country ${COUNTRY}
+EOF

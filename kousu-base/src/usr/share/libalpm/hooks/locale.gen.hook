@@ -1,0 +1,11 @@
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Target = etc/locale.gen
+Target = usr/share/kousu-base/locale.gen.in
+
+[Action]
+Description = Updating locale.gen
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/locale.gen /usr/share/kousu-base/locale.gen.in /etc/locale.gen

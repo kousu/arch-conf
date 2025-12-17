@@ -1,0 +1,9 @@
+[Trigger]
+Type = Path
+Operation = Remove
+Target = usr/share/kousu-base/locale.gen.in
+
+[Action]
+Description = Removing locale.gen
+When = PostTransaction
+Exec = /usr/bin/rm /etc/locale.gen

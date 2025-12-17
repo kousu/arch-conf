@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# https://wiki.archlinux.org/title/Installation_guide#Localization
+# /etc/locale.gen is owned by glibc, but it needs to be customized
+# so overwrite it by script instead.
+
+LOCALESUM=$(md5sum "$2")
+
+$SHELL "$1" > "$2"
+
+if ! (printf "%s\n" "$LOCALESUM" | md5sum --status -c); then
+  # rebuild locales, but only if they've changed
+  locale-gen
+fi

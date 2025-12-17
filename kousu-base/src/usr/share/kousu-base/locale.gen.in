@@ -1,0 +1,6 @@
+# template for /etc/locale.gen
+
+cat <<EOF
+en_CA.UTF-8 UTF-8
+fr_CA.UTF-8 UTF-8
+EOF

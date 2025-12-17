@@ -7,6 +7,8 @@ if pacman -Qttdq >/dev/null; then
   echo
   echo '      There are orphans on your system; consider running'
   echo
+  echo '        pacman -Qttdq # (optional) examine explicitly installed orphans; consider including them in a package'
+  echo '        pacman -Qtteq | grep -v your-toplevel-packages... | sudo pacman -D --asdeps -  # (optional) mark everything as dependencies except a few key top-level packages'
   echo '        pacman -Qttdq | sudo pacman -Rns -'
   echo
 fi

@@ -90,7 +90,7 @@ finddeps() {
 findtops() {
   # find the TOP LEVEL nodes in a tsort(1) input
   awk '
-  $1 != "_" {       # ignore dummy dep
+  {
       nodes[$2]=1;  # right = parents
       deps[$1]=1;   # left = dependencies
   }

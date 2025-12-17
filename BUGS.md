@@ -1,5 +1,6 @@
 # Bugs
 
+- [ ] Uninstalling deadlocks on etckeeper, because it needs /etc/hostname to run, pacman needs etckeeper to run, and /etc/hostname is stored in our package files
 - [ ] Add package signing
 - [ ] Configure idle spindown on spinning disks
   - https://wiki.archlinux.org/title/Hdparm

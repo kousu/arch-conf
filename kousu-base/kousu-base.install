@@ -1,10 +1,16 @@
 #!/bin/bash
 
-_deploy() {
+# These are the steps we couldn't shoehorn in as a file
+# mostly because they're patches to pre-existing files.
 
-  # These are the steps we couldn't shoehorn in as a file
-  # mostly because they're patches to pre-existing files.
+post_install() {
+  # https://wiki.archlinux.org/title/Installation_guide#Time_zone
+  timedatectl set-ntp true # XXX should probably...wait until ntp actually syncs before running the next command?
 
+  # generate /etc/adjtime
+  # this can't be deployed because for the contents to be truthful,
+  # hwclock needs to also actually *sync* the system (i.e. NTP) and hardware clocks and write down when it did so.
+  hwclock --systohc
 
   # make pam_faillock(8) way less aggressive.
   # unlike fail2ban, faillock locks you out *from everywhere*
@@ -24,52 +30,48 @@ _deploy() {
   sed -i '/sshd_config.d/d' /etc/ssh/sshd_config # get rid of any pre-existing lines
   echo 'Include /etc/ssh/sshd_config.d/*.conf' >> /etc/ssh/sshd_config
 
-  systemctl enable systemd-networkd systemd-resolved
-
-  # see discussion in https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
-  systemctl enable fstrim.timer
-
-  systemctl enable reflector.timer
-}
-
-
-post_install() {
-  # https://wiki.archlinux.org/title/Installation_guide#Time_zone
-  timedatectl set-ntp true # XXX should probably...wait until ntp actually syncs before running the next command?
-
-  # generate /etc/adjtime
-  # this can't be deployed because for the contents to be truthful,
-  # hwclock needs to also actually *sync* the system (i.e. NTP) and hardware clocks and write down when it did so.
-  hwclock --systohc
-
   # TODO: I should probably...pull my etckeeper setup out to a separate package
   # debian's etckeeper package initializes fully and correctly at install time
   # why doesn't arch's? is it a bug in arch's version or is it on purpose?
-  # one immediate problem with having this here: etckeeper assumes it can read /etc/hostname
-  # but this package *creates* /etc/hostname, which means it will get jammed: you can't uninstall kousu-device-nigiri
-  # because removing it removes /etc/hostname, etckeeper will fail, then AVOID_COMMIT_BEFORE_INSTALL wil ltrigger
-  # when you try to reinstall it, but there's no way to `etckeeper commit` becuase /etc/hostname is gone!
-  # splitting things up should make this easier to deal with
-  # a workaround: install inetutils, which brings /usr/bin/hostname; etckeeper will try that first before /etc/hostname
-
   if [ -f /etc/etckeeper/etckeeper.conf ]; then
+    if ! grep -E -q '^AVOID_DAILY_AUTOCOMMITS=1' /etc/etckeeper/etckeeper.conf; then
+      (echo; echo 'AVOID_DAILY_AUTOCOMMITS=1') >> /etc/etckeeper/etckeeper.conf
+    fi
     if ! grep -E -q '^AVOID_COMMIT_BEFORE_INSTALL=1' /etc/etckeeper/etckeeper.conf; then
       # this is like lineinfile: in ansible
       # because it doesn't look like this thing contains a .d directory for its config I can use
       (echo; echo 'AVOID_COMMIT_BEFORE_INSTALL=1') >> /etc/etckeeper/etckeeper.conf
     fi
 
-    etckeeper init
-    etckeeper vcs config user.name root  # etckeeper gets mad without this.
+    if [ ! -f /etc/hostname ]; then
+      # etckeeper gets mad without a hostname
+      echo 'WARNING: /etc/hostname not set; disabling etckeeper' >&2
+    elif [ -e /chrootbuild ]; then
+      # I dislike breaking the 4th wall but: detect when inside makechrootpkg.
+      echo 'WARNING: in makechrootpkg; disabling etckeeper' >&2
+      # The etckeeper pacman hook blocks the build when a series of builds are
+      # done in a row on the same container, because makechrootpkg fiddles with
+      # the container users each time but doesn't etckeeper commit.
+      #
+      # The problem is avoided if:
+      # - makechrootpkg -c is always used (but that's very slow)
+      # - AVOID_DAILY_AUTOCOMMITS=0 (unsure why; spawning the container each time triggers the timer?)
+      #
+      # We lose nothing with etckeeper not tracking changes to /etc during builds.
+    else
+      etckeeper init
+      etckeeper vcs config user.name root  # etckeeper gets mad without this.
+    fi
 
   fi
 
-  _deploy
-}
 
+  systemctl enable systemd-networkd systemd-resolved
 
-post_upgrade() {
-  _deploy
+  # see discussion in https://wiki.archlinux.org/title/Dm-crypt/Specialties#Discard/TRIM_support_for_solid_state_drives_(SSD)
+  systemctl enable fstrim.timer
+
+  systemctl enable reflector.timer
 }
 
 

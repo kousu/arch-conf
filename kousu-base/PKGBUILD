@@ -51,6 +51,7 @@ depends=(
 
   # CLI
   bash-completion  # lets apps customize tab completion; it's handy for pass(1) and kubectl(1) and some others, but intereferes and is annoying when apps provide incomplete tab completion because it *disables* the default behaviour of files.
+  entr             # watch files for changes
   sudo
 
   # CLI :: Files

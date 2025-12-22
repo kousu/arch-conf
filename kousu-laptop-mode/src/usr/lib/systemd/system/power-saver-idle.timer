@@ -1,0 +1,8 @@
+[Unit]
+Description=Go to low power mode periodically (unless inhibited)
+
+[Timer]
+OnUnitActiveSec=15m
+
+[Install]
+WantedBy=timers.target

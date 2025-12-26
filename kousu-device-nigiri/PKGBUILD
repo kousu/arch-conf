@@ -14,7 +14,5 @@ depends=(
   broadcom-wl # if the thumbdrive were booted on a system with only broadcom wifi we would be stuck without these drivers
 )
 
-conflicts=(
-  kousu-device-allium
-  kousu-device-bomp
-)
+provides=(kousu-device)
+conflicts=(kousu-device)

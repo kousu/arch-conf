@@ -20,7 +20,5 @@ optdepends=(
   kousu-art-audio
 )
 
-conflicts=(
-  kousu-device-allium
-  kousu-device-nigiri
-)
+provides=(kousu-device)
+conflicts=(kousu-device)

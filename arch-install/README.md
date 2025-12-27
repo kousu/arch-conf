@@ -6,17 +6,11 @@ It's 90% straightforward, but the 10% that is fiddly is really fiddly and takes 
 
 This is my solution. It builds a standard single-user, encrypted, single-disk, EFI-booting, desktop system.
 
-The system has an LVM, so if you don't like the partition sizes is relatively safe and quick
-to `e2resize` + `lvresize` or add new partitions as you like. And of course, if your system
-has the connections, you can always add more disks.
-
-
-
+The system has an LVM, so if you don't like the partition sizes is relatively safe and quick to `e2resize` + `lvresize` or add new partitions as you like. And of course, if your system has the connections, you can always add more disks.
 
 ## Installation
 
-There's a PKGBUILD here so run `makepkg -si` to get it installed to your $PATH,
-or build it and copy it to the target system and install it with `pacman -U`.
+There's a PKGBUILD here so run `makepkg -si` to get it installed to your $PATH, or build it and copy it to the target system and install it with `pacman -U`.
 
 ## Usage
 
@@ -24,94 +18,81 @@ or build it and copy it to the target system and install it with `pacman -U`.
 arch-install [options] disk [packages...]
 ```
 
-The way I recommend using this is in concert with the packages in [my arch-conf](https://github.com/kousu/arch-conf).
-Pick one of the top level packages (e.g. `kousu-device-nigiri`) and install it (and only it).
+The way I recommend using this is in concert with the packages in [my arch-conf](https://github.com/kousu/arch-conf). Pick one of the top level packages (e.g. `kousu-device-nigiri`) and install it (and only it).
 
 ```
 sudo arch-install /dev/sda kousu-device-nigiri
 ```
 
-If you don't provide a list of packages a minimally booting system with basically just the kernel and `pacman` (TODO: and enough networking to get back online??) is created.
-and you can customize it [in the normal way](https://wiki.archlinux.org/title/Installation_guide#Configure_the_system) from there.
-You can customize it manually from there.
+If you don't provide a list of packages a minimally booting system with basically just the kernel and `pacman` (TODO: and enough networking to get back online??) is created. and you can customize it [in the normal way](https://wiki.archlinux.org/title/Installation_guide#Configure_the_system) from there. You can customize it manually from there.
 
 ## Development
 
 1. Install the dependencies (listed in PKGBUILD)
 2. Make a test disk
 
-    ```
-    truncate -s 256G arch.img
-    ```
+   ```
+   truncate -s 256G arch.img
+   ```
 
-    Don't worry, the system won't actually use 256G, truncate makes a _sparse_ file
-    that only uses the space filled in. But this is a good realistic size
-    for the partition table to think it has access to.
+   Don't worry, the system won't actually use 256G, truncate makes a _sparse_ file that only uses the space filled in. But this is a good realistic size for the partition table to think it has access to.
 
 3. Iterate:
 
-    ```
-    sudo ./arch-install arch.img ${PKGS}
-    ```
+   ```
+   sudo ./arch-install arch.img ${PKGS}
+   ```
 
-    The installer **does not** install a bootloader, so
-    you will probably want PKGS to container at least kousu-bootloader-efi
-    or kousu-bootloader-bios.
+   The installer **does not** install a bootloader, so you will probably want PKGS to container at least kousu-bootloader-efi or kousu-bootloader-bios.
 
 4. Test:
 
-    ## Container
+   ## Container
 
-    ```
-    ./arch-img-container arch.img /mnt
-    ```
+   ```
+   ./arch-img-container arch.img /mnt
+   ```
 
-    This unlocks the system and uses `arch-chroot` to get in.
-    It does not test the bootloader or login manager.
-    It can be helpful for verifying what packages got installed
-    and what their install hooks did before testing on a VM.
+   This unlocks the system and uses `arch-chroot` to get in. It does not test the bootloader or login manager. It can be helpful for verifying what packages got installed and what their install hooks did before testing on a VM.
 
-    ## EFI
+   ## EFI
 
-    Get qemu:
-    ````
-    $ sudo pacman -S --noconfirm qemu edk2-ovmf
-    ````
+   Get qemu:
 
-    ```
-    $ sudo qemu-system-x86_64 --enable-kvm -M q35 -m 2G -bios /usr/share/edk2-ovmf/x64/OVMF_CODE.fd -hda arch.img
-    ```
+   ```
+   $ sudo pacman -S --noconfirm qemu edk2-ovmf
+   ```
 
-    _actually_ no you have to do it this way; for some reason -bios will *boot* into a uefi environment but it won't boot syslinux or grub from there
+   ```
+   $ sudo qemu-system-x86_64 --enable-kvm -M q35 -m 2G -bios /usr/share/edk2-ovmf/x64/OVMF_CODE.fd -hda arch.img
+   ```
 
-    ```
-    cp /usr/share/edk2-ovmf/x64/OVMF_VARS.fd /tmp/MY_VARS
-    [kousu@nigiri arch-install]$ qemu-system-x86_64 --enable-kvm -M q35 -m 2G -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_CODE.fd -drive if=pflash,format=raw,file=/tmp/MY_VARS.fd -hda /tmp/arch.img
-    ```
+   _actually_ no you have to do it this way; for some reason -bios will _boot_ into a uefi environment but it won't boot syslinux or grub from there
 
-    or
+   ```
+   cp /usr/share/edk2-ovmf/x64/OVMF_VARS.fd /tmp/MY_VARS
+   [kousu@nigiri arch-install]$ qemu-system-x86_64 --enable-kvm -M q35 -m 2G -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_CODE.fd -drive if=pflash,format=raw,file=/tmp/MY_VARS.fd -hda /tmp/arch.img
+   ```
 
-    ```
-    [kousu@nigiri arch-install]$ qemu-system-x86_64 --enable-kvm -M q35 -m 2G -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_CODE.fd -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_VARS.fd -hda /tmp/arch.img
-    ```
+   or
 
-    `-M q35` is to use a modern system, where -hda implies a *SATA* disk; the default, -M pc, implies an IDE disk, and it seems like Arch doesn't even sh ip drivers for IDE disks anymore??
+   ```
+   [kousu@nigiri arch-install]$ qemu-system-x86_64 --enable-kvm -M q35 -m 2G -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_CODE.fd -drive if=pflash,format=raw,readonly=on,file=/usr/share/edk2-ovmf/x64/OVMF_VARS.fd -hda /tmp/arch.img
+   ```
 
-    or give up and use GNOME Boxes / virt-manager which use libvirt which hides all this cruft. Just make sure you configure the system for UEFI and not BIOS booting.
+   `-M q35` is to use a modern system, where -hda implies a _SATA_ disk; the default, -M pc, implies an IDE disk, and it seems like Arch doesn't even sh ip drivers for IDE disks anymore??
 
+   or give up and use GNOME Boxes / virt-manager which use libvirt which hides all this cruft. Just make sure you configure the system for UEFI and not BIOS booting.
 
-    ## BIOS
+   ## BIOS
 
-    ```
-    qemu-system-x86_64 -enable-kvm  -drive file=./arch.img,format=raw,if=virtio  -m 2G
-    ```
-
-
-
+   ```
+   qemu-system-x86_64 -enable-kvm  -drive file=./arch.img,format=raw,if=virtio  -m 2G
+   ```
 
 # Related Work
 
-* [Arch's official archinstall](https://github.com/archlinux/archinstall?tab=readme-ov-file)
-  * doesn't support encryption?
-* [archiso](https://wiki.archlinux.org/title/Archiso) for building Arch boot disks
-* @NovaViper's https://gitlab.com/NovaViper/aalis/ (https://bbs.archlinux.org/viewtopic.php?id=273531)
+- [Arch's official archinstall](https://github.com/archlinux/archinstall?tab=readme-ov-file)
+  - doesn't support encryption?
+- [archiso](https://wiki.archlinux.org/title/Archiso) for building Arch boot disks
+- @NovaViper's https://gitlab.com/NovaViper/aalis/ (https://bbs.archlinux.org/viewtopic.php?id=273531)

@@ -1,6 +1,6 @@
 # `kousu-bootloader-bios`
 
-Installs a BIOS (i.e. not EFI) bootloader.
+Installs a BIOS (i.e. MBR i.e. not EFI) bootloader.
 
 This package is touchier than the others,
 because it depends a lot on the partition layout.

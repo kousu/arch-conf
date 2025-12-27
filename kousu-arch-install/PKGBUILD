@@ -4,6 +4,7 @@ pkgname=kousu-arch-install
 pkgver=0.4.0
 pkgrel=1
 pkgdesc="A script to install Arch unattended, with EFI booting and full disk encryption."
+groups=('kousu')
 arch=('any')
 url="https://github.com/kousu/arch-conf"
 license=('MIT')

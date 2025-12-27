@@ -376,6 +376,13 @@ done
 #  but it will through getty or gdm)
 (set -x; arch-chroot "$CHROOT" passwd -de root)
 
+# Bootstrap ssh keys, if known
+if [ -f /root/.ssh/authorized_keys ]; then
+  mkdir -p "${CHROOT}"/root/.ssh/
+  chmod 700  "${CHROOT}"/root/.ssh/
+  tee </root/.ssh/authorized_keys -a "${CHROOT}"/root/.ssh/authorized_keys >/dev/null
+  chmod 600  "${CHROOT}"/root/.ssh/authorized_keys
+fi
 
 set -x  # display all the cleanup traps
 

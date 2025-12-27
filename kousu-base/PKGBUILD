@@ -118,6 +118,7 @@ depends=(
 optdepends=(
   'pikaur: [aur] pacman-compatible wrapper which adds the Arch User Repository as a repository'
   'dtach-ng: [aur] it'"'"'s better than tmux'
+  'arch-wiki-docs: offline Archwiki'
   # replaces dtach due to bullshit: https://github.com/crigler/dtach/issues/22
   # dtach is building again but I am unconvinced about it's sustainability
 )

@@ -170,7 +170,7 @@ KEY=$(mktemp -d -t arch-install-key-XXXXXXXXX)/bootstrap_keyfile.bin
 
 
 (set -x; cryptsetup luksFormat --batch-mode --key-file "${KEY}" "$TARGET_LVM")
-LUKS_ID=$(cryptsetup luksUUID /dev/nvme0n1p2 | cut -f 1 -d '-')
+LUKS_ID=$(cryptsetup luksUUID "$TARGET_LVM" | cut -f 1 -d '-')
 
 (set -x; cryptsetup open --allow-discards --persistent --key-file "${KEY}" "$TARGET_LVM" cryptlvm-"$LUKS_ID")
 trap 'cryptsetup close cryptlvm-${LUKS_ID}' EXIT

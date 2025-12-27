@@ -323,6 +323,42 @@ if [ -d /var/lib/iwd ] && ( arch-chroot "$CHROOT" pacman -Qq iwd >/dev/null 2>&1
   cp -r /var/lib/iwd/. "$CHROOT"/var/lib/iwd   # the /. avoids nested iwd/iwd/
 fi
 
+# Bootstrap local (file://) repos from the installer's env
+pacman-conf -l | while read -r repo; do
+    unset seen
+    for server in $(pacman-conf -r "$repo" Server); do
+        # a single repo can have multiple Servers
+        # if any of those are file://, copy them in
+        # and then remember we did that so we can copy but
+        case "$server" in
+            file://*)
+                seen=1
+                repo_path="${server#file://}"
+                # TODO: should we realpath this to ensure it's absolute?
+                mkdir -p "$CHROOT"/"$repo_path"
+                cp -rpv "$repo_path"/. "$CHROOT"/"$repo_path/"
+                ;;
+        esac
+    done
+    if [ -n "${seen-}" ]; then
+      # copy [repo] block
+      (
+      ugly=1
+      if [ -n "${ugly}" ]; then
+        printf "[%s]\n" $repo;
+        # this exapnds shorthands to their full values, and I think it's ugly
+        pacman-conf -r $repo
+      else
+        awk '
+        $0 == "[" ENVIRON["repo"] "]" {printing=1; print; next}
+        /^\[.*\]$/ {printing=0}
+        printing {print}
+        ' /etc/pacman.conf
+        fi
+      ) | tee -a "$CHROOT"/etc/pacman.conf >/dev/null
+    fi
+done
+
 
 ## Credentials / Ownership
 

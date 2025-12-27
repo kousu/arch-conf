@@ -88,8 +88,17 @@ DEFAULT_PKGS=(
 
 
 usage() {
-  echo "usage: $0: /dev/disk"
+  echo "usage: $0: [-c] /dev/disk [pkgs .... ]"
 }
+
+while getopts "ch" opt; do
+    case "$opt" in
+        c) CFLAG="-c" ;; # passed on to pacstrap
+        h) usage; exit 1 ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
 
 if [ -z "$1" ]; then
   usage
@@ -275,7 +284,7 @@ EOF
 
 
 ## Install the system
-(set -x; pacstrap -c "$CHROOT" linux lvm2 cryptsetup "${PKGS[@]}")
+(set -x; pacstrap ${CFLAG:-} "$CHROOT" linux lvm2 cryptsetup "${PKGS[@]}")
 #  To get a bootable system we need lvm and cryptsetup, and linux to trigger mkinitcpio
 #  but if the user didn't explicitly mention them they should sit as dependencies
 #  (if they're not in the tree of things the user installed, well, hm, that risks accidentally leaving the system unbootable

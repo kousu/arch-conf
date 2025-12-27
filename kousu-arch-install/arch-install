@@ -113,24 +113,24 @@ fi
 
 set -u  # NB: set *after* parsing args to make it easier
 
-
-## https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet
-# Connecting to the net can't be automated -- easily
-if ! ping -c 3 archlinux.org >/dev/null; then
-  echo "error: network failure. Are you online? Follow https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet" >&2
-  exit 1
-fi
-
 if [ $(id -u) -ne 0 ]; then
   # re-exec root
   sudo $0 "$TARGET_DISK" "$@"
   exit $?
 fi
 
+## https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet
+
 ## https://wiki.archlinux.org/title/Installation_guide#Update_the_system_clock
 # set the time so that https:// mirrors will work.
 timedatectl set-ntp true
 
+# Two birds one stone: sync + test mirrors and test that the requeted packages are real
+# This doubles as Connect to the internet.
+if ! pacman -Syi "${PKGS[@]}" >/dev/null; then
+  echo "error: Could not verify ${pkgs[@]} are available. Is there a typo in a package name? Are you online? Try https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet" >&2
+  exit 1
+fi
 
 ( # this subshell for the benefit of the possible trap EXIT
 

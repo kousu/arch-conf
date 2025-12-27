@@ -88,8 +88,17 @@ DEFAULT_PKGS=(
 
 
 usage() {
-  echo "usage: $0: /dev/disk"
+  echo "usage: $0: [-c] /dev/disk [pkgs .... ]"
 }
+
+while getopts "ch" opt; do
+    case "$opt" in
+        c) CFLAG="-c" ;; # passed on to pacstrap
+        h) usage; exit 1 ;;
+    esac
+done
+shift $(($OPTIND - 1))
+
 
 if [ -z "$1" ]; then
   usage
@@ -113,24 +122,24 @@ fi
 
 set -u  # NB: set *after* parsing args to make it easier
 
-
-## https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet
-# Connecting to the net can't be automated -- easily
-if ! ping -c 3 archlinux.org >/dev/null; then
-  echo "error: network failure. Are you online? Follow https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet" >&2
-  exit 1
-fi
-
 if [ $(id -u) -ne 0 ]; then
   # re-exec root
   sudo $0 "$TARGET_DISK" "$@"
   exit $?
 fi
 
+## https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet
+
 ## https://wiki.archlinux.org/title/Installation_guide#Update_the_system_clock
 # set the time so that https:// mirrors will work.
 timedatectl set-ntp true
 
+# Two birds one stone: sync + test mirrors and test that the requeted packages are real
+# This doubles as Connect to the internet.
+if ! pacman -Syi "${PKGS[@]}" >/dev/null; then
+  echo "error: Could not verify ${pkgs[@]} are available. Is there a typo in a package name? Are you online? Try https://wiki.archlinux.org/title/Installation_guide#Connect_to_the_internet" >&2
+  exit 1
+fi
 
 ( # this subshell for the benefit of the possible trap EXIT
 
@@ -275,7 +284,7 @@ EOF
 
 
 ## Install the system
-(set -x; pacstrap -c "$CHROOT" linux lvm2 cryptsetup "${PKGS[@]}")
+(set -x; pacstrap ${CFLAG:-} "$CHROOT" linux lvm2 cryptsetup "${PKGS[@]}")
 #  To get a bootable system we need lvm and cryptsetup, and linux to trigger mkinitcpio
 #  but if the user didn't explicitly mention them they should sit as dependencies
 #  (if they're not in the tree of things the user installed, well, hm, that risks accidentally leaving the system unbootable
@@ -322,6 +331,42 @@ if [ -d /var/lib/iwd ] && ( arch-chroot "$CHROOT" pacman -Qq iwd >/dev/null 2>&1
   # if iwd is in use
   cp -r /var/lib/iwd/. "$CHROOT"/var/lib/iwd   # the /. avoids nested iwd/iwd/
 fi
+
+# Bootstrap local (file://) repos from the installer's env
+pacman-conf -l | while read -r repo; do
+    unset seen
+    for server in $(pacman-conf -r "$repo" Server); do
+        # a single repo can have multiple Servers
+        # if any of those are file://, copy them in
+        # and then remember we did that so we can copy but
+        case "$server" in
+            file://*)
+                seen=1
+                repo_path="${server#file://}"
+                # TODO: should we realpath this to ensure it's absolute?
+                mkdir -p "$CHROOT"/"$repo_path"
+                cp -rpv "$repo_path"/. "$CHROOT"/"$repo_path/"
+                ;;
+        esac
+    done
+    if [ -n "${seen-}" ]; then
+      # copy [repo] block
+      (
+      ugly=1
+      if [ -n "${ugly}" ]; then
+        printf "[%s]\n" $repo;
+        # this exapnds shorthands to their full values, and I think it's ugly
+        pacman-conf -r $repo
+      else
+        awk '
+        $0 == "[" ENVIRON["repo"] "]" {printing=1; print; next}
+        /^\[.*\]$/ {printing=0}
+        printing {print}
+        ' /etc/pacman.conf
+        fi
+      ) | tee "$CHROOT"/etc/pacman.conf >/dev/null
+    fi
+done
 
 
 ## Credentials / Ownership

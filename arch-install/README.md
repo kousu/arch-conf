@@ -40,7 +40,7 @@ If you don't provide a list of packages a minimally booting system with basicall
 3. Iterate:
 
    ```
-   sudo ./arch-install arch.img ${PKGS}
+   ./arch-install arch.img ${PKGS}
    ```
 
    The installer **does not** install a bootloader, so you will probably want PKGS to container at least kousu-bootloader-efi or kousu-bootloader-bios.

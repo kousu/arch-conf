@@ -121,6 +121,12 @@ if ! ping -c 3 archlinux.org >/dev/null; then
   exit 1
 fi
 
+if [ $(id -u) -ne 0 ]; then
+  # re-exec root
+  sudo $0 "$TARGET_DISK" "$@"
+  exit $?
+fi
+
 ## https://wiki.archlinux.org/title/Installation_guide#Update_the_system_clock
 # set the time so that https:// mirrors will work.
 timedatectl set-ntp true

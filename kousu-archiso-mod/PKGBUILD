@@ -1,0 +1,21 @@
+# Maintainer: kousu <nick@kousu.ca>
+
+pkgname=kousu-archiso-mod
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="A script to build an Arch install disk."
+groups=('kousu')
+arch=('any')
+url="https://github.com/kousu/arch-conf"
+license=('MIT')
+depends=(
+  archiso
+  pacman
+  sudo # XXX not necessarily necessary, could be rewritten without this.
+  )
+source=("archiso-mod")
+sha256sums=('5ec3424725b48d9ca2658b2b5d22932dba9ebd093f92f76210bafa577b1a46b2')
+
+package() {
+  install -Dm 755 archiso-mod -t "${pkgdir}"/usr/bin
+}

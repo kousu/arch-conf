@@ -17,7 +17,7 @@ depends=(
   parted  # for partprobe(8)
   )
 source=("arch-install")
-sha256sums=('67e81109875ff1297aa8fc597f075a80820d986681fffb8124ac9f714039bb81')
+sha256sums=('3cf3925e4036c65618cec290d4d2829e5ec9ec428b090884bac3e0727541e3fa')
 
 package() {
   install -Dm 755 arch-install -t "${pkgdir}"/usr/bin

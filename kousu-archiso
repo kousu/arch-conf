@@ -1,0 +1,10 @@
+#!/bin/sh
+# script to build kousu's distro installer .iso
+
+OUT=${1:-.}
+
+: "${PKGDEST:=$(pwd)/pkg}"  # default value
+PKGDEST="$(realpath "$PKGDEST")"
+
+archiso-mod --remove archinstall --add kousu-arch-install --key "$(cat ~/.ssh/id_*.pub)" "${PKGDEST}"/site.db "${OUT}"
+sudo chown "$USER":"$USER" "${OUT}"/archlinux*.iso

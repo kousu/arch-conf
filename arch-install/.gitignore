@@ -1,2 +1,4 @@
 
 arch.img
+mnt/
+bootstrap_keyfile.bin

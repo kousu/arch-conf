@@ -50,7 +50,7 @@ If you don't provide a list of packages a minimally booting system with basicall
    ## Container
 
    ```
-   ./arch-img-container arch.img /mnt
+   ./arch-img-container arch.img ./mnt
    ```
 
    This unlocks the system and uses `arch-chroot` to get in. It does not test the bootloader or login manager. It can be helpful for verifying what packages got installed and what their install hooks did before testing on a VM.

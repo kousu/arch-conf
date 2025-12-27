@@ -7,27 +7,36 @@
 
 set -e
 
-MNT="$2"
+DISK="$1"
+MNT="${2:-/mnt}"
+
+mkdir -p "${MNT}"
+if [ -n "$(ls -A "${MNT}")" ]; then
+    echo "error: ${MNT} not empty" >&2
+    exit 1
+fi
+
 cleanup() {
   set -x
   sudo umount -R "$MNT"
-  sleep 1
-  sudo lvchange -a n lvsys2
-  sleep 1
-  sudo cryptsetup close cryptlvm2
-  sleep 1
+  sleep .1
+  sudo lvchange -a n lvsys-${LUKS_ID}
+  sleep .1
+  sudo cryptsetup close cryptlvm-${LUKS_ID}
+  sleep .1
   sudo losetup -D
 }
 trap cleanup EXIT
 
-sudo losetup -f "$1"
-sudo partprobe /dev/loop0
-sudo mount /dev/loop0p1 "$2"
-sudo cp "$2"/bootstrap_keyfile.bin .
-sudo umount -R "$2"
-sudo cryptsetup open --key-file ./bootstrap_keyfile.bin /dev/loop0p3 cryptlvm2
-sleep 4 # give lvm a chance to wake up
-sudo mount /dev/lvsys2/root "$MNT"
-sudo arch-chroot "$2" mount -a
+LOOP=$(sudo losetup --show -f "$DISK")
+sudo partprobe "${LOOP}"
+sudo mount ${LOOP}p1 "$MNT"
+sudo cp "${MNT}"/bootstrap_keyfile.bin . # XXX should use a tempfile; or maybe a bash string.
+sudo umount -R "${MNT}"
+LUKS_ID=$(sudo cryptsetup luksUUID ${LOOP}p3 | cut -f 1 -d '-')
+sudo cryptsetup open --key-file ./bootstrap_keyfile.bin ${LOOP}p3 cryptlvm-${LUKS_ID}
+sleep 2 # give lvm a chance to wake up
+sudo mount /dev/lvsys-${LUKS_ID}/root "$MNT"
+sudo arch-chroot "$MNT" mount -a
 lsblk
-sudo arch-chroot "$2"
+sudo arch-chroot "$MNT"

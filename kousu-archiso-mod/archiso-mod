@@ -1,0 +1,215 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# depends: archiso, sudo, pacman
+# https://wiki.archlinux.org/title/Archiso#Prepare_a_custom_profile
+#
+# tip: this builds in /tmp by default, which is, hopefully, a RAM-backed filesystem
+# if you don't have enough RAM to build in RAM, set TMPDIR before running this script
+# to a folder you have space to build in
+#
+# - if given, pkg_repo will be copied into the installer and available to pacstrap
+# - --add can add any package available to your normal pacman, i.e. any repo in /etc/pacman.conf
+# - --add trumps --remove
+#   - it's not smart enough to detect a series of additions and removals on the same package.
+
+# TODO:
+# - [ ] consider allowing multiple custom repos; pass them via flags?
+# - [ ] add some safety checks around pkg_repo like: is it actually a readable repo
+# - [ ] tame cloud-init
+#   - does it take over DHCP? Can it not?
+#   - does it really need to splurge a bunch of networking/ssh junk over the console? Can it be quiet?
+# - [ ] support adding wifi keys
+# - [ ] parse ${repo}.db to collect all the packages it references? is that necessary?
+# - [ ] support multiple repos in the same folder
+#   - i ..would never use this. but it's something pacman supports. so for completeness...
+
+set -euo pipefail
+
+usage() {
+  echo "$0 [--remove pkg] [--add pkg] [--key ssh_public_key] [--base releng|baseline] [pkg_repo] [output_dir]"
+}
+
+: ${BASE:=releng}
+
+# Arrays to store option values
+remove=()
+add=()
+keys=()
+positional=()
+
+# Convert long options to short options for getopts
+# --remove -> -r, --add -> -a, --key -> -k
+args=()
+while (( $# )); do
+    case "$1" in
+        --remove) args+=("-r") ;;
+        --add)    args+=("-a") ;;
+        --key)    args+=("-k") ;;
+        --base)   args+=("-b") ;;
+        --)       args+=("--") ;;  # end of options
+        *)         args+=("$1") ;;
+    esac
+    shift
+done
+
+set -- "${args[@]}"
+
+while getopts "r:a:k:b:-:" opt; do
+    case "$opt" in
+        r) remove+=("$OPTARG") ;;
+        a) add+=("$OPTARG") ;;
+        k) keys+=("$OPTARG") ;;
+        b) BASE="$OPTARG" ;;
+        -)  # handle "--" to end options
+            shift $((OPTIND-1))
+            break
+            ;;
+        \?) usage; exit 1 ;;
+    esac
+done
+
+if [ "${#positional[@]}" -eq 0 ]; then
+    shift $((OPTIND-1))
+    positional=("$@")
+fi
+
+REPO=$1  # may be empty
+if [ -n "$REPO" ]; then
+  REPO="$(realpath "$REPO")"
+
+  case "${REPO}" in
+    *.db|*.db.tar|*.db.tar.bz2|*.db.tar.gz|*.db.tar.lrz|*.db.tar.lz|*.db.tar.lz4|*.db.tar.lzo|*.db.tar.xz|*.db.tar.zst|*.db.tar.Z)
+      ;;
+    *)
+      echo "error: repo should be a pacman .db file" >&2
+      exit 1
+      ;;
+  esac
+
+  if [ ! -f "${REPO}" ]; then
+    echo "error: repo should be a pacman .db file" >&2
+    exit 1
+  fi
+
+  # extract repo name
+  repo=$(basename "${REPO%%.db*}")
+  if [ "$repo" = "pkg" ]; then
+    # ban pkg because it conflicts with /var/cache/pacman/pkg.
+    # XXX surely there are other ways to solve this
+    echo "error: 'pkg' is reserved. Rename the repository." >&2
+    exit 1
+  fi
+fi
+
+OUTPUT=${2:-.}
+
+
+## Extend sudo privileges until done, meaning the build can be left unattended.
+# If sudo is never used, this is a silent no-op
+( while true; do sudo -nv 2>/dev/null || true; sleep 60; done ) &
+SUDO_PID=$!
+trap 'kill $SUDO_PID' EXIT
+
+pkgpath() {
+  NAME=$1
+  VERSION=$(LANG=C pacman -Si "${NAME}" | awk '/^Version/ {print $3}')
+  ARCH=$(LANG=C pacman -Si "${NAME}" | awk '/^Architecture/ {print $3}')
+  echo /var/cache/pacman/pkg/${NAME}-${VERSION}-${ARCH}.pkg.tar.zst
+}
+
+(
+CWD=$(mktemp -t -d mkarchiso.XXXXXXXXXX)
+trap 'echo "mkarchiso: Cleaning up"; (set -x; rm -rf ${CWD})' EXIT
+
+(set -x; cp -r /usr/share/archiso/configs/${BASE} ${CWD}/template)
+
+# make sure mirrors are up to date on boot
+add+=("reflector")
+(set -x; ln -s /usr/lib/systemd/system/reflector.service ${CWD}/template/airootfs/etc/systemd/system/multi-user.target.wants)
+mkdir -p ${CWD}/template/airootfs/etc/systemd/system/reflector.service.d/
+tee ${CWD}/template/airootfs/etc/systemd/system/reflector.service.d/recovery.conf >/dev/null <<EOF
+[Service]
+Restart=on-failure
+RestartSec=5s
+
+[Unit]
+# this should allow unlimited restarts, until it succeeds?
+StartLimitIntervalSec=10s
+StartLimitBurst=3
+EOF
+mkdir -p ${CWD}/template/airootfs/etc/xdg/reflector/
+tee ${CWD}/template/airootfs/etc/xdg/reflector/reflector.conf >/dev/null <<EOF
+--save /etc/pacman.d/mirrorlist
+--protocol https
+--latest 20
+--fastest 3
+EOF
+
+
+# adjust packages
+# https://wiki.archlinux.org/title/Archiso#Selecting_packages
+# https://wiki.archlinux.org/title/Archiso#Custom_local_repository
+
+# use the system's pacman.conf for the _build_
+# Add custom repos in /etc/pacman.conf to the build, so to allow --add'ing local packages to the image.
+# Leave the rest of the config pristine, to avoid `HoldPkg` and `NoUpgrade` and other user tweaks messing up the build.
+grep -vxF -f <(pacman-conf -c ${CWD}/template/pacman.conf -l) <(pacman-conf -l) | while read -r repo; do
+  printf "[%s]\n" "${repo}"
+  pacman-conf -r "${repo}"
+done | tee -a ${CWD}/template/pacman.conf >/dev/null
+
+# # https://catonmat.net/set-operations-in-unix-shell
+# removals:
+grep -vxF -f <(printf '%s\n' "${remove[@]}") ${CWD}/template/packages.x86_64 > ${CWD}/template/packages.x86_64.tmp
+# additions:
+# the tee dance here is weird but it's to make sure we _use the original file_, preserving its permissions
+sort -u <(printf '%s\n' "${add[@]}") ${CWD}/template/packages.x86_64.tmp | tee ${CWD}/template/packages.x86_64 >/dev/null
+rm ${CWD}/template/packages.x86_64.tmp
+
+
+# Add $REPO to the image as a custom repository
+# https://wiki.archlinux.org/title/Archiso#Adding_repositories_to_the_image
+if [ -n "$REPO" ]; then
+  (set -x; mkdir -p ${CWD}/template/airootfs/var/cache/pacman)
+  # XXX this simply assumes REPO is like path/to/repo/repo.db with all the packages in path/to/repo/*.pkg.tar.zst
+  #     but is that guaranteed?
+  (set -x; cp -r "$(dirname "${REPO}")"/. ${CWD}/template/airootfs/var/cache/pacman/"${repo}")
+
+  # adulterate a clean pacman.conf
+  PACMAN=$(pkgpath pacman)
+  if [ ! -e "${PACMAN}" ]; then
+    sudo pacman -Sw pacman --noconfirm >&2
+  fi
+  (set -x; tar -xOf ${PACMAN} etc/pacman.conf > ${CWD}/template/airootfs/etc/pacman.conf)
+  (set -x; tee -a ${CWD}/template/airootfs/etc/pacman.conf >/dev/null <<EOF
+# --- BEGIN mkarchiso ---
+[${repo}]
+Server = file:///var/cache/pacman/${repo}
+SigLevel = Optional TrustAll
+# --- END mkarchiso ---
+EOF
+  )
+fi
+
+# Add ${keys[@]} to the image.
+#
+# There's another method involving cloud-init and ${CWD}/template/airootfs/var/lib/cloud/seed/nocloud/
+# but if all we're doing is installing keys it's not necessary to trigger it.
+# https://wiki.archlinux.org/title/Install_Arch_Linux_via_SSH#Prepare_cloud-init_configuration_files
+# https://wiki.archlinux.org/title/Install_Arch_Linux_via_SSH#Using_a_single_custom-built_ISO
+if [ "${#keys[@]}" -gt 0 ]; then
+  mkdir -p "${CWD}/template/airootfs/root/.ssh"
+  chmod 700 "${CWD}/template/airootfs/root/.ssh"
+  printf "%s\n" "${keys[@]}" | tee "${CWD}/template/airootfs/root/.ssh/authorized_keys" >/dev/null
+  chmod 600 "${CWD}/template/airootfs/root/.ssh/authorized_keys"
+fi
+
+#tree -a ${CWD}  # DEBUG
+
+# the redundant rm -rf here handles the case where mkarchiso fails; if it succeeds it cleans up and the above trap
+# is enough, but if it fails it leaves root-owned files around.
+(set -x; trap 'sudo rm -rf ${CWD}/build' EXIT; sudo mkarchiso -v -r -w ${CWD}/build -o "${OUTPUT}" ${CWD}/template)
+
+)

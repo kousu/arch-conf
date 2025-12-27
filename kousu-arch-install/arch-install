@@ -44,7 +44,7 @@
 # - [x] Support MBR?
 # - [ ] Support "writable" partition (for thumbdrive mode)
 # - [ ] make suspend-to-disk work
-# - [ ] repack the standard installer to include this script
+# - [x] repack the standard installer to include this script
 # - [x] don 't hardcode "cryptlvm" or "lvsys"? because they might collide with dle vices on the host?
 # - [ ] use UUID in root= instead of /dev/lvsys-*
 # - [ ] vgrename lvsys-$LUKS_ID at the end to just lvsys to make it tidier

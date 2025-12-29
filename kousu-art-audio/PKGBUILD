@@ -50,6 +50,9 @@ depends=(
   lmms
   #hydrogen # basic but effective drum sequencer
   #ft2-clone # tracker
+  #
+
+  realtime-privileges  # you also need your user to be in 'realtime'
 )
 
 optdepends=(

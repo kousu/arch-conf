@@ -1,9 +1,13 @@
 #!/bin/bash
 
 pre_install() {
-  mkdir -p "$CHROOT"/boot/efi/boot   # mkinitcpio will fail unless this exists
+  mkdir -p /boot/efi/boot   # mkinitcpio will fail unless this exists
 }
 
 pre_upgrade() {
-  mkdir -p "$CHROOT"/boot/efi/boot   # mkinitcpio will fail unless this exists
+  mkdir -p /boot/efi/boot   # mkinitcpio will fail unless this exists
+}
+
+post_remove() {
+  find /boot/efi/boot -type d -empty -delete
 }

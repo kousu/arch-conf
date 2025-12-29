@@ -4,7 +4,12 @@ Operation = Upgrade
 Type = Package
 Target = kousu-bootloader-efi
 
+[Trigger]
+Operation = Remove
+Type = Path
+Target = /etc/bootsplash.bmp
+
 [Action]
 Description = Configuring default bootsplash...
 When = PostTransaction
-Exec = /bin/sh -c 'if ! [ -e /etc/bootsplash.bmp ]; then ln -sn /usr/share/systemd/bootctl/splash-arch.bmp /etc/bootsplash.bmp; fi'
+Exec = /bin/sh -c 'if ! pacman -Qqo /etc/bootsplash.bmp >/dev/null 2>&1; then ln -sfn /usr/share/systemd/bootctl/splash-arch.bmp /etc/bootsplash.bmp; fi'

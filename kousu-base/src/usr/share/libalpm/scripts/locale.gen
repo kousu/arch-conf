@@ -6,7 +6,7 @@
 
 LOCALESUM=$(md5sum "$2")
 
-$SHELL "$1" > "$2"
+sh "$1" > "$2"
 
 if ! (printf "%s\n" "$LOCALESUM" | md5sum --status -c); then
   # rebuild locales, but only if they've changed

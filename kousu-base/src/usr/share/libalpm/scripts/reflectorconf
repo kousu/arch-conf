@@ -9,4 +9,4 @@ if [ -z "$COUNTRY" ]; then
   COUNTRY="CA"
 fi
 export COUNTRY
-$SHELL "$1" > "$2"
+sh "$1" > "$2"

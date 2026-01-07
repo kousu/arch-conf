@@ -8,6 +8,7 @@ pkgdesc="Configuration management for kousu's NAS"
 depends=(
   kousu-server
   kousu-bootloader-bios
+  linux-firmware-intel
   kousu-didnt-your-mother-always-tell-you
 
   jellyfin-server

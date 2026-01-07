@@ -158,6 +158,12 @@ Arch's core package build command is `makepkg`, but it has variants and wrappers
 
 [^measure_timing]: This was measured on a machine that also had versions of most of these packages installed already. On a dedicated build machine it should be closer to `makechrootpkg`, except for the time lost building the initial container.
 
+My recommendations are:
+
+- for most packages, build using `makepkg -D the-package -sri` and after testing clean up with `pacman -Rcns the-package`
+- for "fragile" packages -- especially those that touch the bootloader or kernel -- build using `./build.sh the-fragile-package` and test safely in a chroot by `truncate -S 20G arch.img && ./kousu-arch-install/arch-install the-fragile-package && ./kousu-arch-install/arch-img-container arch.img`
+- for real installs, do a final build using `./build.sh the-package` and install the standard way `pacman -Sy the-package`
+
 ## Installation
 
 First, set up a [local repo](https://man.archlinux.org/man/pacman.conf.5#USING_YOUR_OWN_REPOSITORY)

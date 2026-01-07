@@ -93,9 +93,51 @@ makepkg -d
 
 which, for these packages, is probably honestly fine. `-d` is risky with complex packages that have subtle build-time dependencies but there aren't any of those here.
 
-### Signing off
+### Signing Off
 
-Before you build you may want to edit `/etc/makepkg.conf` to set `PACKAGER` and/or `GPGKEY`.
+#### Packager name
+
+Edit [~/.makepkg.conf](https://wiki.archlinux.org/title/Makepkg#Configuration) to add your name to built packages:
+
+```
+# ~/.makepkg.conf
+PACKAGER="you <your@email.net>"
+```
+
+#### Package signing
+
+To add cryptographic signing, i.e. the kind that can't be forged:
+
+Make a new signing key [^yubikeys]:
+
+[^yubikeys]: you could also pick an existing key, use a key on a Yubikey, etc.
+
+```
+gpg --quick-generate-key "you (arch packages) <your@email.net>" ed25519 sign never
+```
+
+Authorize your key on your own system; without this you won't be able to install your own builds.
+
+```
+gpg --export -a "arch-packages" | sudo pacman-key --add -
+gpg --export -a "arch-packages" | sudo pacman-key --lsign-key -
+```
+
+Find out your key ID; it should look like 'FE5AFA6D5DE0070ADFA21BC5E074B83653CBB7BA'
+
+```
+pacman-key -l "your@email.net"
+```
+
+Add it to ~/.makepkg.conf:
+
+```
+# ~/.makepkg.conf
+BUILDENV+=(sign)
+GPGKEY="71A0A1E9B8F194F74F2FDD11921A81F08585A418"
+```
+
+Then running `./build.sh` will produce `pkg/*.sig` for each package and for the database file itself.
 
 ### Build Methods
 
@@ -130,7 +172,16 @@ $ tee -a /etc/pacman.conf >/dev/null <<EOF
 Server = file:///var/cache/pacman/site
 # Disable signature checking on local packages -- because we don't have signing configured
 SigLevel = Optional TrustAll
+EOF
+```
+
+**If** you set up signing (above), _instead_ do
+
+```
+$ tee -a /etc/pacman.conf >/dev/null <<EOF
 [site]
+Server = file:///var/cache/pacman/site
+SigLevel = Required
 EOF
 ```
 

@@ -156,6 +156,21 @@ SigLevel = Optional TrustAll
 EOF
 done
 
+load_makepkg_config
+# check if gpg signature is to be created and if signing key is valid
+if { [[ -z $SIGNPKG ]] && check_buildenv "sign" "y"; } || [[ $SIGNPKG == 'y' ]]; then
+        SIGNPKG='y'
+        if ! gpg --list-secret-key ${GPGKEY:+"$GPGKEY"} &>/dev/null; then
+                if [[ ! -z $GPGKEY ]]; then
+                        error "$(gettext "The key %s does not exist in your keyring.")" "${GPGKEY}"
+                else
+                        error "$(gettext "There is no key in your keyring.")"
+                fi
+                exit $E_PRETTY_BAD_PRIVACY
+        fi
+fi
+
+
 ## Extend makechrootpkg's sudo privileges until
 ## done, meaning the build can be left unattended.
 ( while true; do sudo -v; sleep 60; done ) &
@@ -199,14 +214,20 @@ printf "%s\n" "$DEPS" | while read -r target; do
     else
       # build
       makechrootpkg $build_flags -r "$CHROOT" -u
-      build_flags=""
 
-      # expose new package in repo
-      repo-add "$PKGDEST"/site.db.tar.zst "${pkg}"
+      build_flags=""
     fi
+    create_package_signatures   # no-op unless GPGKEY defined and 'sign' in BUILDENV; redundant if using `makepkg`.
+
+    # expose new package in repo
+    if [ "${SIGNPKG}" = y ]; then
+      REPOARGS+=(-s -k "${GPGKEY}")
+    fi
+    (set -x; repo-add "${REPOARGS[@]}" "$PKGDEST"/site.db.tar.zst "${pkg}")
     rm -f .pkgver .lib.PKGBUILD
   fi
   cd - >/dev/null
+
 done
 done
 

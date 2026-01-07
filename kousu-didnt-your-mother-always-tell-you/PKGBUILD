@@ -8,24 +8,24 @@ pkgdesc="- that sharing is caring."
 depends=(
   kousu-media
 
-  transmission-gtk
+  transmission-gtk # torrents
   transmission-cli
+  transmission-daemon
 
-  nicotine+
+  nicotine+ # Soulseek network
 
   magic-wormhole
 
   kubo # ipfs
-
-  #aur/airdcpp-webclient # AUR
-  #ncdc # AUR
-  #eiskaltdcpp-cli-git # AUR
-  #eiskaltdcpp-daemon-git
-  #eiskaltdcpp-gtk-git
 
   # TODO: decide between navidrome and jellyfin
   navidrome
 
   jellyfin-server
   jellyfin-web
+)
+
+optdepends=(
+  'airdcpp-webclient: [aur] DC++' # alts: ncdc, eiskaltdcpp
+  'gtk-gnutella: [aur]'
 )

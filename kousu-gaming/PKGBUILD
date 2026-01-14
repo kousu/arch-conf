@@ -1,0 +1,15 @@
+pkgname=kousu-gaming
+pkgdesc="Configuration management for games"
+
+# load common settings; be aware if you ever split up this repo.
+[ -f ../lib/lib.PKGBUILD ] && cp -lf ../lib/lib.PKGBUILD .lib.PKGBUILD
+. .lib.PKGBUILD || exit 1
+
+depends=(
+
+)
+
+optdepend=(
+  'xpadneo-dkms: [aur] Xbox game controller driver'
+  'flare-player-bin: [aur] Flash (.swf) player'
+)

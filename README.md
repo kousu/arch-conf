@@ -37,7 +37,7 @@ git clone https://github.com/kousu/arch-conf && cd arch-conf/device-nigiri
 Build a top-level package and all its dependencies:
 
 ```
-./build.sh kousu-device-nigiri
+./makepkgs kousu-device-nigiri
 ```
 
 Output goes to `${PKGDEST}`, and that folder will be a valid pacman repo. This path can be set in /etc/makepkg.conf, but is `.` if not specified.
@@ -67,7 +67,7 @@ pacman -Sy kousu-device-${HOSTNAME}
 But in _regular use_ as you make updates:
 
 ```
-./build.sh kousu-device-${HOSTNAME} &&
+./makepkgs kousu-device-${HOSTNAME} &&
 sudo cp -r ./pkg/. /usr/cache/pacman/site/ &&
 sudo pacman -Syu
 ```
@@ -75,7 +75,7 @@ sudo pacman -Syu
 You can also pre-build **all** the packages:
 
 ```
-ls | grep -v matlab | xargs ./build.sh
+ls | grep -v matlab | xargs ./makepkgs
 ```
 
 Or you can build a single package _without_ its dependencies, say, if you are working on it in detail:
@@ -137,11 +137,11 @@ BUILDENV+=(sign)
 GPGKEY="71A0A1E9B8F194F74F2FDD11921A81F08585A418"
 ```
 
-Then running `./build.sh` will produce `pkg/*.sig` for each package and for the database file itself.
+Then running `./makepkgs` will produce `pkg/*.sig` for each package and for the database file itself.
 
 ### Build Methods
 
-Arch's core package build command is `makepkg`, but it has variants and wrappers which provide different levels of speed. In `build.sh` we use `makechrootpkg` but you can edit `build.sh` to play with swapping
+Arch's core package build command is `makepkg`, but it has variants and wrappers which provide different levels of speed. In `makepkgs` we use `makechrootpkg` but you can edit `makepkgs` to play with swapping
 
 | Core build command | Isolation level | Reliability | Speed[^timing] |
 | --- | --- | --- | --- |
@@ -161,8 +161,8 @@ Arch's core package build command is `makepkg`, but it has variants and wrappers
 My recommendations are:
 
 - for most packages, build using `makepkg -D the-package -sri` and after testing clean up with `pacman -Rcns the-package`
-- for "fragile" packages -- especially those that touch the bootloader or kernel -- build using `./build.sh the-fragile-package` and test safely in a chroot by `truncate -S 20G arch.img && ./kousu-arch-install/arch-install the-fragile-package && ./kousu-arch-install/arch-img-container arch.img`
-- for real installs, do a final build using `./build.sh the-package` and install the standard way `pacman -Sy the-package`
+- for "fragile" packages -- especially those that touch the bootloader or kernel -- build using `./makepkgs the-fragile-package` and test safely in a chroot by `truncate -S 20G arch.img && ./kousu-arch-install/arch-install the-fragile-package && ./kousu-arch-install/arch-img-container arch.img`
+- for real installs, do a final build using `./makepkgs the-package` and install the standard way `pacman -Sy the-package`
 
 ## Installation
 
@@ -246,7 +246,7 @@ Then your development iteration loops like:
 
 ```
 $ # edit packages
-$ ./build.sh
+$ ./makepkgs
 $ sudo cp -r pkg/. /var/cache/pacman/site  # don't ignore the '.'!
 $ sudo pacman -Syu  # update packages
 $ # test system
@@ -410,7 +410,7 @@ Sometimes shit fucks up. Do this:
 sudo rm -r /var/lib/archbuild/site/
 ```
 
-and/or add in `c` to `makechrootpkg -c` in `build.sh`. But even then sometimes you just gotta nuke it.
+and/or add in `c` to `makechrootpkg -c` in `makepkgs`. But even then sometimes you just gotta nuke it.
 
 ### `pkgver`
 
@@ -426,7 +426,7 @@ pkgver="$(_pkgver)"
 pkgrel=1
 ```
 
-1. `.pkgver` is used by `build.sh`; the containerized build forgets the git repo, so when building containerized that makes sure the version number survives
+1. `.pkgver` is used by `makepkgs`; the containerized build forgets the git repo, so when building containerized that makes sure the version number survives
 2. This assigns to `pkgver` _eagerly_.
 
    `makepkg`/`makechrootpkg` have a feature that `pkgver` can be a function `pkgver()` in which case it is run _after_ `prepare()` to generate a version dynamically from the source code, and then once that's done it will _write back_ a hardcoded `pkgver=` line.

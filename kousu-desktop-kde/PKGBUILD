@@ -18,6 +18,7 @@ depends=(
   plasma-systemmonitor # KDE task manager (i.e. GUI version of top)
   kscreen    # KDE plugin for screen management? I think?
   vokoscreen # screen recorder
+  wl-clipboard # for wl-copy; needed by xclip under Wayland (which KDE uses by default)
 
   # thse are kde-applications-meta, split out so I can be choosier
   #kde-accessibility-meta

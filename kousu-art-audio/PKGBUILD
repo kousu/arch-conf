@@ -11,6 +11,7 @@ depends=(
   # hardware
   # alsa-card-profiles # is this needed? it's for making fancy professional soundcards work, I think
   pipewire-jack
+  qpwgraph
 
   # music :: editing
   audacity

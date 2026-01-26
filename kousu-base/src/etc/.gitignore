@@ -12,6 +12,9 @@
 # might as well live in /var. But it doesn't.
 /resolv.conf
 
+# managed by iwd, but NetworkManager likes to make duplicate copies
+NetworkManager/system-connections
+
 # don't track systemd-update-done(8)'s file; it gets bumped
 # on each boot automatically which is kind of counterproductive
 # as far as etckeeper is concerned

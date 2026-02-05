@@ -10,4 +10,4 @@
 
 # install first stage bootloader
 BOOT_DISK="/dev/$(/usr/bin/lsblk -no PKNAME "$(/usr/bin/findmnt -no SOURCE -T /boot/limine)")"
-/usr/bin/limine bios-install "$BOOT_DISK"
+/usr/bin/limine bios-install --quiet "$BOOT_DISK"

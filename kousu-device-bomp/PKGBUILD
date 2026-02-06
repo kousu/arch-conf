@@ -10,7 +10,6 @@ depends=(
   kousu-bootloader-efi
   kousu-desktop-niri
   kousu-laptop-mode
-  kousu-work
 
   # Programming
   julia

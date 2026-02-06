@@ -22,7 +22,6 @@ depends=(
   # TODO: https://wiki.archlinux.org/title/CPU_frequency_scaling
 
   kousu-school
-  kousu-work
   kousu-art-graphics
 
   # Programming

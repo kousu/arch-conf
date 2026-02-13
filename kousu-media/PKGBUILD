@@ -37,6 +37,9 @@ depends=(
 
   # archiving
   yt-dlp
+
+  # cli
+  playerctl  # uses the MPRIS protocol to allow controlling player/pause/prev/next buttons of any media player from the cli
 )
 
 optdepends=(

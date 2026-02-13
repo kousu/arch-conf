@@ -214,10 +214,10 @@ printf "%s\n" "$DEPS" | while read -r target; do
     else
       # build
       makechrootpkg $build_flags -r "$CHROOT" -u
+      create_package_signatures   # no-op unless GPGKEY defined and 'sign' in BUILDENV; redundant if using `makepkg`.
 
       build_flags=""
     fi
-    create_package_signatures   # no-op unless GPGKEY defined and 'sign' in BUILDENV; redundant if using `makepkg`.
 
     # expose new package in repo
     if [ "${SIGNPKG}" = y ]; then

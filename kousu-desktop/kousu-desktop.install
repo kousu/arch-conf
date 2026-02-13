@@ -3,6 +3,8 @@
 _deploy() {
   systemctl enable bluetooth
   systemctl enable iwd
+
+  systemctl --global preset drop-credentials-on-screenlock
 }
 
 
@@ -19,4 +21,3 @@ post_upgrade() {
 pre_remove() {
   systemctl disable bluetooth # ???
 }
-

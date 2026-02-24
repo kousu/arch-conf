@@ -51,3 +51,8 @@ depends=(
   freerdp       # Windows screen sharing
   libvncserver  # VNC screen sharing (macOS, some Unixes)
 )
+
+optdepends=(
+	'ssh-tools: mostly for ssh-hostkeys and ssh-authorized-keys which print ssh keys nicer; also ssh-sig which makes the ssh-keygen -Y stuff easier'
+	'sshx: multiplayer web ssh sessions. seems sketchy but useful.'
+)

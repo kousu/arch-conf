@@ -4,7 +4,8 @@
 # and it's called a "hold" but nothing actually enforces that it's held
 if [ $1 = set ]; then
   if powerprofilesctl list-holds | grep -q Hold:; then
-    exit 1
+    echo 'warning: power hold in place, maintaining power level.' >&2
+    exit 0
   fi
 fi
 /usr/bin/powerprofilesctl "$@"

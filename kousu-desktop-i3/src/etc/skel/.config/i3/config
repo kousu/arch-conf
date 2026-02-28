@@ -33,7 +33,7 @@ exec --no-startup-id ~/.fehbg
 
 # Screensaver/Lock
 # lock on suspend, screensaver, or $mod+L xss-lock locks on suspend
-exec --no-startup-id xss-lock -n /usr/lib/xsecurelock/dimmer --transfer-sleep-lock -- ~/.local/bin/xsecurelock 
+exec --no-startup-id xss-lock -n /usr/lib/xsecurelock/dimmer --transfer-sleep-lock -- ~/.local/bin/xsecurelock
 # manual lock
 exec --no-startup-id xset s 270 30  # screensaver: activate after 4.5 minutes, but lock at 5 minutes
 bindsym $mod+Shift+l exec xset s activate  # or could use: `loginctl lock-session`

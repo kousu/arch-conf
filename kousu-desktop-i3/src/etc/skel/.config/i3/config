@@ -21,6 +21,9 @@ font pango:monospace 8
 
 exec --no-startup-id setxkbmap -option compose:rctrl
 
+# system tray
+exec --no-startup-id snixembed
+
 # Start ~/.config/autostart/*.desktop. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3

@@ -31,6 +31,7 @@ depends=(
 
   # for a tinier DE:
   i3-wm
+  snixembed # system tray
   dmenu
   i3status
   dex # default i3 config file uses this to run ~/.config/autostart

@@ -17,6 +17,11 @@ depends=(
   acme-user
   #acme-tiny # ?
   #acme.sh
+  #
+  # third-party package managers
+  # obviously using pacman is ideal on an Arch system
+  # but in a pinch
+  python-uv
 
   # backup
   restic

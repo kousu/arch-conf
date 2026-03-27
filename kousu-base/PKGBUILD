@@ -109,6 +109,7 @@ depends=(
 
   # TUI
   vis    # editor
+  vis-syntax-highlighting
   lua-lpeg # syntax highlighting in vis
   #vim
   #e3    # has e3vi; 23kiB installed

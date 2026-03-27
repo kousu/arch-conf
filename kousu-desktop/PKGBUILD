@@ -31,6 +31,10 @@ depends=(
 
   # CLI :: Programming
   helix
+  prettier
+  ripgrep
+  fd
+  fzf
   # tree-sitter  # TODO: install and configure this
   android-tools # adb! fastest way to get files in and out of a phone
   android-udev

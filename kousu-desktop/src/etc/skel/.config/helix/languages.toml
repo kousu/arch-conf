@@ -7,3 +7,24 @@ formatter = { command = "typstyle" }
 # julia's formatter is expensive so disabled by default
 name = "julia"
 auto-format = true
+
+[[language]]
+name = "vala"
+auto-format = false
+
+[[language]]
+name = "python"
+indent = { tab-width = 2, unit = "  " }
+
+[[language]]
+name = "markdown"
+soft-wrap.enable = true
+# text-width = 80 < this is the default
+soft-wrap.wrap-at-text-width = true
+formatter = { command = 'prettier', args = [
+  "--parser",
+  "markdown",
+  "--prose-wrap",
+  "never", # <always|never|preserve>
+] }
+auto-format = false

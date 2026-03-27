@@ -18,3 +18,9 @@ theme = "autumn_night"
 trim-final-newlines = true
 trim-trailing-whitespace = true
 rulers = [80, 120]
+text-width = 80
+mouse = false
+
+[editor.soft-wrap]
+enable = false # true
+wrap-at-text-width = true

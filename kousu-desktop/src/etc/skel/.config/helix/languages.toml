@@ -17,6 +17,11 @@ name = "python"
 indent = { tab-width = 2, unit = "  " }
 
 [[language]]
+name = "lua"
+formatter = { command = 'stylua', args = ["-"] }
+auto-format = true
+
+[[language]]
 name = "markdown"
 soft-wrap.enable = true
 # text-width = 80 < this is the default

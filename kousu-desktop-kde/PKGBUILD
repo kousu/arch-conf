@@ -11,6 +11,7 @@ depends=(
   ## GUI :: Desktop Environment :: KDE
   #breeze-gtk # themes GTK apps to match the KDE ones..but I don't know how to use it yet.
   plasma-desktop
+  plasma-login-manager
   plasma-workspace-wallpapers # extra KDE wallpapers
   powerdevil # KDE plugin for power management
   bluedevil  # KDE plugin for Bluetooth
@@ -39,6 +40,12 @@ depends=(
   # install the 'maui' group
 
   transmission-qt
+)
+
+optdepends=(
+  # the above installs startplasma-x11 but *not* kwin-x11 (presumably to save space)
+  # which means KDE doesn't work on X by default.
+  'kwin-x11: if launching KDE under X using startplasma-x11'
 )
 
 package() {

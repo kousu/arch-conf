@@ -1,3 +1,6 @@
+> [!WARNING]
+> Migrated to https://codeberg.org/kousu/arch-conf
+
 # Configuration Management via Package Management (for arch!)
 
 This is my first attempt at trying to do configuration management via packages.
